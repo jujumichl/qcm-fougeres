@@ -4,17 +4,38 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .btn-orange {
+    background-color: orange;
+    color: white;
+    border: none; /* optionnel pour enlever la bordure */
+    }
+
+    .btn-orange:hover {
+        background-color: darkorange; /* effet au survol */
+    }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/var/www/html/QCM/src/Controller/LoginController.php</code></li>
-        <li>Your template at <code>/var/www/html/QCM/templates/login/index.html.twig</code></li>
-    </ul>
+<div class="d-flex justify-content-center mt-5">
+    <img src="https://intranet.fougeres.fr/wp-content/uploads/2019/12/Logo-foug%c3%a8res-quadri.png" alt="Logo de Fougères" width="15%" height="15%">
 </div>
+
+<div class="d-flex justify-content-center mt-5">
+<div class="card shadow p-4" style="width: 350px;">
+    <form action="{{ path('page_login') }}" method="POST">
+        <fieldset>
+            <div class="mb-3">
+                <input type="text" id="_username" name="_username" class="form-control" placeholder="Nom d'utilisateur">
+            </div>
+            <div class="mb-3">
+                <input type="password" id="_password" name="_password" class="form-control" placeholder="Mot de passe">
+            </div>
+            <div>
+                <button type="submit" class="w-100">S'identifier</button> 
+            </div>
+        </fieldset>
+    </form>
+</div>
+</div>
+
+    
 {% endblock %}
