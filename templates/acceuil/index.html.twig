@@ -5,58 +5,75 @@
 {% endblock %}
 
 {% block body %}
+  <section class="p-2">
+    <!-- Bouton toggle -->
+    <button class="btn mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"><i class="bi bi-arrow-bar-right"></i></button>
+  </section>
 
-<section class="p-2">
-  <!-- Bouton toggle -->
-  <button
-    class="btn btn-outline-primary mb-3"
-    type="button"
-    data-bs-toggle="offcanvas"
-    data-bs-target="#offcanvasMenu"
-    aria-controls="offcanvasMenu">
-    ☰ Menu
-  </button>
+  <!-- OFFCANVAS -->
+  <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
+    <div class="offcanvas-header">
+      <a href="http://localhost/truc/qcm/public/" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
+      <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
+    </div>
 
-  <a href="http://localhost/truc/qcm/public/"
-     class="btn btn-outline-secondary mb-3">
-     Déconnexion
-  </a>
-</section>
+    <div class="offcanvas-body pb-5">
+      <ul class="list-group list-group-flush" id="QMC-list">
+        <!--   Implémentation des QCM créer ici, format : 
+        <button type="button" class="btn">
+          <li class="list-group-item">
+            QCM 3
+          </li>
+        </button>
+        </li>
+          -->
 
-<!-- OFFCANVAS GAUCHE -->
-<div
-  class="offcanvas offcanvas-start show"
-  tabindex="-1"
-  id="offcanvasMenu"
-  data-bs-backdrop="false"
-  data-bs-scroll="true">
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
+        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
+        <button type="button" class="btn"><li class="list-group-item">...</li></button>
+      </ul>
+      <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <!-- Bouton à gauche -->
+          <button class="btn btn-outline-primary">CODE <i class="bi bi-lock"></i></button>
 
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Menu</h5>
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="offcanvas"
-      aria-label="Fermer">
-    </button>
+          <!-- 2 boutons à droite -->
+          <div class="btn-group">
+            <button class="btn"><i class="bi bi-trash"></i></button>
+            <button class="btn"><i class="bi bi-plus-square"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="offcanvas-body">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Dashboard</li>
-      <li class="list-group-item">QCM</li>
-      <li class="list-group-item">Résultats</li>
-    </ul>
-  </div>
-</div>
-
-<!-- CONTENU -->
-<section id="QCM" class="container-fluid mt-4">
-  <p>
-    Contenu principal…<br>
-    Le scroll fonctionne normalement.<br>
-    Ajoute beaucoup de texte pour tester.
-  </p>
-</section>
-
+  <!-- CONTENU -->
+  <section id="QCM-content" class="container-fluid mt-4">
+    <p>
+      Contenu principal…<br />
+      Le scroll fonctionne normalement.<br />
+      Ajoute beaucoup de texte pour tester.
+    </p>
+  </section>
 {% endblock %}
