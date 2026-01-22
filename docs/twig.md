@@ -22,7 +22,34 @@ Lien vers les filtres : https://twig.symfony.com/doc/3.x/filters/index.html
 
 Lien vers les fontions : https://twig.symfony.com/doc/3.x/functions/index.html
 
-## JS externe avec Twig
+
+
+## Où mettre le JS en Symfony ?
+
+### Solution simple (sans Node)
+
+-> **`public/js/`**
+
+* rapide
+* pas de compilation
+* bien pour petits projets
+
+```twig
+<script src="{{ asset('js/app.js') }}"></script>
+```
+
+---
+
+### Solution pro : `assets/` + Encore
+
+-> **`assets/app.js`**
+
+* meilleure organisation
+* compatible Bootstrap, npm, modules JS
+* standard Symfony
+
+---
+## Solution simple
 
 1. **Créer le fichier JS**
    `public/js/app.js`
@@ -48,5 +75,34 @@ Lien vers les fontions : https://twig.symfony.com/doc/3.x/functions/index.html
 
 ---
 
-Résultat : JS séparé, propre et facile à maintenir.
+## Encore
 
+1. **Installer Encore**
+
+```bash
+composer require symfony/webpack-encore-bundle
+npm install
+```
+
+2. **JS dans `assets/app.js`**
+
+```js
+import 'bootstrap';
+```
+
+3. **Inclure dans Twig**
+
+```twig
+{{ encore_entry_script_tags('app') }}
+```
+
+---
+
+## Résumé rapide
+
+| Projet                    | Où mettre le JS |
+| ------------------------- | --------------- |
+| Petit / rapide            | `public/js`     |
+| Symfony propre / scalable | `assets/`     |
+
+**Sur Symfony + Bootstrap + JS**, la bonne pratique est **`assets/`**.
