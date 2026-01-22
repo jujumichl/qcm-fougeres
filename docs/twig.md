@@ -21,3 +21,32 @@ Lien vers les tags : https://twig.symfony.com/doc/3.x/tags/index.html
 Lien vers les filtres : https://twig.symfony.com/doc/3.x/filters/index.html
 
 Lien vers les fontions : https://twig.symfony.com/doc/3.x/functions/index.html
+
+## JS externe avec Twig
+
+1. **Créer le fichier JS**
+   `public/js/app.js`
+
+   ```js
+   // app.js
+   console.log("JS chargé !");
+   ```
+
+2. **Inclure dans le Twig**
+
+   ```twig
+   {% block javascripts %}
+     <script src="{{ asset('js/app.js') }}"></script>
+   {% endblock %}
+   ```
+
+3. **Ajouter le block dans `base.html.twig`** (si absent)
+
+   ```twig
+   {% block javascripts %}{% endblock %}
+   ```
+
+---
+
+Résultat : JS séparé, propre et facile à maintenir.
+

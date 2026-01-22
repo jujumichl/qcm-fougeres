@@ -19,14 +19,14 @@
 
     <div class="offcanvas-body pb-5">
       <ul class="list-group list-group-flush" id="QMC-list">
-        <!--   Implémentation des QCM créer ici, format : 
+        <!--    Implémentation des QCM créer ici, format : 
         <button type="button" class="btn">
           <li class="list-group-item">
             QCM 3
           </li>
         </button>
         </li>
-          -->
+           -->
 
         <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
         <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
@@ -56,7 +56,7 @@
       <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
         <div class="d-flex justify-content-between align-items-center">
           <!-- Bouton à gauche -->
-          <button class="btn btn-outline-primary">CODE <i class="bi bi-lock"></i></button>
+          <button class="btn btn-outline-primary">CODE</button>
 
           <!-- 2 boutons à droite -->
           <div class="btn-group">
@@ -76,4 +76,7 @@
       Ajoute beaucoup de texte pour tester.
     </p>
   </section>
+{% endblock %}
+{% block javascripts %}
+  <script src="{{ asset('js/acceuil.js') }}"></script>
 {% endblock %}
