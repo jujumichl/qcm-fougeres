@@ -106,3 +106,5 @@ import 'bootstrap';
 | Symfony propre / scalable | `assets/`     |
 
 **Sur Symfony + Bootstrap + JS**, la bonne pratique est **`assets/`**.
+
+
