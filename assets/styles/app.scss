@@ -1,6 +1,4 @@
-@import "login";
-@import "~bootstrap/scss/bootstrap";
-@import "~bootstrap-icons/font/bootstrap-icons.css";
+@use "login";
 
 body {
     background-color: skyblue;
