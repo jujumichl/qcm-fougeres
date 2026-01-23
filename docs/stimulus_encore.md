@@ -35,7 +35,7 @@ Il ne compile pas lui‑même les fichiers : il prépare le système de build qu
 3. Il transforme :
 
    * SCSS → CSS
-   * ES6+ JavaScript → JavaScript compatible navigateurs
+   * JavaScript → JavaScript compatible navigateurs
    * Regroupe les fichiers en bundles (`app.css`, `app.js`).
 4. Le résultat est placé dans **`public/build/`** (prêt pour le navigateur).
 
