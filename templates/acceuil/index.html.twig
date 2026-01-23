@@ -18,55 +18,42 @@
     </div>
 
     <div class="offcanvas-body pb-5">
-      <ul class="list-group list-group-flush" id="QMC-list">
-        <!--     Implémentation des QCM créer ici, format : 
-        <button type="button" class="btn">
-          <li class="list-group-item">
-            QCM 3
-          </li>
-        </button>
-        </li>
-            -->
+      <div data-controller="acceuil">
+        <ul class="list-group list-group-flush" id="QMC-list">
+          <button type="button" class="btn" data-acceuil-target="count"><li class="list-group-item">QCM 1</li></button>
+          <button type="button" class="btn" data-acceuil-target="count"><li class="list-group-item">QCM 2</li></button>
+          <button type="button" class="btn" data-acceuil-target="count"><li class="list-group-item">...</li></button>
+          <!-- ... etc ... -->
+        </ul>
 
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
-        <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
-        <button type="button" class="btn"><li class="list-group-item">...</li></button>
-      </ul>
-      <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
-        <div class="d-flex justify-content-between align-items-center">
-          <!-- Bouton à gauche -->
-          <button class="btn btn-outline-primary">CODE</button>
+        <!-- target tot -->
+        <span data-acceuil-target="tot"></span>
 
-          <!-- 2 boutons à droite -->
-          <div class="btn-group">
-            <button class="btn"><i class="bi bi-trash"></i></button>
-            <button class="btn"><i class="bi bi-plus-square"></i></button>
+        <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-primary">CODE</button>
+
+            <div class="btn-group">
+              <button class="btn"><i class="bi bi-trash"></i></button>
+
+              <!-- bouton + : on déclenche count() du controller acceuil -->
+              <button class="btn" data-action="click->acceuil#count"><i class="bi bi-plus-square"></i></button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!--        Implémentation des QCM créer ici, format : 
+        <div data-controller="acceuil" data-acceuil-nb-value="0">
+        <button type="button" class="btn" data-action="click->acceuil#AddQcm" id="">
+          <li class="list-group-item">
+            QCM 3
+          </li>
+        </button>
+        </li>
+               -->
 
   <!-- CONTENU -->
   <section id="QCM-content" class="container-fluid mt-4">
@@ -75,11 +62,5 @@
       Le scroll fonctionne normalement.<br />
       Ajoute beaucoup de texte pour tester.
     </p>
-
-    <div data-controller="hello">
-      Test Stimulus
-    </div>
-
   </section>
 {% endblock %}
-
