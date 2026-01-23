@@ -28,6 +28,12 @@
 
   <body>
     {% block body %}
+
+    {% endblock %}
+
+    {# JS compilé par Webpack Encore (Bootstrap JS + ton JS) #}
+    {% block javascripts %}
+      {{ encore_entry_script_tags('app') }}
     {% endblock %}
     
  {% block javascripts %}

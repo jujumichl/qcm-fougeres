@@ -1,7 +1,7 @@
-import { Application } from "@hotwired/stimulus";
-import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers";
+import { startStimulusApp } from '@symfony/stimulus-bridge';
 
-const application = Application.start();
-const context = require.context("./controllers", true, /\.js$/);
-
-application.load(definitionsFromContext(context));
+export const app = startStimulusApp(require.context(
+  '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
+  true,
+  /\.js$/
+));

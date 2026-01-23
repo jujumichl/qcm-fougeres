@@ -8,8 +8,8 @@
 #   bin/console debug:router
 
 # Route de la page d'acceuil
-index:
-  path: /
-  controller: App\Controller\DefaultController::index
-  methods: [GET]
+#index:
+#  path: /
+#  controller: App\Controller\DefaultController::index
+#  methods: [GET]
 
