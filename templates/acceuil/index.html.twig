@@ -19,14 +19,14 @@
 
     <div class="offcanvas-body pb-5">
       <ul class="list-group list-group-flush" id="QMC-list">
-        <!--    Implémentation des QCM créer ici, format : 
+        <!--     Implémentation des QCM créer ici, format : 
         <button type="button" class="btn">
           <li class="list-group-item">
             QCM 3
           </li>
         </button>
         </li>
-           -->
+            -->
 
         <button type="button" class="btn"><li class="list-group-item">QCM 1</li></button>
         <button type="button" class="btn"><li class="list-group-item">QCM 2</li></button>
@@ -75,6 +75,18 @@
       Le scroll fonctionne normalement.<br />
       Ajoute beaucoup de texte pour tester.
     </p>
+
+    <div data-controller="hello">
+      <input data-hello-target="input" type="text" />
+      <button data-action="click->hello#greet">bouh</button>
+      <span data-hello-target="output"></span>
+    </div>
+
+    <div data-controller="greet">
+      <input data-greet-target="input" type="text" />
+      <button data-action="click->greet#greet">Dire bonjour</button>
+      <div data-greet-target="output"></div>
+    </div>
   </section>
 {% endblock %}
 {% block javascripts %}
