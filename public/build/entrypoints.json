@@ -1,0 +1,13 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/stage_fougeres_owen/qcm/public/build/runtime.js",
+        "/stage_fougeres_owen/qcm/public/build/app.js"
+      ],
+      "css": [
+        "/stage_fougeres_owen/qcm/public/build/app.css"
+      ]
+    }
+  }
+}
