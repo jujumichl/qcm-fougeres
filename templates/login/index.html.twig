@@ -5,34 +5,31 @@
 {% endblock %}
 
 {% block body %}
-  <style>
-    
-  </style>
-
   <div class="d-flex justify-content-center mt-5">
     <img src="https://intranet.fougeres.fr/wp-content/uploads/2019/12/Logo-foug%c3%a8res-quadri.png" alt="Logo de Fougères" width="15%" height="15%" />
   </div>
 
-  <div data-controller="hello">hahaha</div>
-
   <div class="d-flex justify-content-center mt-5">
-    <div class="card shadow p-4" style="width: 375px;">
-      <div class="card-header text-center fw-bold text-white mb-3">Bienvenue sur le site QCM de Fougère</div>
-      <form action="{{ path('page_login') }}" method="POST">
-        <fieldset>
-          <div class="mb-3">
-            <label for="_username" class="form-label">Nom d'utilisateur</label>
-            <input type="text" id="_username" name="_username" class="form-control" placeholder="Identifiant" />
-          </div>
-          <div class="mb-3">
-            <label for="_password" class="form-label">Mot de passe</label>
-            <input type="password" id="_password" name="_password" class="form-control" placeholder="Mot de passe" />
-          </div>
-          <div>
-            <button type="submit" class="btn-orange w-100">S'identifier</button>
-          </div>
-        </fieldset>
-      </form>
+    <div class="card shadow" style="width: 400px;">
+      <div class="card-header text-center fw-bold card-orange">Bienvenue sur QCM Fougères</div>
+
+      <div class="card-body p-4">
+        <form action="{{ path('page_login') }}" method="POST">
+          <fieldset>
+            <div class="mb-3">
+              <label for="_username" class="form-label">Nom d'utilisateur</label>
+              <input type="text" id="_username" name="_username" class="form-control" placeholder="Identifiant" />
+            </div>
+
+            <div class="mb-4">
+              <label for="_password" class="form-label">Mot de passe</label>
+              <input type="password" id="_password" name="_password" class="form-control" required minlength="8" placeholder="Mot de passe" />
+            </div>
+
+            <button type="submit" class="btn-orange btn-size w-100">S'identifier</button>
+          </fieldset>
+        </form>
+      </div>
     </div>
   </div>
 {% endblock %}
