@@ -7,7 +7,7 @@ export default class extends Controller {
 
    // Vérifie que le controller est bien connecté et fontionnelle
    connect() {
-    alert("🔥 STIMULUS FONCTIONNE 🔥");
+    console.log("🔥 STIMULUS FONCTIONNE 🔥");
   }
 
   redirectVersAccueil() {
