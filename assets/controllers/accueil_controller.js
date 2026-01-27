@@ -10,4 +10,15 @@ export default class extends Controller {
   count(){
     this.totTarget.textContent = this.countTargets.length;
   }
+  
+  select(event) {
+  this.countTargets.forEach(btn =>
+    btn.classList.remove("is-selected")
+  )
+  event.currentTarget.classList.add("is-selected")
+}
+
+
+  //this.countTargets.forEach(...)
+
 }

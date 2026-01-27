@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Accueil
+{% endblock %}
+
+{% block body %}
+  <section class="p-2">
+    <!-- Bouton toggle -->
+    <button class="btn mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"><i class="bi bi-arrow-bar-right"></i></button>
+  </section>
+
+  <!-- OFFCANVAS -->
+  <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
+    <div class="offcanvas-header">
+      <a href="{{ path('page_login') }}" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
+      <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
+    </div>
+
+    <div class="offcanvas-body pb-5">
+      <div data-controller="acceuil">
+        <ul class="list-group list-group-flush" id="QMC-list">
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+
+            <button type="button" class="qcm-btn" data-acceuil-target="count" data-action="click->acceuil#select">QCM 2</button>
+          </li>
+          <!-- ... etc ... -->
+        </ul>
+
+        <!-- target tot -->
+        <span data-acceuil-target="tot"></span>
+
+        <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#codeModal">CODE</button>
+            <div class="btn-group">
+              <button class="btn" title="Supprimer les QCM séléctionner"><i class="bi bi-trash"></i></button>
+
+              <!-- bouton + : on déclenche count() du controller acceuil -->
+              <button class="btn" data-action="click->acceuil#count"><i class="bi bi-plus-square"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL du code pour le QCM -->
+  <div class="modal fade" id="codeModal" tabindex="-1" aria-labelledby="codeModalLibelle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="d-flex flex-row-reverse">
+          <button type="button" class="btn-close mt-3 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="QCM-code" class="col-form-label fs-5">Code du QCM</label>
+              <input type="text" class="form-control" id="QCM-code" maxlength="7" />
+            </div>
+          </form>
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <button type="button" class="btn btn-primary mb-3 me-3">Send message</button>
+          <button type="button" class="btn btn-secondary mb-3 me-3" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>y
+
+  <!--          Implémentation des QCM créer ici, format : 
+        <div data-controller="acceuil" data-acceuil-nb-value="0">
+        <button type="button" class="btn" data-action="click->acceuil#AddQcm" id="">
+          <li class="list-group-item">
+            QCM 3
+          </li>
+        </button>
+        </li>
+                 -->
+
+  <!-- CONTENU -->
+  <section id="QCM-content" class="container-fluid mt-4">
+    <p>
+      Contenu principal…<br />
+      Le scroll fonctionne normalement.<br />
+      Ajoute beaucoup de texte pour tester.
+    </p>
+  </section>
+{% endblock %}
