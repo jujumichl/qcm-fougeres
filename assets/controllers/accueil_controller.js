@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['count', 'tot'];
+  static targets = ['count', 'tot', 'case'];
 
   connect() {
     this.totTarget.textContent = this.countTargets.length;
@@ -17,7 +17,11 @@ export default class extends Controller {
   )
   event.currentTarget.classList.add("is-selected")
 }
-
+allSelect(){
+  this.caseTargets.forEach(box =>
+    box.checked = !box.checked
+  )
+}
 
   //this.countTargets.forEach(...)
 
