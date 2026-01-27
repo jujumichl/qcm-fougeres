@@ -1,0 +1,13 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/truc/qcm/public/build/runtime.js",
+        "/truc/qcm/public/build/app.js"
+      ],
+      "css": [
+        "/truc/qcm/public/build/app.css"
+      ]
+    }
+  }
+}
