@@ -1,10 +1,12 @@
+import { startStimulusApp } from '@symfony/stimulus-bridge';
+// Bootstrap
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+// Styles
 import './styles/app.scss';
-// Styles page login
 import './styles/login.scss';
+import './styles/accueil.scss';
 
 import { startStimulusApp } from '@symfony/stimulus-bridge';
 
