@@ -8,8 +8,6 @@ import './styles/app.scss';
 import './styles/login.scss';
 import './styles/accueil.scss';
 
-import { startStimulusApp } from '@symfony/stimulus-bridge';
-
 export const app = startStimulusApp(require.context(
   '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
   true,
