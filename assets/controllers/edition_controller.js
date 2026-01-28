@@ -3,10 +3,10 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-   static targets = [ "reponse", "divReponse", "addRepBtn"] 
+  static targets = ["reponse", "divReponse", "addRepBtn"]
 
-   // Vérifie que le controller est bien connecté et fontionnelle
-   connect() {
+  // Vérifie que le controller est bien connecté et fontionnelle
+  connect() {
     console.log("🔥 STIMULUS FONCTIONNE 🔥");
   }
 
@@ -20,33 +20,63 @@ export default class extends Controller {
     // On compte combien de réponses déjà existantes
     let num = this.reponseTargets.length + 1
 
-    // Crée le nouvel élément
-    const div = document.createElement("div");
-    div.className = "form-check";
+    if(num - 1 > 0){  
+      let targetNum = this.reponseTargets[num - 2].id;
+      targetNum = targetNum.split("p") 
+      num = Number(targetNum[1]) + 1
+      console.log(num);
+    }
 
-    // Crée le nouvel input et label
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.name = "reponse"; // même groupe
-    input.id = `rep${num}`;
-    input.value = `Option ${num}`;
-    input.className = "form-check-input";
-    input.dataset.editionTarget = "reponse";
+    if (this.reponseTargets.length < 5) {
+      
+      // Crée le nouvel élément
+      const div = document.createElement("div");
+      div.className = "d-flex align-items-center gap-2";
 
-    const label = document.createElement("label");
-    label.htmlFor = input.id;
-    label.textContent = `Option ${num}`;
-    label.className = "form-check-label";
+      const btnSuppr = document.createElement("button");
+      btnSuppr.type = "button";
+      btnSuppr.className = "btn";
+      btnSuppr.title = "supprimer";
+      btnSuppr.dataset.action = "click->edition#supprReponse";
 
-    div.appendChild(input);
-    div.appendChild(label);
+      // Création de l’icône
+      const icon = document.createElement("i");
+      icon.className = "bi bi-dash-circle";
+      icon.style.color = "red";
 
-    const btnRep = this.addRepBtnTarget;
+      // Ajout de l’icône dans le bouton
+      btnSuppr.appendChild(icon);
 
-    this.divReponseTarget.insertBefore(div, btnRep);
+      // Crée le nouvel input et label
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.name = "reponse"; // même groupe
+      input.id = `rep${num}`;
+      input.value = `Option ${num}`;
+      input.className = "form-check-input";
+      input.dataset.editionTarget = "reponse";
+
+      const label = document.createElement("label");
+      label.htmlFor = input.id;
+      label.textContent = `Option ${num}`;
+      label.className = "form-check-label";
+
+      div.appendChild(btnSuppr);
+      div.appendChild(input);
+      div.appendChild(label);
+
+      const btnRep = this.addRepBtnTarget;
+
+      this.divReponseTarget.insertBefore(div, btnRep);
+    }
   }
+  supprReponse(event) {
+    // bouton cliqué
+    const button = event.currentTarget;
 
-  supprReponse(){
-    
+    // on remonte à la div parente
+    const reponseDiv = button.parentElement;
+
+    reponseDiv.remove();
   }
 }
