@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-  static targets = ["reponse", "divReponse", "addRepBtn"]
+  static targets = ["reponse", "divReponse", "addRepBtn", "formQcm"]
 
   // Vérifie que le controller est bien connecté et fontionnelle
   connect() {
@@ -31,39 +31,44 @@ export default class extends Controller {
       
       // Crée le nouvel élément
       const div = document.createElement("div");
-      div.className = "d-flex align-items-center gap-2";
+      div.classList.add("d-flex", "align-items-center", "gap-3", "mb-3");
 
       const btnSuppr = document.createElement("button");
       btnSuppr.type = "button";
-      btnSuppr.className = "btn";
-      btnSuppr.title = "supprimer";
+      btnSuppr.classList.add("btn");
+      btnSuppr.title = "supprimer une réponse";
       btnSuppr.dataset.action = "click->edition#supprReponse";
 
       // Création de l’icône
       const icon = document.createElement("i");
-      icon.className = "bi bi-dash-circle";
+      icon.classList.add("bi", "bi-dash-circle");
       icon.style.color = "red";
 
       // Ajout de l’icône dans le bouton
       btnSuppr.appendChild(icon);
 
-      // Crée le nouvel input et label
-      const input = document.createElement("input");
-      input.type = "checkbox";
-      input.name = "reponse"; // même groupe
-      input.id = `rep${num}`;
-      input.value = `Option ${num}`;
-      input.className = "form-check-input";
-      input.dataset.editionTarget = "reponse";
+      // Créer l'input pour l'utilisateur
+      const inputUser = document.createElement("input");
+      inputUser.type = "checkbox";
+      inputUser.name = "userReponse";
+      inputUser.classList.add("form-check-input");
+      inputUser.id = `userRep${num}`;
+      inputUser.disabled = true;
 
-      const label = document.createElement("label");
-      label.htmlFor = input.id;
-      label.textContent = `Option ${num}`;
-      label.className = "form-check-label";
+      // Créer l'input pour insérer une réponse coté edition
+      const inputTxt = document.createElement("input");
+      inputTxt.type = "text";
+      inputTxt.name = "reponseEdition";
+      inputTxt.classList.add("form-control", "me-4");
+      inputTxt.id = `rep${num}`;
+      inputTxt.dataset.editionTarget = "reponse";
+      if(inputTxt.id == "rep1"){
+        inputTxt.placeholder = "Ecrivez une réponse..."
+      }
 
       div.appendChild(btnSuppr);
-      div.appendChild(input);
-      div.appendChild(label);
+      div.append(inputUser);
+      div.appendChild(inputTxt);
 
       const btnRep = this.addRepBtnTarget;
 
@@ -79,4 +84,5 @@ export default class extends Controller {
 
     reponseDiv.remove();
   }
+
 }

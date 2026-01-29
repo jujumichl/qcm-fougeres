@@ -6,7 +6,7 @@
 
 {% block body %}
   <div class="d-flex flex-column align-items-center mt-5" data-controller="edition">
-    <form action="" method="POST" class="w-25">
+    <form action="" method="POST" class="col-4" data-edition-target="formQcm">
       <div class="card mx-auto">
         <div class="card-header text-center fw-bold card-orange">Personnalisez votre QCM :</div>
         <div class="card-body p-4">
@@ -26,16 +26,19 @@
 
       <!-- Question 1 -->
       <div class="card mt-5 mx-auto">
-        <div class="card-header">
-          <textarea id="_question" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
+        <div class="card-header d-flex align-items-start gap-2">
+          <label for="_question" class="col-form-label mt-2">1.</label>
+          <textarea id="_question" name="question" rows="1" style="resize: none;" class="form-control mt-1 mb-1" placeholder="Insérez votre question..."></textarea>
         </div>
         <div class="card-body" data-edition-target="divReponse">
+        
           <div class="mt-auto text-end" data-edition-target="addRepBtn">
             <button type="button" class="btn btn-bottom-right" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
           </div>
         </div>
       </div>
-      <div class="text-center mt-4">
+
+      <div class="text-center mt-4 mb-4">
         <button type="button" class="btn btn-lg" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
       </div>
     </form>
