@@ -1,10 +1,3 @@
-Très bien 👍
-Si tu veux gérer **toutes tes routes uniquement dans `config/routes.yaml`**, c’est parfaitement possible et même conseillé pour une structure simple.
-
-Je te donne un guide complet, clair et prêt à copier/coller.
-
----
-
 # ✅ 1) Config minimale : désactiver l’import des routes par attributs
 
 Dans `config/routes.yaml`, tu ne mets QUE tes routes.
