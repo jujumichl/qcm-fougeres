@@ -26,13 +26,26 @@
 
       <!-- Question 1 -->
       <div class="card mt-5 mx-auto">
-        <div class="card-header">
-          <textarea id="_question" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
+        <div class="card-header d-flex align-items-start gap-2">
+          <label for="q1" class="form-label mt-2">1.</label>
+          <textarea id="q1" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
         </div>
-        <div class="card-body" data-edition-target="divReponse">
-          <div class="mt-auto text-end" data-edition-target="addRepBtn">
-            <button type="button" class="btn btn-bottom-right" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
-          </div>
+        <div class="card-body" data-edition-target="bodyReponse">
+          {# Exemple d'une réponse => 
+          <div class="d-flex align-items-center gap-3">
+            <!-- Bouton supprimer -->
+            <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
+
+            <!-- Checkbox utilisateur -->
+            <input type="checkbox" name="userRep" id="repUser1" class="form-check-input mb-3" data-edition-target="reponse" disabled />
+
+            <!-- Input pour éditer la réponse -->
+            <input type="text" name="editRep" id="rep1" class="form-control mb-3" placeholder="Mettez une réponse..." />
+          </div> #}
+        </div>
+        <div class="card-header d-flex justify-content-between align-items-center p-1">
+          <button type="button" class="btn btn-orange btn-sm ms-3">Choisir Type</button>
+          <button type="button" class="btn btn-bottom-left" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
         </div>
       </div>
       <div class="text-center mt-4">
