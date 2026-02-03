@@ -59,19 +59,19 @@
                 <div class="modal-body d-flex flex-column gap-3">
                   <!-- Affiche le choix "réponses multiple" -->
                   <div class="d-flex align-items-center gap-2">
-                    <input type="radio" name="radio" id="radio1" class="form-check-input" />
+                    <input type="radio" name="radio" id="radio1" value="multiple" class="form-check-input" data-edition-target="type"/>
                     <label for="radio1" class="form-check-label ">Choix multiple</label>
                     <i class="bi bi-check-square fs-5"></i>
                   </div>
                   <!-- Affiche le choix "réponse unique" -->
                   <div class="d-flex align-items-center gap-2"> 
-                    <input type="radio" name="radio" id="radio2" class="form-check-input" />
+                    <input type="radio" name="radio" id="radio2" value="unique" class="form-check-input" data-edition-target="type" />
                     <label for="radio2" class="form-check-label">Choix unique</label>
                     <i class="bi bi-record-circle fs-5"></i>
                   </div>
                    <!-- Affiche une liste de réponse -->
                   <div class="d-flex align-items-center gap-2">
-                    <input type="radio" name="radio" id="radio3" class="form-check-input" />
+                    <input type="radio" name="radio" id="radio3" value="liste" class="form-check-input" data-edition-target="type"/>
                     <label for="radio3" class="form-check-label">Liste de réponse</label>
                     <i class="bi bi-menu-button-wide-fill fs-4"></i>
                   </div>
@@ -79,7 +79,7 @@
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                  <button type="button" class="btn btn-primary" data-action="edition#typeReponse">Valider</button>
+                  <button type="button" class="btn btn-primary" data-action="edition#changerType">Valider</button>
                 </div>
               </div>
             </div>

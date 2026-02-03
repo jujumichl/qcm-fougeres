@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-  static targets = ["reponse", "bodyReponse"]
+  static targets = ["reponse", "bodyReponse", "type"]
   static values = {
     type : {Type:String, default:"unique"}
   }
@@ -49,9 +49,9 @@ export default class extends Controller {
 
     // Crée le nouvel input qui sera visible côté utilisateur
     const inputUser = document.createElement("input");
-    inputUser.type = "radio";
+    inputUser.type = "checkbox";
     inputUser.name = "userRep"; // même groupe pour tous les inputs user
-    inputUser.id = `repUser${num}`; // Le num est récupérer par la boucle IF
+    // inputUser.id = `repUser${num}`; Le num est récupérer par la boucle IF
     inputUser.className = "form-check-input mb-3";
     inputUser.dataset.editionTarget = "reponse";
     inputUser.disabled = "false";
@@ -83,10 +83,12 @@ export default class extends Controller {
     reponseDiv.remove();
   }
   
-  typeReponse(event){
-    event.currentTarget; //document.querySelector('[data-action="edition#typeReponse"]')
-    
+  changerType(){
+    const selectedType = this.typeTargets.find(r => r.checked).value;
+    this.typeValue = selectedType;
+    // test en console : console.log (this.typeValue);
   }
+  
   /**
   ajoutQuestion(event) {
     event.preventDefault(); 
