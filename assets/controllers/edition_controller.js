@@ -3,76 +3,70 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-  static targets = ["reponse", "divReponse", "addRepBtn", "formQcm", "question"]
+  static targets = ["reponse", "bodyReponse"]
 
-  //if (document.getElementsByClassName('btn btn-bottom-right')[0].parentElement.previousElementSibling) {id = 1 } else {if id précédent < 6 -> id pécédent +1 sinon non}
+  ajoutReponse() {
+ 
+    // On compte combien de réponses déjà existante
+    let num = this.reponseTargets.length + 1
 
-  // Vérifie que le controller est bien connecté et fontionnelle
-  connect() {
-    console.log("🔥 STIMULUS FONCTIONNE 🔥");
-  }
+    // Permet de générer et d’insérer un chiffre unique dans l’ID des réponses
+    if (num - 1 > 0) {
+      /**
+       * Récupère l'id de l'avant avant dernière réponse
+       * exemple d'id pour la 1ère réponse : rep1 
+       */ 
+      let targetNum = this.reponseTargets[num - 2].id;
 
-  ajoutReponse(event) {
-    event.preventDefault(); // éviter le comportement par défaut du bouton
+      //On fais un split pour récupérer que le chiffre
+      targetNum = targetNum.split("p");
 
-    // On compte combien de réponses déjà existantes
-    let numR = this.reponseTargets.length + 1
-
-    if (numR - 1 > 0) {
-      let targetNumR = this.reponseTargets[numR - 2].id;
-      targetNumR = targetNumR.split("p")
-      numR = Number(targetNumR[1]) + 1
-      console.log(numR);
+      // On ajoute 1 à chaque boucle
+      num = Number(targetNum[1]) + 1;
+      console.log(num);
     }
 
-    if (this.reponseTargets.length >= 5) return;
+    // Crée la div qui contient les élements d'une réponse côté editeur
+    const div = document.createElement("div");
+    div.className = "d-flex align-items-center gap-3";
 
-      // Crée le nouvel élément
-      const div = document.createElement("div");
-      div.classList.add("d-flex", "align-items-center", "gap-3", "mb-3");
+    // bouton pour supprimer une réponse
+    const btnSuppr = document.createElement("button");
+    btnSuppr.type = "button";
+    btnSuppr.className = "btn mb-3";
+    btnSuppr.title = "supprimer";
+    btnSuppr.dataset.action = "click->edition#supprReponse";
 
-      const btnSuppr = document.createElement("button");
-      btnSuppr.type = "button";
-      btnSuppr.classList.add("btn");
-      btnSuppr.title = "supprimer une réponse";
-      btnSuppr.dataset.action = "click->edition#supprReponse";
+    // Création de l’icône supprimer
+    const icon = document.createElement("i");
+    icon.className = "bi bi-dash-circle";
+    icon.style.color = "red";
 
-      // Création de l’icône
-      const iconSuppr = document.createElement("i");
-      iconSuppr.classList.add("bi", "bi-dash-circle");
-      iconSuppr.style.color = "red";
+    // Ajout de l’icône dans le bouton
+    btnSuppr.appendChild(icon);
 
-      // Ajout de l’icône dans le bouton
-      btnSuppr.append(iconSuppr);
+    // Crée le nouvel input qui sera visible côté utilisateur
+    const inputUser = document.createElement("input");
+    inputUser.type = "checkbox";
+    inputUser.name = "userRep"; // même groupe pour tous les inputs user
+    inputUser.id = `repUser${num}`; // Le num est récupérer par la boucle IF
+    inputUser.className = "form-check-input mb-3";
+    inputUser.dataset.editionTarget = "reponse";
+    inputUser.disabled = "true";
 
-      // Créer l'input pour l'utilisateur
-      const inputUser = document.createElement("input");
-      inputUser.type = "checkbox";
-      inputUser.name = "userReponse";
-      inputUser.classList.add("form-check-input");
-      inputUser.id = `userRep${numR}`;
-      inputUser.disabled = true;
+    // Crée le nouvel input pour insérer une réponse côté edition
+    const inputTxt = document.createElement("input");
+    inputTxt.type = "text";
+    inputTxt.name = "editRep";
+    inputTxt.id = `rep${num}`;
+    inputTxt.className = "form-control mb-3"; // me-4
+    if (num === 1) {
+      inputTxt.placeholder = "Mettez une réponse...";
+    }
 
-      // Créer l'input pour insérer une réponse coté edition
-      const inputTxt = document.createElement("input");
-      inputTxt.type = "text";
-      inputTxt.name = "reponseEdition";
-      inputTxt.classList.add("form-control", "me-4");
-      inputTxt.id = `rep${numR}`;
-      inputTxt.dataset.editionTarget = "reponse";
-      if (inputTxt.id == "rep1") {
-        inputTxt.placeholder = "Ecrivez une réponse..."
-      }
+    div.append(btnSuppr, inputUser, inputTxt);
 
-       // bouton qui a été cliqué
-      const button = event.currentTarget
-
-      const cardBody = button.closest(".card-body")
-      const cardRep = cardBody.querySelectorAll('[data-edition-target="reponse"]')
-
-      div.append(btnSuppr, inputUser, inputTxt);
-
-      cardBody.insertBefore(div, button.parentElement);
+    this.bodyReponseTarget.append(div);
   }
 
   supprReponse(event) {
@@ -81,7 +75,7 @@ export default class extends Controller {
     // bouton cliqué
     const button = event.currentTarget;
 
-    // on remonte à la div parente
+    // on remonte à la div parente qui contient les inputs et le bouton supprimer
     const reponseDiv = button.parentElement;
 
     reponseDiv.remove();

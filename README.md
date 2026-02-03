@@ -13,7 +13,9 @@ Utilise Symfony pour le backend et Webpack Encore pour compiler les assets (JS/C
 
 ---
 
+
 ## Installation (dev)
+
 
 ### 1. Installer les dépendances
 ```bash
@@ -27,6 +29,95 @@ npm install
 npm run dev
 ```
 ---
+
+## Prérequis PHP (erreur Composer possible)
+
+### 1. Arrêter XAMPP
+
+Dans le **XAMPP Control Panel** :
+
+* Stop **Apache**
+* Stop **MySQL**
+
+---
+
+### 2️. Télécharger PHP
+
+* Allez sur **[www.php.net](https://www.php.net/downloads.php)**
+* Téléchargez **la version adéquate**
+* Version **Thread Safe**
+* Architecture **x64**
+* Format **ZIP**
+
+---
+
+### 3️. Sauvegarder l’ancien PHP
+
+Dans `C:\xampp\` :
+
+* Renommez le dossier `php` en `php_old` (ou `php_backup`)
+
+---
+
+### 4️. Installer le nouveau PHP
+
+* Dézippez PHP 8.4
+* Renommez le dossier en `php`
+* Placez-le dans :
+
+```
+C:\xampp\php
+```
+
+---
+
+### 5️⃣ Copier la configuration
+
+Depuis l’ancien dossier PHP :
+
+* Copiez `php.ini`
+* Collez-le dans le nouveau dossier `php`
+
+---
+
+### 6️⃣ Vérifier les extensions
+
+Dans `C:\xampp\php\php.ini` :
+
+* Vérifize que `extension_dir="ext"`
+* Activez les extensions nécessaires (`pdo_mysql`, `intl`, etc.)
+
+---
+
+### 7️⃣ Redémarrer Apache
+
+Dans XAMPP :
+
+* Start **Apache**
+
+---
+
+### 8️⃣ Vérifier la version
+
+```bash
+php -v
+```
+
+Et dans le navigateur :
+
+```
+http://localhost/dashboard/phpinfo.php
+```
+
+---
+
+### 9️⃣ Vérifier Composer
+
+```bash
+where php
+composer update
+```
+
 
 ## Commandes utiles
 
@@ -68,7 +159,7 @@ Ils sont compilés dans :
 
 Le dossier `public/build/` **ne doit pas** être commité.
 
-## 💡 Astuce
+## Astuce
 
 Si le build ne fonctionne pas :
 
@@ -84,7 +175,7 @@ npm install @symfony/webpack-encore --save-dev
 
 ---
 
-## 🧠 Stimulus
+## Stimulus
 
 Stimulus est un micro-framework JS utilisé pour organiser le JS côté front.
 

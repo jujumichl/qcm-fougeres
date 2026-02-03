@@ -28,17 +28,25 @@
       <!-- Question 1 -->
       <div class="card mt-5 mx-auto">
         <div class="card-header d-flex align-items-start gap-2">
-          <label for="_question" class="col-form-label mt-2">1.</label>
-          <textarea id="_question" name="question" rows="1" style="resize: none;" data-edition-target="question" class="form-control mt-1 mb-1" placeholder="Insérez votre question..."></textarea>
+          <label for="q1" class="form-label mt-2">1.</label>
+          <textarea id="q1" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
         </div>
+        <div class="card-body" data-edition-target="bodyReponse">
+          {# Exemple d'une réponse => 
+          <div class="d-flex align-items-center gap-3">
+            <!-- Bouton supprimer -->
+            <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
 
-        <div class="card-body" data-edition-target="divReponse">
-      
+            <!-- Checkbox utilisateur -->
+            <input type="checkbox" name="userRep" id="repUser1" class="form-check-input mb-3" data-edition-target="reponse" disabled />
 
-          <div class="mt-auto text-end">
-            <button type="button" class="btn btn-bottom-right" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
-          </div>
-
+            <!-- Input pour éditer la réponse -->
+            <input type="text" name="editRep" id="rep1" class="form-control mb-3" placeholder="Mettez une réponse..." />
+          </div> #}
+        </div>
+        <div class="card-header d-flex justify-content-between align-items-center p-1">
+          <!-- Bouton pour Ajouter une réponse -->
+          <button type="button" class="btn btn-bottom-right" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
         </div>
       </div>
 
