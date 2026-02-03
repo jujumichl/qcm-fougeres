@@ -7,13 +7,14 @@
 {% block body %}
   <div class="d-flex flex-column align-items-center mt-5" data-controller="edition">
     <form action="" method="POST" class="col-4" data-edition-target="formQcm">
+
       <div class="card mx-auto">
         <div class="card-header text-center fw-bold card-orange">Personnalisez votre QCM :</div>
         <div class="card-body p-4">
           <fieldset>
             <div class="mb-3">
               <label for="_titre" class="form-label">Titre</label>
-              <input type="text" id="_titre" name="_titre" class="form-control" required placeholder="Votre titre..." />
+              <input type="text" id="_titre" name="_titre" class="form-control" placeholder="Votre titre..." />
             </div>
 
             <div class="mb-4">
@@ -28,19 +29,23 @@
       <div class="card mt-5 mx-auto">
         <div class="card-header d-flex align-items-start gap-2">
           <label for="_question" class="col-form-label mt-2">1.</label>
-          <textarea id="_question" name="question" rows="1" style="resize: none;" class="form-control mt-1 mb-1" placeholder="Insérez votre question..."></textarea>
+          <textarea id="_question" name="question" rows="1" style="resize: none;" data-edition-target="question" class="form-control mt-1 mb-1" placeholder="Insérez votre question..."></textarea>
         </div>
+
         <div class="card-body" data-edition-target="divReponse">
-        
-          <div class="mt-auto text-end" data-edition-target="addRepBtn">
+      
+
+          <div class="mt-auto text-end">
             <button type="button" class="btn btn-bottom-right" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
           </div>
+
         </div>
       </div>
 
       <div class="text-center mt-4 mb-4">
-        <button type="button" class="btn btn-lg" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
+        <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
       </div>
+
     </form>
   </div>
 {% endblock %}
