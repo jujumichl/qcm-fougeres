@@ -11,7 +11,7 @@
       <button class="btn mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"><i class="bi bi-arrow-bar-right"></i></button>
 
       <!-- OFFCANVAS -->
-      <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
         <div class="offcanvas-header">
           <a href="{{ path('page_login') }}" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
           <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
@@ -23,24 +23,21 @@
 
         <div class="offcanvas-body pb-5">
           <ul class="list-group list-group-flush" data-accueil-target="list">
-            <!--   
-           Implémentation des QCM créer ici, format (dans le menu de modification): 
-            <li class="list-group-item p-0 d-flex align-items-center gap-2">
-              <input type="checkbox" class="p-4 m-2" data-accueil-target="case"/>
-              <button type="button" class="qcm-btn flex-grow-1" 
-                data-accueil-target="QCM" data-action="click->accueil#select">
-                QCM ${nombre du QCM}
-              </button>
-              <div class="d-flex gap-1" data-accueil-target="renameValide">
-                <button class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-outline-sucess no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide">
-                  <i class="bi bi-check"></i>
-                </button>
-              </div>
-            </li>
-             -->
+
+            <template id="qcm-template">
+              <li class="list-group-item p-0 d-flex align-items-center gap-2">
+                <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
+
+                <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-action="click->accueil#select"></button>
+
+                <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
+                  <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
+
+                  <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
+                </div>
+              </li>
+            </template>
+
           </ul>
 
           <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
@@ -84,7 +81,7 @@
     <div class="modal fade" id="corbeilleModal" tabindex="-1" aria-labelledby="corbeilleModalLibelle" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header ">
+          <div class="modal-header">
             <h5 class="modal-title w-100 text-center">Corbeille</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -100,16 +97,16 @@
                   </tr>
                 </thead>
                 <tbody data-accueil-target="corbeille">
-                  {# 
-                  <tr data-accueil-target="QCMSuppr">
-                    <th class="text-wrap col-4">QCM 3</th>
-                    <td class="text-wrap col-4">2020/20/20</td>
-                    <td class="text-wrap col-4">2020/20/20</td>
-                    <td class="text-center align-middle">
-                      <button type="button" class="btn btn-success" data-action="recupQcm">Récupérer</button>
-                    </td>
-                  </tr> 
-                  #}
+                  <template id="corbeille-template">
+                    <tr data-accueil-target="QCMSuppr">
+                      <td class="text-wrap col-4"></td>
+                      <td class="text-wrap col-4"></td>
+                      <td class="text-wrap col-4"></td>
+                      <td class="text-center align-middle">
+                        <button type="button" class="btn btn-success" data-action="click->accueil#recupQcm">Récupérer</button>
+                      </td>
+                    </tr>
+                  </template>
                 </tbody>
               </table>
             </div>
@@ -147,8 +144,8 @@
 
     <!-- vérifier pour le all selected si au moins 2 cases sont séléctionnées -->
     <!-- CONTENU -->
-    <main id="content" data-accueil-target="content" class="container mt-4">
-      <h1 class="position-absolute top-50 start-50 translate-middle text-center text-break fs-1 fs-md-1">Bienvenue sur le site de QCM de la ville de fougères</h1>
+    <main data-accueil-target="content" class="container mt-4">
+      {% include './accueil/defaultContent.html.twig' %}
     </main>
   </div>
 {% endblock %}

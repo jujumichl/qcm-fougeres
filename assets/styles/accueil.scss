@@ -54,23 +54,6 @@
 }
 
 
-// Pour gérer le contenue main de la page quand 
-// le menu est ouvert et quand il est fermer
-#content {
-  transition: margin-left 0.3s ease;
-}
-
-#content.menu-open {
-  margin-left: var(--bs-offcanvas-width, 400px);
-}
-
-@media (max-width: 768px) {
-  #content.menu-open {
-    margin-left: 0;
-  }
-}
-
-
 :root {
   --fougeres-orange: #FF8C00;
   --fougeres-orange-dark: #E67600;

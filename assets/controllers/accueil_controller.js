@@ -1,7 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  // Définition des targets
   static targets = [
     'QCM',
     'case',
@@ -17,44 +16,19 @@ export default class extends Controller {
     'corbeille',
     'QCMSuppr',
   ];
+
   static values = {
     mode: { type: String, default: "normal" }
   }
-  /**
-   * Définition des écouteur d'évènement
-   */
+
   connect() {
-    this.nomQcm = null;
-    this.onShown = () => {
-      this.contentTarget.classList.add("menu-open");
-    };
-
-    this.onHidden = () => {
-      this.contentTarget.classList.remove("menu-open");
-    };
-
-    this.element.addEventListener("shown.bs.offcanvas", this.onShown);
-    this.element.addEventListener("hidden.bs.offcanvas", this.onHidden);
-  }
-
-  /**
-   * Executer lors de la deconnexion de la page, pour supprimer les écouteurs d'évenment 
-   */
-  disconnect() {
-    this.element.removeEventListener("shown.bs.offcanvas", this.onShown);
-    this.element.removeEventListener("hidden.bs.offcanvas", this.onHidden);
+    this.selectedQcms = new Set();
   }
 
   getQcmItem(element) {
     return element.closest("li");
   }
 
-
-  /**
-   * //////////////////////////////////////////////////////////////////////////////////
-   * A voir avec la BDD
-   * Ajout un QCM
-   */
   addQcm(evt, nameQCM = "") {
     let nb = this.QCMTargets.length + 1;
 
@@ -66,61 +40,21 @@ export default class extends Controller {
     }
 
     const isModif = this.modeValue === "modif";
+    const template = document.getElementById("qcm-template");
+    const li = template.content.firstElementChild.cloneNode(true);
 
-    const li = document.createElement("li");
-    li.classList.add("list-group-item", "p-0", "d-flex", "align-items-center", "gap-2");
+    const id = Date.now().toString();
+    const btn = this.createQcmButton(id, nameQCM || `QCM ${nb}`);
+    this.replaceQcmButton(li, btn);
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.classList.add("p-4", "m-2");
-    checkbox.dataset.accueilTarget = "case";
-    checkbox.dataset.action = "click->accueil#caseSelectedM"
-    checkbox.classList.toggle("is-hidden", !isModif);
+    if (isModif) {
+      li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
+      li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+    }
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.classList.add("qcm-btn", "flex-grow-1");
-    btn.dataset.accueilTarget = "QCM";
-    btn.dataset.action = "click->accueil#select";
-    btn.textContent = nameQCM !== "" ? nameQCM : `QCM ${nb}`;
-
-    const div = document.createElement("div");
-    div.dataset.accueilTarget = "renameValide";
-    div.classList.add("d-flex", "gap-1");
-    div.classList.toggle("is-hidden", !isModif);
-
-    const btnRename = document.createElement("button");
-    btnRename.type = "button";
-    btnRename.classList.add("btn", "btn-outline-warning", "no-border");
-    btnRename.dataset.accueilTarget = "rename";
-    btnRename.dataset.action = "click->accueil#rename";
-    btnRename.classList.toggle("is-hidden", !isModif);
-
-    const pencil = document.createElement("i");
-    pencil.classList.add("bi", "bi-pencil");
-    btnRename.append(pencil);
-
-    const btnValide = document.createElement("button");
-    btnValide.type = "button";
-    btnValide.classList.add("btn", "btn-outline-success", "no-border", "is-hidden");
-    btnValide.dataset.accueilTarget = "valide";
-    btnValide.dataset.action = "click->accueil#valide";
-
-    const check = document.createElement("i");
-    check.classList.add("bi", "bi-check");
-    btnValide.append(check);
-
-    div.append(btnRename, btnValide);
-    li.append(checkbox, btn, div);
     this.listTarget.append(li);
   }
 
-
-  /**
-   * //////////////////////////////////////////////////////////////////////////////////
-   * A voir avec la BDD
-   * supprime un QCM
-   */
   delQcm() {
     if (confirm("Voulez vous vraiment supprimer ces QCM ?")) {
       this.caseTargets.forEach(box => {
@@ -132,52 +66,66 @@ export default class extends Controller {
     }
   }
 
-  /**
-   * Met en valeur l'élément sélectionner
-   */
   select(event) {
     const btn = event.currentTarget;
+    const id = btn.dataset.qcmId;
 
     if (this.modeValue === "normal") {
-      this.QCMTargets.forEach(b => b.classList.remove("is-selected"));
-      btn.classList.add("is-selected");
-      return;
+      this.selectedQcms.clear();
+      this.selectedQcms.add(id);
+    } else {
+      this.selectedQcms.has(id)
+        ? this.selectedQcms.delete(id)
+        : this.selectedQcms.add(id);
     }
 
-    // mode modif
-    const checkbox = btn.previousElementSibling;
-    checkbox.checked = !checkbox.checked;
-
-    this.caseSelectedM();
+    this.renderSelection();
   }
 
+  renderSelection() {
+    this.QCMTargets.forEach(btn => {
+      const id = btn.dataset.qcmId;
+
+      btn.classList.toggle(
+        'is-selected',
+        this.selectedQcms.has(id)
+      );
+
+      const checkbox = btn.previousElementSibling;
+      if (checkbox) {
+        checkbox.checked = this.selectedQcms.has(id);
+      }
+    });
+
+    this.caseAllSelectTarget.checked =
+      this.selectedQcms.size === this.QCMTargets.length &&
+      this.selectedQcms.size > 0;
+  }
 
   caseSelectedM() {
-    // Sync is-selected <-> checkbox
-    this.QCMTargets.forEach(qcm => {
-      const checkbox = qcm.previousElementSibling;
-      qcm.classList.toggle("is-selected", checkbox.checked);
-    });
-
-    // Sync "tout sélectionner"
-    const checkedCount = this.caseTargets.filter(c => c.checked).length;
-    this.caseAllSelectTarget.checked =
-      checkedCount === this.caseTargets.length && checkedCount > 0;
-
-  }
-  /**
-   * Sélectionne toute les cases
-   */
-  allSelect() {
-    const checked = this.caseAllSelectTarget.checked;
+    this.selectedQcms.clear();
 
     this.caseTargets.forEach(box => {
-      box.checked = checked;
+      if (box.checked) {
+        const btn = box.nextElementSibling;
+        this.selectedQcms.add(btn.dataset.qcmId);
+      }
     });
 
-    this.syncSelectionFromCases();
+    this.renderSelection();
   }
 
+  allSelect() {
+    if (this.caseAllSelectTarget.checked) {
+      this.QCMTargets.forEach(btn =>
+        this.selectedQcms.add(btn.dataset.qcmId)
+      );
+    } else {
+      this.selectedQcms.clear();
+    }
+
+    this.renderSelection();
+  }
 
   modif() {
     const isModif = this.modeValue !== "modif";
@@ -196,16 +144,16 @@ export default class extends Controller {
 
     if (isModif) {
       this.QCMTargets.forEach(qcm => {
-        if (qcm.classList.contains('is-selected')) {
+        if (this.selectedQcms.has(qcm.dataset.qcmId)) {
           qcm.previousElementSibling.checked = true;
         }
-      })
+      });
       this.caseSelectedM();
     }
+
     if (!isModif) {
-      this.QCMTargets.forEach(b =>
-        b.classList.remove("is-selected")
-      );
+      this.selectedQcms.clear();
+      this.renderSelection();
     }
 
     this.renameValideTargets.forEach(div => {
@@ -217,26 +165,22 @@ export default class extends Controller {
     });
 
     if (this.hasNameTarget) {
-      this.handleExistingRename()
+      this.handleExistingRename();
     }
   }
 
-
   rename(event) {
-    // gérer un éventuel renommage en cours
     this.handleExistingRename();
 
     const li = this.getQcmItem(event.currentTarget);
 
-    // Boutons rename / valide
     li.querySelector('[data-accueil-target="rename"]').classList.add("is-hidden");
     li.querySelector('[data-accueil-target="valide"]').classList.remove("is-hidden");
 
-    // Bouton QCM actuel
     const qcmBtn = li.querySelector('[data-accueil-target="QCM"]');
+    const id = qcmBtn.dataset.qcmId;
     this.nomQcm = qcmBtn.textContent;
 
-    // Création input
     const input = document.createElement("input");
     input.classList.add("flex-grow-1");
     input.value = this.nomQcm;
@@ -245,7 +189,6 @@ export default class extends Controller {
     const div = li.querySelector('[data-accueil-target="renameValide"]');
     li.insertBefore(input, div);
     input.focus();
-
 
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -259,41 +202,22 @@ export default class extends Controller {
       }
     });
 
-
     qcmBtn.remove();
+    li.dataset.qcmId = id;
   }
-
-
-
-
 
   valide(event) {
     const li = this.getQcmItem(event.currentTarget);
+    const id = li.dataset.qcmId;
 
-    // Cacher valide, afficher rename
     li.querySelector('[data-accueil-target="valide"]').classList.add("is-hidden");
     li.querySelector('[data-accueil-target="rename"]').classList.remove("is-hidden");
 
     const input = li.querySelector('[data-accueil-target="name"]');
-    const nom = input.value;
 
-    // Recréer le bouton QCM
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.classList.add("qcm-btn", "flex-grow-1");
-    btn.dataset.accueilTarget = "QCM";
-    btn.dataset.action = "click->accueil#select";
-    btn.textContent = nom;
+    const btn = this.createQcmButton(id, input.value);
+    this.replaceQcmButton(li, btn);
 
-    // Si checkbox cochée, on garde la sélection
-    if (li.querySelector('input[type="checkbox"]').checked) {
-      btn.classList.add('is-selected');
-    }
-
-    const div = li.querySelector('[data-accueil-target="renameValide"]');
-    li.insertBefore(btn, div);
-
-    // Supprimer l'input
     input.remove();
   }
 
@@ -301,19 +225,10 @@ export default class extends Controller {
     const input = li.querySelector('[data-accueil-target="name"]');
     if (!input) return;
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.classList.add("qcm-btn", "flex-grow-1");
-    btn.dataset.accueilTarget = "QCM";
-    btn.dataset.action = "click->accueil#select";
-    btn.textContent = value;
+    const id = li.dataset.qcmId;
 
-    if (li.querySelector('input[type="checkbox"]').checked) {
-      btn.classList.add("is-selected");
-    }
-
-    const div = li.querySelector('[data-accueil-target="renameValide"]');
-    li.insertBefore(btn, div);
+    const btn = this.createQcmButton(id, value);
+    this.replaceQcmButton(li, btn);
 
     input.remove();
 
@@ -321,11 +236,9 @@ export default class extends Controller {
     li.querySelector('[data-accueil-target="rename"]').classList.remove("is-hidden");
   }
 
-
-
   handleExistingRename() {
     const input = this.element.querySelector('[data-accueil-target="name"]');
-    if (!input) return true; // aucun renommage en cours → OK
+    if (!input) return true;
 
     const li = input.closest("li");
     const keep = confirm(
@@ -338,53 +251,55 @@ export default class extends Controller {
     return true;
   }
 
-  addCorbeille(liElement){
-    // Récupération de la date d'ajourd'hui et mise au format 
+  addCorbeille(liElement) {
     const today = new Date();
     const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1; // Months start at 0
+    let mm = today.getMonth() + 1;
     let dd = today.getDate();
     let dd7 = dd + 7;
+
     if (dd < 10) dd = '0' + dd;
     if (dd7 < 10) dd7 = '0' + dd7;
     if (mm < 10) mm = '0' + mm;
-    
-    let nameQCM = liElement.children[1].textContent;
-    let tr = document.createElement("tr");
-    tr.dataset.accueilTarget = "QCMSuppr";
-    
-    let tdNom = document.createElement('td');
-    tdNom.textContent = nameQCM;
-    tdNom.classList.add('text-wrap', 'col-4');
 
-    let tdDateSuppr = document.createElement('td');
-    tdDateSuppr.textContent = `${dd}/${mm}/${yyyy}`;
-    tdDateSuppr.classList.add('text-wrap', 'col-4');
+    const template = document.getElementById("corbeille-template");
+    const tr = template.content.firstElementChild.cloneNode(true);
 
-    let tdDateSupprDef = document.createElement('td');
-    tdDateSupprDef.textContent = `${dd7}/${mm}/${yyyy}`;
-    tdDateSupprDef.classList.add('text-wrap', 'col-4');
+    tr.children[0].textContent = liElement.children[1].textContent;
+    tr.children[1].textContent = `${dd}/${mm}/${yyyy}`;
+    tr.children[2].textContent = `${dd7}/${mm}/${yyyy}`;
 
-    let tdButton = document.createElement('td'); 
-    tdButton.classList.add('text-center', 'align-middle');
-
-    let button = document.createElement('button');
-    button.type = "button";
-    button.classList.add('btn', 'btn-success');
-    button.dataset.action = "click->accueil#recupQcm";
-    button.textContent = "Récupérer";
-
-    tdButton.append(button);
-    tr.append(tdNom, tdDateSuppr, tdDateSupprDef, tdButton);
     this.corbeilleTarget.append(tr);
     liElement.remove();
   }
 
-  recupQcm(evt){
+  recupQcm(evt) {
     let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
     if (this.modeValue !== 'modif') this.modif();
     this.addQcm("", nameQCM);
     evt.currentTarget.closest('tr').remove();
     if (this.modeValue !== 'normal') this.modif();
+  }
+
+  createQcmButton(id, name) {
+    const btn = document.createElement("button");
+    btn.dataset.qcmId = id;
+    btn.type = "button";
+    btn.classList.add("qcm-btn", "flex-grow-1");
+    btn.dataset.accueilTarget = "QCM";
+    btn.dataset.action = "click->accueil#select";
+    btn.textContent = name;
+    return btn;
+  }
+
+  replaceQcmButton(li, btn) {
+    const old = li.querySelector('[data-accueil-target="QCM"]');
+    const div = li.querySelector('[data-accueil-target="renameValide"]');
+
+    if (old) {
+      old.replaceWith(btn);
+    } else {
+      li.insertBefore(btn, div);
+    }
   }
 }
