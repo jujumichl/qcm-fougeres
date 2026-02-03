@@ -5,7 +5,7 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static targets = ["reponse", "bodyReponse", "type"]
   static values = {
-    type : {Type:String, default:"unique"}
+    type: { Type: String, default: "unique" }
   }
 
   ajoutReponse() {
@@ -17,7 +17,7 @@ export default class extends Controller {
       /**
        * Récupère l'id de l'avant avant dernière réponse
        * exemple d'id pour la 1ère réponse : rep1 
-       */ 
+       */
       let targetNum = this.reponseTargets[num - 2].id;
 
       //On fais un split pour récupérer que le chiffre
@@ -47,28 +47,39 @@ export default class extends Controller {
     // Ajout de l’icône dans le bouton
     btnSuppr.appendChild(icon);
 
-    // Crée le nouvel input qui sera visible côté utilisateur
-    const inputUser = document.createElement("input");
-    inputUser.type = "checkbox";
-    inputUser.name = "userRep"; // même groupe pour tous les inputs user
-    // inputUser.id = `repUser${num}`; Le num est récupérer par la boucle IF
-    inputUser.className = "form-check-input mb-3";
-    inputUser.dataset.editionTarget = "reponse";
-    inputUser.disabled = "false";
+    // On exclu la liste car ce n'est pas un élément <input> mais <select>
+    if (this.typeValue !== "liste") {
+      // Crée le nouvel input qui sera visible côté utilisateur
+      const inputUser = document.createElement("input");
 
-    // Crée le nouvel input pour insérer une réponse côté edition
-    const inputTxt = document.createElement("input");
-    inputTxt.type = "text";
-    inputTxt.name = "editRep";
-    inputTxt.id = `rep${num}`;
-    inputTxt.className = "form-control mb-3";
-    if (num === 1) {
-      inputTxt.placeholder = "Mettez une réponse...";
+      // Boucle pour déterminer le type d'input générer
+      if (this.typeValue === "unique") {
+        inputUser.type = "radio";
+      }
+      else{
+        inputUser.type = "checkbox";
+      }
+      inputUser.name = "userRep"; // même groupe pour tous les inputs user
+      // inputUser.id = `repUser${num}`; Le num est récupérer par la boucle IF
+      inputUser.className = "form-check-input mb-3";
+      inputUser.dataset.editionTarget = "reponse";
+      inputUser.disabled = "false";
+
+      // Crée le nouvel input pour insérer une réponse côté edition
+      const inputTxt = document.createElement("input");
+      inputTxt.type = "text";
+      inputTxt.name = "editRep";
+      inputTxt.id = `rep${num}`;
+      inputTxt.className = "form-control mb-3";
+      if (num === 1) {
+        inputTxt.placeholder = "Mettez une réponse...";
+      }
+
+      // Assemblage des différents éléments créés pour formé une réponse 
+      div.append(btnSuppr, inputUser, inputTxt);
+
+      this.bodyReponseTarget.append(div);
     }
-
-    div.append(btnSuppr, inputUser, inputTxt);
-
-    this.bodyReponseTarget.append(div);
   }
 
   supprReponse(event) {
@@ -82,13 +93,13 @@ export default class extends Controller {
 
     reponseDiv.remove();
   }
-  
-  changerType(){
+
+  changerType() {
     const selectedType = this.typeTargets.find(r => r.checked).value;
     this.typeValue = selectedType;
     // test en console : console.log (this.typeValue);
   }
-  
+
   /**
   ajoutQuestion(event) {
     event.preventDefault(); 
