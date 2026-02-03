@@ -6,28 +6,38 @@ export default class extends Controller {
   static targets = ["reponse", "bodyReponse"]
 
   ajoutReponse() {
-
-    // On compte combien de réponses déjà existantes
+ 
+    // On compte combien de réponses déjà existante
     let num = this.reponseTargets.length + 1
 
+    // Permet de générer et d’insérer un chiffre unique dans l’ID des réponses
     if (num - 1 > 0) {
+      /**
+       * Récupère l'id de l'avant avant dernière réponse
+       * exemple d'id pour la 1ère réponse : rep1 
+       */ 
       let targetNum = this.reponseTargets[num - 2].id;
+
+      //On fais un split pour récupérer que le chiffre
       targetNum = targetNum.split("p");
+
+      // On ajoute 1 à chaque boucle
       num = Number(targetNum[1]) + 1;
       console.log(num);
     }
 
-    // Crée le nouvel élément
+    // Crée la div qui contient les élements d'une réponse côté editeur
     const div = document.createElement("div");
     div.className = "d-flex align-items-center gap-3";
 
+    // bouton pour supprimer une réponse
     const btnSuppr = document.createElement("button");
     btnSuppr.type = "button";
     btnSuppr.className = "btn mb-3";
     btnSuppr.title = "supprimer";
     btnSuppr.dataset.action = "click->edition#supprReponse";
 
-    // Création de l’icône
+    // Création de l’icône supprimer
     const icon = document.createElement("i");
     icon.className = "bi bi-dash-circle";
     icon.style.color = "red";
@@ -39,7 +49,7 @@ export default class extends Controller {
     const inputUser = document.createElement("input");
     inputUser.type = "checkbox";
     inputUser.name = "userRep"; // même groupe pour tous les inputs user
-    inputUser.id = `repUser${num}`;
+    inputUser.id = `repUser${num}`; // Le num est récupérer par la boucle IF
     inputUser.className = "form-check-input mb-3";
     inputUser.dataset.editionTarget = "reponse";
     inputUser.disabled = "true";
@@ -54,9 +64,7 @@ export default class extends Controller {
       inputRep.placeholder = "Mettez une réponse...";
     }
 
-    div.append(btnSuppr);
-    div.append(inputUser);
-    div.append(inputRep);
+    div.append(btnSuppr, inputUser, inputRep);
 
     this.bodyReponseTarget.append(div);
   }
@@ -65,7 +73,7 @@ export default class extends Controller {
     // bouton cliqué
     const button = event.currentTarget;
 
-    // on remonte à la div parente
+    // on remonte à la div parente qui contient les inputs et le bouton supprimer
     const reponseDiv = button.parentElement;
 
     reponseDiv.remove();
