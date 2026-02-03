@@ -57,26 +57,26 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body d-flex flex-column gap-3">
-                  <div class="d-flex gap-2"> <!-- Affiche le choix "réponses multiple" -->
+                  <!-- Affiche le choix "réponses multiple" -->
+                  <div class="d-flex align-items-center gap-2">
                     <input type="radio" name="radio" id="radio1" class="form-check-input" />
                     <label for="radio1" class="form-check-label ">Choix multiple</label>
-                    <input type="checkbox" class="form-check-input" disabled />
+                    <i class="bi bi-check-square fs-5"></i>
                   </div>
-                  <div class="d-flex gap-2"> <!-- Affiche le choix "réponse unique" -->
+                  <!-- Affiche le choix "réponse unique" -->
+                  <div class="d-flex align-items-center gap-2"> 
                     <input type="radio" name="radio" id="radio2" class="form-check-input" />
                     <label for="radio2" class="form-check-label">Choix unique</label>
-                    <input type="radio" class="form-radio-input" disabled />
+                    <i class="bi bi-record-circle fs-5"></i>
                   </div>
-                  <div class="d-flex gap-2"> <!-- Affiche une liste de réponse -->
+                   <!-- Affiche une liste de réponse -->
+                  <div class="d-flex align-items-center gap-2">
                     <input type="radio" name="radio" id="radio3" class="form-check-input" />
                     <label for="radio3" class="form-check-label">Liste de réponse</label>
-                    <select name="exemple" class="form-select form-select-sm w-auto">
-                      <option value="test1" hidden>Choisissez une réponse</option>
-                      <option value="test2" disabled>Exemple 1</option>
-                      <option value="test3"disabled>Exemple 2</option>
-                    </select>
+                    <i class="bi bi-menu-button-wide-fill fs-4"></i>
                   </div>
                 </div>
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                   <button type="button" class="btn btn-primary" data-action="edition#typeReponse">Valider</button>

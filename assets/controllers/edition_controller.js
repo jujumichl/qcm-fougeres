@@ -82,7 +82,7 @@ export default class extends Controller {
 
     reponseDiv.remove();
   }
-
+  
   typeReponse(event){
     event.currentTarget; //document.querySelector('[data-action="edition#typeReponse"]')
     
