@@ -7,7 +7,6 @@
 {% block body %}
   <div class="d-flex flex-column align-items-center mt-5" data-controller="edition">
     <form action="" method="POST" class="col-4" data-edition-target="formQcm">
-
       <div class="card mx-auto">
         <div class="card-header text-center fw-bold card-orange">Personnalisez votre QCM :</div>
         <div class="card-body p-4">
@@ -32,7 +31,8 @@
           <textarea id="q1" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
         </div>
         <div class="card-body" data-edition-target="bodyReponse">
-          {# Exemple d'une réponse => 
+          {# Exemple d'une réponse à choix mutiple => 
+          <h6 class="mb-3">Il y a plusieurs réponses possible...</h6>
           <div class="d-flex align-items-center gap-3">
             <!-- Bouton supprimer -->
             <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
@@ -44,16 +44,57 @@
             <input type="text" name="editRep" id="rep1" class="form-control mb-3" placeholder="Mettez une réponse..." />
           </div> #}
         </div>
-        <div class="card-header d-flex justify-content-between align-items-center p-1">
-          <!-- Bouton pour Ajouter une réponse -->
-          <button type="button" class="btn btn-bottom-right" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
+        <div class="card-footer d-flex justify-content-between align-items-center p-1">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-orange btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#typeReponse">Type de réponse</button>
+
+          <!-- Modal(PopUp) pour choisir le type de réponse -->
+          <div class="modal fade" id="typeReponse" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5">Choisissez un type de réponse :</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column gap-3">
+                  <div class="d-flex gap-2"> <!-- Affiche le choix "réponses multiple" -->
+                    <input type="radio" name="radio" id="radio1" class="form-check-input" />
+                    <label for="radio1" class="form-check-label ">Choix multiple</label>
+                    <input type="checkbox" class="form-check-input" disabled />
+                  </div>
+                  <div class="d-flex gap-2"> <!-- Affiche le choix "réponse unique" -->
+                    <input type="radio" name="radio" id="radio2" class="form-check-input" />
+                    <label for="radio2" class="form-check-label">Choix unique</label>
+                    <input type="radio" class="form-radio-input" disabled />
+                  </div>
+                  <div class="d-flex gap-2"> <!-- Affiche une liste de réponse -->
+                    <input type="radio" name="radio" id="radio3" class="form-check-input" />
+                    <label for="radio3" class="form-check-label">Liste de réponse</label>
+                    <select name="exemple" class="form-select form-select-sm w-auto">
+                      <option value="test1" hidden>Choisissez une réponse</option>
+                      <option value="test2" disabled>Exemple 1</option>
+                      <option value="test3"disabled>Exemple 2</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                  <button type="button" class="btn btn-primary" data-action="edition#typeReponse">Valider</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <!-- Bouton pour Ajouter une réponse -->
+            <button type="button" class="btn" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
+          </div>
         </div>
       </div>
 
       <div class="text-center mt-4 mb-4">
         <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
       </div>
-
     </form>
   </div>
 {% endblock %}

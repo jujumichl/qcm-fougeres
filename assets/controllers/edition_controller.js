@@ -4,9 +4,11 @@ import { Controller } from "@hotwired/stimulus";
 // Connects to data-controller="login"
 export default class extends Controller {
   static targets = ["reponse", "bodyReponse"]
+  static values = {
+    type : {Type:String, default:"unique"}
+  }
 
   ajoutReponse() {
- 
     // On compte combien de réponses déjà existante
     let num = this.reponseTargets.length + 1
 
@@ -47,19 +49,19 @@ export default class extends Controller {
 
     // Crée le nouvel input qui sera visible côté utilisateur
     const inputUser = document.createElement("input");
-    inputUser.type = "checkbox";
+    inputUser.type = "radio";
     inputUser.name = "userRep"; // même groupe pour tous les inputs user
     inputUser.id = `repUser${num}`; // Le num est récupérer par la boucle IF
     inputUser.className = "form-check-input mb-3";
     inputUser.dataset.editionTarget = "reponse";
-    inputUser.disabled = "true";
+    inputUser.disabled = "false";
 
     // Crée le nouvel input pour insérer une réponse côté edition
     const inputTxt = document.createElement("input");
     inputTxt.type = "text";
     inputTxt.name = "editRep";
     inputTxt.id = `rep${num}`;
-    inputTxt.className = "form-control mb-3"; // me-4
+    inputTxt.className = "form-control mb-3";
     if (num === 1) {
       inputTxt.placeholder = "Mettez une réponse...";
     }
@@ -81,6 +83,11 @@ export default class extends Controller {
     reponseDiv.remove();
   }
 
+  typeReponse(event){
+    event.currentTarget; //document.querySelector('[data-action="edition#typeReponse"]')
+    
+  }
+  /**
   ajoutQuestion(event) {
     event.preventDefault(); 
 
@@ -135,6 +142,6 @@ export default class extends Controller {
 
     divCardMain.append(divCardHeader, divCardBody);
     formQcm.append(divCardMain);
-  }
+  }*/
 
 }
