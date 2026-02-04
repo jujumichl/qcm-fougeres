@@ -21,9 +21,18 @@ export default class extends Controller {
     mode: { type: String, default: "normal" }
   }
 
-  connect() {
-    this.selectedQcms = new Set();
+ connect() {
+  this.selectedQcms = new Set();
+
+  const offcanvasEl = document.getElementById('offcanvasMenu');
+
+  if (offcanvasEl) {
+    const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+    offcanvas.show();
   }
+}
+
+
 
   getQcmItem(element) {
     return element.closest("li");
