@@ -10,14 +10,14 @@ export default class extends Controller {
 
   ajoutReponse() {
     // On compte combien de réponses déjà existante
-    let num = this.reponseTargets.length + 1
+    // let num = this.reponseTargets.length + 1
 
-    // Permet de générer et d’insérer un chiffre unique dans l’ID des réponses
+    /**  Permet de générer et d’insérer un chiffre unique dans l’ID des réponses
     if (num - 1 > 0) {
-      /**
-       * Récupère l'id de l'avant avant dernière réponse
-       * exemple d'id pour la 1ère réponse : rep1 
-       */
+      
+        Récupère l'id de l'avant avant dernière réponse
+        exemple d'id pour la 1ère réponse : rep1 
+       
       let targetNum = this.reponseTargets[num - 2].id;
 
       //On fais un split pour récupérer que le chiffre
@@ -25,81 +25,33 @@ export default class extends Controller {
 
       // On ajoute 1 à chaque boucle
       num = Number(targetNum[1]) + 1;
-      console.log(num);
-    }
-
-    // Crée la div qui contient les élements d'une réponse côté editeur
-    const div = document.createElement("div");
-    div.className = "d-flex align-items-center gap-3";
-
-    // bouton pour supprimer une réponse
-    const btnSuppr = document.createElement("button");
-    btnSuppr.type = "button";
-    btnSuppr.className = "btn mb-3";
-    btnSuppr.title = "supprimer";
-    btnSuppr.dataset.action = "click->edition#supprReponse";
-
-    // Création de l’icône supprimer
-    const icon = document.createElement("i");
-    icon.className = "bi bi-dash-circle";
-    icon.style.color = "red";
-
-    // Ajout de l’icône dans le bouton
-    btnSuppr.appendChild(icon);
-
-    /**Création de la zone de text pour le select
-    const inputTxt = document.createElement("input");
-      inputTxt.type = "text";
-      inputTxt.name = "editRep";
-      inputTxt.id = `rep${num}`;
-      inputTxt.className = "form-control mb-3";
-      if (num === 1) {
-        inputTxt.placeholder = "Mettez une réponse...";
-      }
-
-    //Création du select
-    const selectUser = document.createElement("select");
-    
-    div.append(btnSuppr, selectUser);
-
-    this.bodyReponseTarget.append(div);
-    */
-    // On exclu la liste car ce n'est pas un élément <input> mais <select>
-    if (this.typeValue !== "liste") {
-      // Crée le nouvel input qui sera visible côté utilisateur
-      const inputUser = document.createElement("input");
+    }*/
 
       // Boucle pour déterminer le type d'input générer
       if (this.typeValue === "unique") {
-        inputUser.type = "radio";
-      }
-      else{
-        inputUser.type = "checkbox";
-      }
-      inputUser.name = "userRep"; // même groupe pour tous les inputs user
-      // inputUser.id = `repUser${num}`; Le num est récupérer par la boucle IF
-      inputUser.className = "form-check-input mb-3";
-      inputUser.dataset.editionTarget = "reponse";
-      inputUser.disabled = "false";
-    
-      // Crée le nouvel input pour insérer une réponse côté edition
-      const inputTxt = document.createElement("input");
-      inputTxt.type = "text";
-      inputTxt.name = "editRep";
-      inputTxt.id = `rep${num}`;
-      inputTxt.className = "form-control mb-3";
-      if (num === 1) {
-        inputTxt.placeholder = "Mettez une réponse...";
+        const templateUnique = document.getElementById("reponseUnique");
+
+        const cloneRepUnique = templateUnique.content.firstElementChild.cloneNode(true);
+
+        console.log(cloneRepUnique)
+        this.bodyReponseTarget.append(cloneRepUnique);
       }
 
-      // Assemblage des différents éléments créés pour formé une réponse 
-      div.append(btnSuppr, inputUser, inputTxt);
+      else if (this.typeValue === "multiple") {
+        const templateMultiple = document.getElementById("reponseMultiple");
 
-      this.bodyReponseTarget.append(div);
-    }
-    /**
-    // On génère les élément de réponses liée à une liste
-    else{}*/
+        const cloneRepMultiple = templateMultiple.content.firstElementChild.cloneNode(true);
+
+        this.bodyReponseTarget.append(cloneRepMultiple);
+      }
+
+      else {
+        const templateListe = document.getElementById("reponseListe");
+
+        const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
+
+        this.bodyReponseTarget.append(cloneRepListe);
+      }
   }
 
   supprReponse(event) {
@@ -117,7 +69,7 @@ export default class extends Controller {
   changerType() {
     const selectedType = this.typeTargets.find(r => r.checked).value;
     this.typeValue = selectedType;
-    // test en console : console.log (this.typeValue);
+     console.log (this.typeValue);
   }
 
   /**
