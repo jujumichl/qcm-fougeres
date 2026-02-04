@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-  static targets = ["reponse", "bodyReponse", "type"]
+  static targets = ["reponse", "cardReponse", "divReponse","type", "modalBody"]
   static values = {
     type: { Type: String, default: "unique" }
   }
@@ -33,8 +33,7 @@ export default class extends Controller {
 
         const cloneRepUnique = templateUnique.content.firstElementChild.cloneNode(true);
 
-        console.log(cloneRepUnique)
-        this.bodyReponseTarget.append(cloneRepUnique);
+        this.cardReponseTarget.append(cloneRepUnique);
       }
 
       else if (this.typeValue === "multiple") {
@@ -42,7 +41,7 @@ export default class extends Controller {
 
         const cloneRepMultiple = templateMultiple.content.firstElementChild.cloneNode(true);
 
-        this.bodyReponseTarget.append(cloneRepMultiple);
+        this.cardReponseTarget.append(cloneRepMultiple);
       }
 
       else {
@@ -50,13 +49,21 @@ export default class extends Controller {
 
         const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
 
-        this.bodyReponseTarget.append(cloneRepListe);
+        this.cardReponseTarget.append(cloneRepListe);
       }
+  }
+
+  resetReponse(){
+    const modalBody = this.modalBodyTarget;
+    const choixUser = modalBody.querySelector('input[name="radio"]:checked');
+
+    if(this.typeValue !== choixUser.value ){
+      this.divReponseTargets.forEach(target => target.replaceChildren());
+    }
   }
 
   supprReponse(event) {
     event.preventDefault();
-
     // bouton cliqué
     const button = event.currentTarget;
 

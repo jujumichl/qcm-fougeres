@@ -30,11 +30,11 @@
           <label for="q1" class="form-label mt-2">1.</label>
           <textarea id="q1" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
         </div>
-        <div class="card-body" data-edition-target="bodyReponse">
+        <div class="card-body" data-edition-target="cardReponse">
 
           <!-- Template qui contient la structure d'une réponse à choix unique -->
           <template id="reponseUnique">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
               <!-- Bouton pour supprimer la réponse -->
               <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
 
@@ -48,7 +48,7 @@
 
           <!-- Template qui contient la structure d'une réponse à choix multiple -->
           <template id="reponseMultiple">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
               <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
               <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" disabled="false" />
               <input type="text" name="editRep" class="form-control mb-3" placeholder="Mettez une réponse..." />
@@ -57,7 +57,7 @@
 
           <!-- Template qui contient la structure d'une liste de réponses -->
           <template id="reponseListe">
-            <div class="d-flex flex-wrap align-items-center gap-3 input-group">
+            <div class="d-flex flex-wrap align-items-center gap-3 input-group" data-edition-target="divReponse">
               <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
               <input type="text" name="editRep" id="rep1" class="form-control w-auto" placeholder="Mettez un libelle..." />
 
@@ -93,7 +93,7 @@
                   <h1 class="modal-title fs-5">Choisissez un type de réponse :</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body d-flex flex-column gap-3">
+                <div class="modal-body d-flex flex-column gap-3" data-edition-target="modalBody">
                   <!-- Affiche le choix "réponses multiple" -->
                   <div class="d-flex align-items-center gap-2">
                     <input type="radio" name="radio" id="radio1" value="multiple" class="form-check-input" data-edition-target="type" />
@@ -116,7 +116,7 @@
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-action="edition#changerType">Valider</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-action="click->edition#resetReponse click->edition#changerType">Valider</button>
                 </div>
               </div>
             </div>
