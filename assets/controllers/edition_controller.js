@@ -47,6 +47,23 @@ export default class extends Controller {
     // Ajout de l’icône dans le bouton
     btnSuppr.appendChild(icon);
 
+    /**Création de la zone de text pour le select
+    const inputTxt = document.createElement("input");
+      inputTxt.type = "text";
+      inputTxt.name = "editRep";
+      inputTxt.id = `rep${num}`;
+      inputTxt.className = "form-control mb-3";
+      if (num === 1) {
+        inputTxt.placeholder = "Mettez une réponse...";
+      }
+
+    //Création du select
+    const selectUser = document.createElement("select");
+    
+    div.append(btnSuppr, selectUser);
+
+    this.bodyReponseTarget.append(div);
+    */
     // On exclu la liste car ce n'est pas un élément <input> mais <select>
     if (this.typeValue !== "liste") {
       // Crée le nouvel input qui sera visible côté utilisateur
@@ -64,7 +81,7 @@ export default class extends Controller {
       inputUser.className = "form-check-input mb-3";
       inputUser.dataset.editionTarget = "reponse";
       inputUser.disabled = "false";
-
+    
       // Crée le nouvel input pour insérer une réponse côté edition
       const inputTxt = document.createElement("input");
       inputTxt.type = "text";
@@ -80,6 +97,9 @@ export default class extends Controller {
 
       this.bodyReponseTarget.append(div);
     }
+    /**
+    // On génère les élément de réponses liée à une liste
+    else{}*/
   }
 
   supprReponse(event) {
