@@ -1,0 +1,20 @@
+.btn-orange {
+    background-color: orange;
+    color: white;
+    border: none; /* optionnel pour enlever la bordure */
+    border-radius: 3px;
+    }
+    
+.btn-orange:hover {
+    background-color: darkorange; /* effet au survol */
+    }
+
+.card-orange {
+    background-color: orange;
+    color: #fff;
+    }
+
+.btn-size {
+  font-size: 1rem;     /* texte plus gros */
+  padding: 0.3rem;    /* plus de hauteur */
+}

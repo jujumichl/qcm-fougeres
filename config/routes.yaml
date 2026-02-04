@@ -7,8 +7,9 @@
 # To list all registered routes, run the following command:
 #   bin/console debug:router
 
-# Route de la page d'acceuil
-index:
-  path: /
-  controller: App\Controller\DefaultController::index
-  methods: [GET]
+# Route de la page d'accueil
+#index:
+#  path: /
+#  controller: App\Controller\DefaultController::index
+#  methods: [GET]
+

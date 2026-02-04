@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Accueil
+{% endblock %}
+
+{% block body %}
+  <div data-controller="accueil">
+    <section id="menu" class="p-2">
+      <!-- Bouton toggle -->
+      <button class="btn mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"><i class="bi bi-arrow-bar-right"></i></button>
+
+      <!-- OFFCANVAS -->
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
+        <div class="offcanvas-header">
+          <a href="{{ path('page_login') }}" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
+          <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
+        </div>
+
+        <div class="bg-white sticky-top">
+          <input type="checkbox" class="p-4 ms-4 sticky-top is-hidden" title="Tout sélectionner" data-accueil-target="caseAllSelect" data-action="click->accueil#allSelect" />
+        </div>
+
+        <div class="offcanvas-body pb-5">
+          <ul class="list-group list-group-flush" data-accueil-target="list">
+
+            <template id="qcm-template">
+              <li class="list-group-item p-0 d-flex align-items-center gap-2">
+                <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
+
+                <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-action="click->accueil#select"></button>
+
+                <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
+                  <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
+
+                  <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
+                </div>
+              </li>
+            </template>
+
+          </ul>
+
+          <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
+            <div class="d-flex justify-content-between align-items-center" data-accueil-target="footerOffCanvas">
+              <div class="container text-center">
+                <!-- Etat par défaut -->
+                <div class="row" data-accueil-target="base">
+                  <div class="col">
+                    <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#codeModal">Code</button>
+                  </div>
+                  <div class="col">
+                    <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#corbeilleModal">Corbeille</button>
+                  </div>
+                  <div class="col">
+                    <button type="button" class="btn btn-outline-fougeres" data-action="click->accueil#modif">Modifier</button>
+                  </div>
+                </div>
+
+                <!-- Afficher quand on appuie sur Modifier -->
+                <div class="btn-group is-hidden" data-accueil-target="modifier">
+                  <div class="row justify-content-end">
+                    <div class="col">
+                      <button type="button" class="btn btn-outline-dark no-border" data-action="click->accueil#modif"><i class="bi bi-arrow-return-left"></i></button>
+                    </div>
+                    <div class="col">
+                      <button class="btn btn-outline-danger no-border" title="Supprimer les QCM séléctionner" data-action="click->accueil#delQcm"><i class="bi bi-trash"></i></button>
+                    </div>
+                    <div class="col">
+                      <button class="btn btn-outline-success no-border" data-action="click->accueil#addQcm"><i class="bi bi-plus-square"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODAL de la corbeille des QCM -->
+    <div class="modal fade" id="corbeilleModal" tabindex="-1" aria-labelledby="corbeilleModalLibelle" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title w-100 text-center">Corbeille</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Nom du QCM</th>
+                    <th>Date de suppression</th>
+                    <th>Date de suppression définitive</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody data-accueil-target="corbeille">
+                  <template id="corbeille-template">
+                    <tr data-accueil-target="QCMSuppr">
+                      <td class="text-wrap col-4"></td>
+                      <td class="text-wrap col-4"></td>
+                      <td class="text-wrap col-4"></td>
+                      <td class="text-center align-middle">
+                        <button type="button" class="btn btn-success" data-action="click->accueil#recupQcm">Récupérer</button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL du code pour le QCM -->
+    <div class="modal fade" id="codeModal" tabindex="-1" aria-labelledby="codeModalLibelle" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="d-flex flex-row-reverse">
+            <button type="button" class="btn-close mt-3 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- CODE DU QCM, A Gérer plus tard -->
+            <form>
+              <div class="mb-3">
+                <label for="QCM-code" class="col-form-label fs-5">Code du QCM</label>
+                <input type="text" class="form-control" id="QCM-code" maxlength="7" />
+              </div>
+            </form>
+          </div>
+          <div class="d-flex flex-row-reverse">
+            <button type="button" class="btn btn-primary mb-3 me-3">Send message</button>
+            <button type="button" class="btn btn-secondary mb-3 me-3" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- vérifier pour le all selected si au moins 2 cases sont séléctionnées -->
+    <!-- CONTENU -->
+    <main data-accueil-target="content" class="container mt-4">
+      {% include './accueil/defaultContent.html.twig' %}
+    </main>
+  </div>
+{% endblock %}
