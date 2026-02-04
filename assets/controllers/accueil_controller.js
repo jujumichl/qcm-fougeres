@@ -40,7 +40,10 @@ export default class extends Controller {
     }
 
     const isModif = this.modeValue === "modif";
+
+    // Récupération de la template qui nous intéresse
     const template = document.getElementById("qcm-template");
+    // Puis clone template
     const li = template.content.firstElementChild.cloneNode(true);
 
     const id = Date.now().toString();
