@@ -4,7 +4,7 @@
 ### Message d'erreur
 ```bash
 php bin/console make:migration
-$ php bin/console make:migration
+ php bin/console make:migration
 
 In MissingColumnException.php line 16:
                                                                                                                 
@@ -19,7 +19,7 @@ Ici le message d'erreur indique que la colonne "id" n'existe pas dans l'entité 
 ### Résolution
 Pour voir plus en détail l'erreur, j'ai lancer la commande suivante :
 ```bash
-$ php bin/console doctrine:mapping:info
+ php bin/console doctrine:mapping:info
 
  Found 7 mapped entities:
 
@@ -31,7 +31,7 @@ $ php bin/console doctrine:mapping:info
  [OK]   App\Entity\Type
  [OK]   App\Entity\Users
 
-$ php bin/console doctrine:schema:validate
+ php bin/console doctrine:schema:validate
 
 
 Mapping
@@ -63,7 +63,7 @@ J'ai ensuite ajouter un champ `id` en tant que PK dans l'entité `Users` pour r�
 Puis j'ai relancé la commande `php bin/console doctrine:schema:validate` qui cette fois-ci m'a retournée :  
 ```bash
 php bin/console doctrine:schema:validate
-$ php bin/console doctrine:schema:validate
+ php bin/console doctrine:schema:validate
 
 Mapping
 -------
@@ -82,4 +82,22 @@ Database
 
 L'erreur restante est due au fait que la base de données n'est pas à jour avec les entités, j'ai donc lancé la commande `php bin/console make:migration` pour créer une migration, puis `php bin/console doctrine:migrations:migrate` pour appliquer les changements dans la base de données.
 
-## Erreur 2: 
+## Erreur 2: Lors de l'insertion des données Test dans la base de données
+### Message d'erreur
+```bash
+bin/console doctrine:query:sql "$(<dataTestBdd.sql)"
+
+                                                
+  Command "doctrine:query:sql" is not defined.  
+                                                
+
+ Do you want to run "doctrine:query:dql" instead?  (yes/no) [no]:
+ > no
+
+```
+
+### Résolution
+j'ai exécuter cette commande afin de vérifier que j'avais bien le composant présent dans mon composer, et qu'il soit bine installer `composer require --dev doctrine/doctrine-fixtures-bundle` puis j'ai effectuer la commande suivante pour charger les données de test dans la base de données : 
+```bash
+ php bin/console doctrine:fixtures:load
+```

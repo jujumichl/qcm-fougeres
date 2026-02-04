@@ -19,9 +19,21 @@ class Users
     #[ORM\Column]
     private ?bool $admin = null;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getcodeAd(): ?int
     {
         return $this->codeAd;
+    }
+
+    public function setcodeAd(int $codeAd): static
+    {
+        $this->codeAd = $codeAd;
+
+        return $this;
     }
 
     public function isAdmin(): ?bool

@@ -10,12 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Qcm
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(length: 7)]
+    #[ORM\Column(type: 'string', length: 7)]
     private ?string $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $nom = null; 
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $dateDeb = null;
@@ -33,9 +32,16 @@ class Qcm
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $createur = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function setId(string $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getNom(): ?string
