@@ -3,62 +3,55 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-  static targets = ["reponse", "cardReponse", "divReponse","type", "modalBody"]
+  static targets = ["reponse", "cardReponse", "divReponse", "type", "modalBody"]
   static values = {
-    type: { Type: String, default: "unique" }
+    type: { Type: String, default: "multiple" }
   }
 
   ajoutReponse() {
-    // On compte combien de réponses déjà existante
-    // let num = this.reponseTargets.length + 1
+    // Boucle pour déterminer le type d'input générer
+    if (this.typeValue === "unique") {
 
-    /**  Permet de générer et d’insérer un chiffre unique dans l’ID des réponses
-    if (num - 1 > 0) {
-      
-        Récupère l'id de l'avant avant dernière réponse
-        exemple d'id pour la 1ère réponse : rep1 
-       
-      let targetNum = this.reponseTargets[num - 2].id;
+      // récupère le template côté JS
+      const templateUnique = document.getElementById("reponseUnique");
 
-      //On fais un split pour récupérer que le chiffre
-      targetNum = targetNum.split("p");
+      // construit un clone du contenue de la template => représente une réponse
+      const cloneRepUnique = templateUnique.content.firstElementChild.cloneNode(true);
 
-      // On ajoute 1 à chaque boucle
-      num = Number(targetNum[1]) + 1;
-    }*/
+      // Lie la réponse générer à la div qui contient les réponses
+      this.cardReponseTarget.append(cloneRepUnique);
+    }
 
-      // Boucle pour déterminer le type d'input générer
-      if (this.typeValue === "unique") {
-        const templateUnique = document.getElementById("reponseUnique");
+    else if (this.typeValue === "multiple") {
+      const templateMultiple = document.getElementById("reponseMultiple");
 
-        const cloneRepUnique = templateUnique.content.firstElementChild.cloneNode(true);
+      const cloneRepMultiple = templateMultiple.content.firstElementChild.cloneNode(true);
 
-        this.cardReponseTarget.append(cloneRepUnique);
-      }
+      this.cardReponseTarget.append(cloneRepMultiple);
+    }
 
-      else if (this.typeValue === "multiple") {
-        const templateMultiple = document.getElementById("reponseMultiple");
+    else {
+      const templateListe = document.getElementById("reponseListe");
 
-        const cloneRepMultiple = templateMultiple.content.firstElementChild.cloneNode(true);
+      const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
 
-        this.cardReponseTarget.append(cloneRepMultiple);
-      }
-
-      else {
-        const templateListe = document.getElementById("reponseListe");
-
-        const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
-
-        this.cardReponseTarget.append(cloneRepListe);
-      }
+      this.cardReponseTarget.append(cloneRepListe);
+    }
   }
 
-  resetReponse(){
+  changerType() {
+    const selectedType = this.typeTargets.find(r => r.checked).value;
+    this.typeValue = selectedType;
+    this.ajoutReponse();
+    //console.log (this.typeValue);
+  }
+
+  resetReponse() {
     const modalBody = this.modalBodyTarget;
     const choixUser = modalBody.querySelector('input[name="radio"]:checked');
 
-    if(this.typeValue !== choixUser.value ){
-      this.divReponseTargets.forEach(target => target.replaceChildren());
+    if (this.typeValue !== choixUser.value) {
+      this.divReponseTargets.forEach(target => target.remove());
     }
   }
 
@@ -71,12 +64,6 @@ export default class extends Controller {
     const reponseDiv = button.parentElement;
 
     reponseDiv.remove();
-  }
-
-  changerType() {
-    const selectedType = this.typeTargets.find(r => r.checked).value;
-    this.typeValue = selectedType;
-     console.log (this.typeValue);
   }
 
   /**

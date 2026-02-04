@@ -80,6 +80,12 @@
               </div>
             </div>
           </template>
+          <!-- Le type de réponse de base pour chaque question -->
+          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+              <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
+              <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" disabled="false" />
+              <input type="text" name="editRep" class="form-control mb-3" placeholder="Mettez une réponse..." />
+            </div>
         </div>
         <div class="card-footer d-flex justify-content-between align-items-center p-1">
           <!-- Button trigger modal -->
@@ -96,13 +102,13 @@
                 <div class="modal-body d-flex flex-column gap-3" data-edition-target="modalBody">
                   <!-- Affiche le choix "réponses multiple" -->
                   <div class="d-flex align-items-center gap-2">
-                    <input type="radio" name="radio" id="radio1" value="multiple" class="form-check-input" data-edition-target="type" />
+                    <input type="radio" name="radio" id="radio1" value="multiple" class="form-check-input" checked data-edition-target="type" />
                     <label for="radio1" class="form-check-label">Choix multiple</label>
                     <i class="bi bi-check-square fs-5"></i>
                   </div>
                   <!-- Affiche le choix "réponse unique" -->
                   <div class="d-flex align-items-center gap-2">
-                    <input type="radio" name="radio" id="radio2" value="unique" class="form-check-input" data-edition-target="type" checked/>
+                    <input type="radio" name="radio" id="radio2" value="unique" class="form-check-input" data-edition-target="type"/>
                     <label for="radio2" class="form-check-label">Choix unique</label>
                     <i class="bi bi-record-circle fs-5"></i>
                   </div>
