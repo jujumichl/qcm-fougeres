@@ -5,7 +5,7 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static targets = ["reponse", "cardReponse", "divReponse", "type", "modalBody"]
   static values = {
-    type: { Type: String, default: "multiple" }
+    type: { Type: String, default: "liste" }
   }
 
   ajoutReponse() {
