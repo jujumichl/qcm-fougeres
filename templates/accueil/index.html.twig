@@ -38,12 +38,26 @@
               </li>
             </template>
 
+            {% for Qcm in Qcms %}
+              <li class="list-group-item p-0 d-flex align-items-center gap-2">
+                <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
+
+                <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-qcm-id={{Qcm.id}} data-action="click->accueil#select"> {{Qcm.nom}}</button>
+
+                <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
+                  <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
+
+                  <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
+                </div>
+              </li>
+            {% else %}
+              <li>Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</li>
+            {% endfor %}
           </ul>
 
           <div class="position-absolute bottom-0 start-0 w-100 border-top bg-white p-2">
             <div class="d-flex justify-content-between align-items-center" data-accueil-target="footerOffCanvas">
               <div class="container text-center">
-
                 <!-- Etat par défaut -->
                 <div class="row" data-accueil-target="base">
                   <div class="col">
@@ -98,8 +112,7 @@
                   </tr>
                 </thead>
                 <tbody data-accueil-target="corbeille">
-                
-                <!-- Template cloner lors d'un ajout d'un QCM a la corbeille -->
+                  <!-- Template cloner lors d'un ajout d'un QCM a la corbeille -->
                   <template id="corbeille-template">
                     <tr data-accueil-target="QCMSuppr">
                       <td class="text-wrap col-4"></td>
@@ -110,7 +123,6 @@
                       </td>
                     </tr>
                   </template>
-
                 </tbody>
               </table>
             </div>

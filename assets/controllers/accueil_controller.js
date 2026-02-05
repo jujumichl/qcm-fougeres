@@ -38,7 +38,7 @@ export default class extends Controller {
     return element.closest("li");
   }
 
-  addQcm(evt, nameQCM = "") {
+  addQcm(evt, id = Date.now().toString(), nameQCM = "") {
     let nb = this.QCMTargets.length + 1;
 
     if (nb > 1) {
@@ -55,7 +55,6 @@ export default class extends Controller {
     // Puis clone template
     const li = template.content.firstElementChild.cloneNode(true);
 
-    const id = Date.now().toString();
     const btn = this.createQcmButton(id, nameQCM || `QCM ${nb}`);
     this.replaceQcmButton(li, btn);
 
@@ -278,6 +277,7 @@ export default class extends Controller {
     const tr = template.content.firstElementChild.cloneNode(true);
 
     tr.children[0].textContent = liElement.children[1].textContent;
+    tr.children[0].dataset.qcmId = liElement.children[1].dataset.qcmId;
     tr.children[1].textContent = `${dd}/${mm}/${yyyy}`;
     tr.children[2].textContent = `${dd7}/${mm}/${yyyy}`;
 
@@ -287,8 +287,9 @@ export default class extends Controller {
 
   recupQcm(evt) {
     let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
+    let id = evt.currentTarget.closest('tr').children[0].dataset.qcmId;
     if (this.modeValue !== 'modif') this.modif();
-    this.addQcm("", nameQCM);
+    this.addQcm("", id, nameQCM);
     evt.currentTarget.closest('tr').remove();
     if (this.modeValue !== 'normal') this.modif();
   }
