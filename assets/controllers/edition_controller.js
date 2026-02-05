@@ -40,8 +40,13 @@ export default class extends Controller {
   }
 
   changerType() {
+    // Récupère, parmi les éléments possédant la target : type, celui dont le bouton radio est coché.
     const selectedType = this.typeTargets.find(r => r.checked).value;
+
+    // associe la valeur du bouton à la value Stimulus
     this.typeValue = selectedType;
+
+    // Appel la fonction pour ajouté une réponse
     this.ajoutReponse();
     //console.log (this.typeValue);
   }

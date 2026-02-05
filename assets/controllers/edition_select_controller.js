@@ -25,8 +25,8 @@ export default class extends Controller {
 
         if (!value) return // Si la valeur est vide la fonction s'arrête
 
-        const exists = Array.from(this.selectTarget.options) // Intègre la collection HTML des options du select sous forme de tableau JS
-        .some(option => option.value === value) // renvoi un @bool => vérifie si la valeur existe ou non parmi les options existantes
+        const exists = Array.from(this.selectTarget.options) // Transforme la collection HTML des options du select sous forme de tableau JS
+        .some(option => option.value === value) // renvoi un @bool => vérifie si la valeur existe ou non parmi les options existantes fans le tableau
 
         // Envoie une alerte si valeur déjà existante et arrête la fonction
         if (exists) {

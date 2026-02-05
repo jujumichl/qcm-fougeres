@@ -30,7 +30,7 @@
           <label for="q1" class="form-label mt-2">1.</label>
           <textarea id="q1" name="_question" rows="1" style="resize: none;" class="form-control" placeholder="Insérez votre question..."></textarea>
         </div>
-        <div class="card-body" data-edition-target="cardReponse">
+        <div class="card-body position-relative" data-edition-target="cardReponse">
           <!-- Template qui contient la structure d'une réponse à choix unique -->
           <template id="reponseUnique">
             <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
@@ -41,7 +41,7 @@
               <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" disabled="false" />
 
               <!-- Input pour éditer la réponse -->
-              <input type="text" name="editRep" class="form-control mb-3" placeholder="Mettez une réponse..." />
+              <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
             </div>
           </template>
 
@@ -50,7 +50,7 @@
             <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
               <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
               <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" disabled="false" />
-              <input type="text" name="editRep" class="form-control mb-3" placeholder="Mettez une réponse..." />
+              <input type="text" name="editRepMultiple" class="form-control mb-3" placeholder="Mettez une réponse..." />
             </div>
           </template>
 
@@ -58,9 +58,9 @@
           <template id="reponseListe">
             <div class="d-flex flex-wrap align-items-center gap-3 input-group" data-controller="edition-select" data-edition-target="divReponse">
               <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
-              <input type="text" name="editRep" id="rep1" class="form-control w-auto" placeholder="Mettez un libelle..." />
+              <input type="text" name="editRepListe" class="form-control w-auto" placeholder="Mettez un libelle..." />
 
-              <select name="liste" id="liste1" class="form-select w-auto" data-edition-select-target="select">
+              <select name="listeRep" class="form-select w-auto" data-edition-select-target="select">
                 <option value="0" hidden>-- Voir les options --</option>
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
@@ -79,19 +79,60 @@
               </div>
             </div>
           </template>
-          <div class="d-flex flex-wrap align-items-center gap-3 input-group" data-controller="edition-select" data-edition-target="divReponse">
+          <!--                 Le type de réponse de base pour chaque question 
+          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+              <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
+              <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" disabled="false" />
+              <input type="text" name="editRep" class="form-control mb-3" placeholder="Mettez une réponse..." />
+            </div>                 -->
+          <div class="d-flex align-items-center gap-3 input-group" data-controller="edition-select" data-edition-target="divReponse">
             <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
-            <input type="text" name="editRep" id="rep1" class="form-control w-auto" placeholder="Mettez un libelle..." />
 
-            <select name="liste" id="liste1" class="form-select w-auto" data-edition-select-target="select">
-              <option value="0" hidden>-- Voir les options --</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-            </select>
+            <input type="text" name="editRep" class="form-control w-auto" placeholder="Mettez un libelle..." />
 
-            <button type="button" class="btn" title="ajouter une option" data-edition-select-target="addButton" data-action="click->edition-select#showInput"><i class="bi bi-file-plus fs-4"></i></button>
+            <div class="position-relative">
+              <select name="listeRep" class="form-select" data-edition-select-target="select">
+                <option value="0" hidden>-- Voir les options --</option>
+              </select>
 
-            {# Formulaire d’ajout (caché par défaut) avec d-none #}
+              <div class="collapse position-absolute w-100" id="collapseWidthExample">
+                <div class="card card-body">
+                  <ul>
+                    <li>Coffee</li>
+                    <li>Tea</li>
+                    <li>Milk</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn" title="ajouter une option" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample"><i class="bi bi-file-plus fs-4"></i></button>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 input-group" data-controller="edition-select" data-edition-target="divReponse">
+            <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
+
+            <input type="text" name="editRep" class="form-control w-auto" placeholder="Mettez un libelle..." />
+
+            <div class="position-relative">
+              <select name="listeRep" class="form-select" data-edition-select-target="select">
+                <option value="0" hidden>-- Voir les options --</option>
+              </select>
+
+              <div class="collapse position-absolute w-100" id="collapseWidth">
+                <div class="card card-body">
+                  <ul>
+                    <li>Coffee</li>
+                    <li>Tea</li>
+                    <li>Milk</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn" title="ajouter une option" data-bs-toggle="collapse" data-bs-target="#collapseWidth" aria-expanded="false" aria-controls="collapseWidth"><i class="bi bi-file-plus fs-4"></i></button>
+          </div>
+          {#             <button type="button" class="btn" title="ajouter une option" data-edition-select-target="addButton" data-action="click->edition-select#showInput"><i class="bi bi-file-plus fs-4"></i></button>
+            #}
+          {# Formulaire d’ajout (caché par défaut) avec d-none 
             <div class="card p-2 mt-2 d-none" data-edition-select-target="form" style="max-width: 280px">
               <input type="text" class="form-control mb-2" placeholder="Nouvelle option" data-edition-select-target="input" data-action="keydown.enter->edition-select#addOption" />
 
@@ -99,17 +140,9 @@
                 <button type="button" class="btn btn-sm btn-secondary" data-action="click->edition-select#cancelForm">Annuler</button>
                 <button type="button" class="btn btn-sm btn-success" data-action="click->edition-select#addOption">Valider</button>
               </div>
-            </div>
-          </div>
-          <!--   Le type de réponse de base pour chaque question 
-          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
-              <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle" style="color: red;"></i></button>
-              <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" disabled="false" />
-              <input type="text" name="editRep" class="form-control mb-3" placeholder="Mettez une réponse..." />
-            </div>   -->
+            </div>#}
         </div>
         <div class="card-footer d-flex justify-content-between align-items-center p-1">
-        
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-orange btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#typeReponse">Type de réponse</button>
 
