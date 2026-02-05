@@ -14,7 +14,13 @@ final class AccueilController extends AbstractController
     #[Route('/accueil', name: 'app_accueil')]
     public function index(QcmRepository $unQcmRepo): Response
     {
-        $Qcms = $unQcmRepo->findAll();
+        $Qcms = $unQcmRepo->createQueryBuilder('q')
+            ->leftJoin('q.createur', 'u')
+            ->addSelect('u')
+            ->andWhere('u.codeAd = :codeAd')
+            ->setParameter('codeAd', 5)
+            ->getQuery()
+            ->getResult();
 
         dump($Qcms);
         return $this->render('accueil/index.html.twig', [
@@ -22,8 +28,8 @@ final class AccueilController extends AbstractController
             'Qcms' => $Qcms,
         ]);
     }
+    
 
 }
 
 
-    
