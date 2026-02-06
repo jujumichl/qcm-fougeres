@@ -7,6 +7,28 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    locale: 'fr'
+    app_copyright: '&copy; 2020 - Ville de Fougères'
+    app_version: 'v1.0'
+    ldap_host: 'ad.hdv.local'
+    ldap_baseDn: 'DC=hdv,DC=local'
+    ldap_domain: 'hdv.local'
+    ldap_query_string: '(sAMAccountName={username})'
+    # Identifiant de connexion au serveur LDAP
+    ldap_identifier: 'srv_portail_web@hdv.local'
+    # Mot de passe de l'identifiant de connexion au serveur LDAP
+    ldap_password: 'ZtB107FB'
+    # Numéro de port du serveur LDAP
+    ldap_port: 389
+    # Numéro de version du protocol LDAP
+    ldap_protocol_version: 3
+    # Permet de définir les groupes de sécurité qui ont accès à l'application. Si pas de restriction, laissé
+    # laissé le tableau vide
+    ldap_authorized_groups:
+        - CN=informatique,OU=Groupe_partagereseau,OU=GROUPES,DC=hdv,DC=local
+        - CN=Portail_informatique,OU=Groupe_partagereseau,OU=GROUPES,DC=hdv,DC=local
+    ldap_authorized_primary_groups: ['1419']
+    default_redirection: 'login'
 
 services:
     # default configuration for services in *this* file

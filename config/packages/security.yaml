@@ -4,8 +4,17 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
-    providers:
+    providers: # Liste les sources où Symfony va chercher les utilisateurs pour l’authentification.
         users_in_memory: { memory: null }
+
+        ldapProvider:                     # Nom du fournisseur pour chercher les utilisateurs dans un annuaire Active Directory (N'importe quel nom)
+            ldap:                 # Indique le type de fournisseur : LDAP
+                service: Symfony\Component\Ldap\Ldap   # Service LDAP utilisé pour se connecter
+                base_dn: '%env(LDAP_BASE_DN)%'       # Point de départ pour rechercher les utilisateurs dans AD
+                search_dn: '%env(LDAP_SEARCH_DN)%'   # Compte ayant le droit de recherche dans AD via Ldap (permission de lecture des utilisateurs)
+                search_password: '%env(LDAP_PASSWORD)%' # Mot de passe du compte de recherche
+                default_roles: ROLE_USER             # Rôle par défaut attribué à tous les utilisateurs LDAP
+                uid_key: sAMAccountName              # Clé utilisée pour l'identifiant unique (login) dans AD
 
     firewalls:
         dev:
@@ -14,7 +23,23 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: ldapProvider # Définit quel fournisseur d’utilisateurs utiliser
+
+            anonymous: true        # Autorise les utilisateurs anonymes (non connectés) à accéder notamment à la page login
+            
+            # === Formulaire de login avec LDAP ===
+            form_login_ldap:
+                login_path: login         # URL du formulaire de connexion
+                check_path: login         # URL où Symfony vérifie les identifiants
+                service: Symfony\Component\Ldap\Ldap  # Service LDAP utilisé pour authentification
+                dn_string: "CN={username},OU=Users,DC=mondomaine,DC=com"
+                # Format du DN pour l'utilisateur à authentifier
+                # {username} sera remplacé par le login saisi
+                # Exemple : CN=jdupont,OU=Users,DC=mondomaine,DC=com
+
+            # === Déconnexion ===
+            logout:
+                path: logout              # URL pour se déconnecter
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
