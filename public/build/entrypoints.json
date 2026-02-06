@@ -2,11 +2,11 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/truc/qcm/public/build/runtime.js",
-        "/truc/qcm/public/build/app.js"
+        "/stage_fougeres_owen/qcm/public/build/runtime.js",
+        "/stage_fougeres_owen/qcm/public/build/app.js"
       ],
       "css": [
-        "/truc/qcm/public/build/app.css"
+        "/stage_fougeres_owen/qcm/public/build/app.css"
       ]
     }
   }

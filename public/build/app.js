@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-"use strict";
-=======
->>>>>>> 1c4d4446e9dddb6404a3127fc66e183fa4eed3e4
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
 
 /***/ "./assets/app.js"
@@ -10,44 +6,6 @@
   \***********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-<<<<<<< HEAD
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _stimulus_bootstrap_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./stimulus_bootstrap.js */ "./assets/stimulus_bootstrap.js");
-/* harmony import */ var _styles_app_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/app.css */ "./assets/styles/app.css");
-
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
-
-/***/ },
-
-/***/ "./assets/stimulus_bootstrap.js"
-/*!**************************************!*\
-  !*** ./assets/stimulus_bootstrap.js ***!
-  \**************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-Object(function webpackMissingModule() { var e = new Error("Cannot find module '@symfony/stimulus-bundle'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-
-var app = Object(function webpackMissingModule() { var e = new Error("Cannot find module '@symfony/stimulus-bundle'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())();
-// register any custom, 3rd party controllers here
-// app.register('some_controller_name', SomeImportedController);
-
-/***/ },
-
-/***/ "./assets/styles/app.css"
-/*!*******************************!*\
-  !*** ./assets/styles/app.css ***!
-  \*******************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-=======
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -83,6 +41,8 @@ console.log('APP.JS CHARGÉ');
 
 var map = {
 	"./accueil_controller.js": "./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/accueil_controller.js",
+	"./confirm_controller.js": "./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/confirm_controller.js",
+	"./helpers/confirmMess.js": "./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/helpers/confirmMess.js",
 	"./login_controller.js": "./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/login_controller.js"
 };
 
@@ -108,6 +68,48 @@ webpackContext.id = "./assets/controllers sync recursive ./node_modules/@symfony
 
 /***/ },
 
+/***/ "./assets/controllers/helpers/confirmMess.js"
+/*!***************************************************!*\
+  !*** ./assets/controllers/helpers/confirmMess.js ***!
+  \***************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   confirmMess: () => (/* binding */ confirmMess)
+/* harmony export */ });
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+// assets/helpers/confirm.js
+function confirmMess(_x, _x2) {
+  return _confirmMess.apply(this, arguments);
+}
+function _confirmMess() {
+  _confirmMess = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(application, message) {
+    var el, controller;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          el = document.querySelector('[data-controller="confirm"]');
+          if (el) {
+            _context.n = 1;
+            break;
+          }
+          throw new Error('Confirm modal not found');
+        case 1:
+          controller = application.getControllerForElementAndIdentifier(el, 'confirm');
+          return _context.a(2, controller.open(message));
+      }
+    }, _callee);
+  }));
+  return _confirmMess.apply(this, arguments);
+}
+
+/***/ },
+
 /***/ "./assets/styles/accueil.scss"
 /*!************************************!*\
   !*** ./assets/styles/accueil.scss ***!
@@ -115,13 +117,10 @@ webpackContext.id = "./assets/controllers sync recursive ./node_modules/@symfony
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
->>>>>>> 1c4d4446e9dddb6404a3127fc66e183fa4eed3e4
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
 
-<<<<<<< HEAD
-=======
 /***/ },
 
 /***/ "./assets/styles/app.scss"
@@ -13139,7 +13138,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ _default)
 /* harmony export */ });
 /* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+/* harmony import */ var _helpers_confirmMess_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers/confirmMess.js */ "./assets/controllers/helpers/confirmMess.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -13154,6 +13158,7 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
+
 var _default = /*#__PURE__*/function (_Controller) {
   function _default() {
     _classCallCheck(this, _default);
@@ -13164,6 +13169,11 @@ var _default = /*#__PURE__*/function (_Controller) {
     key: "connect",
     value: function connect() {
       this.selectedQcms = new Set();
+      var offcanvasEl = document.getElementById('offcanvasMenu');
+      if (offcanvasEl) {
+        var offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+        offcanvas.show();
+      }
     }
   }, {
     key: "getQcmItem",
@@ -13173,7 +13183,8 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "addQcm",
     value: function addQcm(evt) {
-      var nameQCM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+      var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Date.now().toString();
+      var nameQCM = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
       var nb = this.QCMTargets.length + 1;
       if (nb > 1) {
         if (Number(this.QCMTargets[nb - 2].textContent.split(" ")[1])) {
@@ -13184,7 +13195,6 @@ var _default = /*#__PURE__*/function (_Controller) {
       var isModif = this.modeValue === "modif";
       var template = document.getElementById("qcm-template");
       var li = template.content.firstElementChild.cloneNode(true);
-      var id = Date.now().toString();
       var btn = this.createQcmButton(id, nameQCM || "QCM ".concat(nb));
       this.replaceQcmButton(li, btn);
       if (isModif) {
@@ -13195,17 +13205,35 @@ var _default = /*#__PURE__*/function (_Controller) {
     }
   }, {
     key: "delQcm",
-    value: function delQcm() {
-      var _this = this;
-      if (confirm("Voulez vous vraiment supprimer ces QCM ?")) {
-        this.caseTargets.forEach(function (box) {
-          if (box.checked) {
-            _this.addCorbeille(box.closest("li"));
+    value: function () {
+      var _delQcm = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+        var _this = this;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              _context.n = 1;
+              return (0,_helpers_confirmMess_js__WEBPACK_IMPORTED_MODULE_1__.confirmMess)(this.application, "Voulez vous vraiment supprimer ces QCM ?");
+            case 1:
+              if (!_context.v) {
+                _context.n = 2;
+                break;
+              }
+              this.caseTargets.forEach(function (box) {
+                if (box.checked) {
+                  _this.addCorbeille(box.closest("li"));
+                }
+              });
+              this.caseAllSelectTarget.checked = false;
+            case 2:
+              return _context.a(2);
           }
-        });
-        this.caseAllSelectTarget.checked = false;
+        }, _callee, this);
+      }));
+      function delQcm() {
+        return _delQcm.apply(this, arguments);
       }
-    }
+      return delQcm;
+    }()
   }, {
     key: "select",
     value: function select(event) {
@@ -13261,73 +13289,115 @@ var _default = /*#__PURE__*/function (_Controller) {
     }
   }, {
     key: "modif",
-    value: function modif() {
-      var _this5 = this;
-      var isModif = this.modeValue !== "modif";
-      this.modeValue = isModif ? "modif" : "normal";
-      this.baseTarget.classList.toggle("is-hidden", isModif);
-      this.modifierTarget.classList.toggle("is-hidden", !isModif);
-      this.caseTargets.forEach(function (c) {
-        c.classList.toggle("is-hidden", !isModif);
-        c.checked = false;
-      });
-      this.caseAllSelectTarget.classList.toggle("is-hidden", !isModif);
-      this.caseAllSelectTarget.checked = false;
-      if (isModif) {
-        this.QCMTargets.forEach(function (qcm) {
-          if (_this5.selectedQcms.has(qcm.dataset.qcmId)) {
-            qcm.previousElementSibling.checked = true;
+    value: function () {
+      var _modif = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+        var _this5 = this;
+        var isModif;
+        return _regenerator().w(function (_context2) {
+          while (1) switch (_context2.n) {
+            case 0:
+              isModif = this.modeValue !== "modif";
+              this.modeValue = isModif ? "modif" : "normal";
+              this.baseTarget.classList.toggle("is-hidden", isModif);
+              this.modifierTarget.classList.toggle("is-hidden", !isModif);
+              this.caseTargets.forEach(function (c) {
+                c.classList.toggle("is-hidden", !isModif);
+                c.checked = false;
+              });
+              this.caseAllSelectTarget.classList.toggle("is-hidden", !isModif);
+              this.caseAllSelectTarget.checked = false;
+              if (isModif) {
+                this.QCMTargets.forEach(function (qcm) {
+                  if (_this5.selectedQcms.has(qcm.dataset.qcmId)) {
+                    qcm.previousElementSibling.checked = true;
+                  }
+                });
+                this.caseSelectedM();
+              }
+              if (!isModif) {
+                this.selectedQcms.clear();
+                this.renderSelection();
+              }
+              this.renameValideTargets.forEach(function (div) {
+                div.classList.toggle("is-hidden", !isModif);
+                if (!div.children[1].classList.contains('is-hidden')) {
+                  div.children[1].classList.add('is-hidden');
+                  div.children[0].classList.remove('is-hidden');
+                }
+              });
+
+              // attente de la réponse de utilisateur
+              if (!this.hasNameTarget) {
+                _context2.n = 1;
+                break;
+              }
+              _context2.n = 1;
+              return this.handleExistingRename();
+            case 1:
+              return _context2.a(2);
           }
-        });
-        this.caseSelectedM();
+        }, _callee2, this);
+      }));
+      function modif() {
+        return _modif.apply(this, arguments);
       }
-      if (!isModif) {
-        this.selectedQcms.clear();
-        this.renderSelection();
-      }
-      this.renameValideTargets.forEach(function (div) {
-        div.classList.toggle("is-hidden", !isModif);
-        if (!div.children[1].classList.contains('is-hidden')) {
-          div.children[1].classList.add('is-hidden');
-          div.children[0].classList.remove('is-hidden');
-        }
-      });
-      if (this.hasNameTarget) {
-        this.handleExistingRename();
-      }
-    }
+      return modif;
+    }()
   }, {
     key: "rename",
-    value: function rename(event) {
-      var _this6 = this;
-      this.handleExistingRename();
-      var li = this.getQcmItem(event.currentTarget);
-      li.querySelector('[data-accueil-target="rename"]').classList.add("is-hidden");
-      li.querySelector('[data-accueil-target="valide"]').classList.remove("is-hidden");
-      var qcmBtn = li.querySelector('[data-accueil-target="QCM"]');
-      var id = qcmBtn.dataset.qcmId;
-      this.nomQcm = qcmBtn.textContent;
-      var input = document.createElement("input");
-      input.classList.add("flex-grow-1");
-      input.value = this.nomQcm;
-      input.dataset.accueilTarget = "name";
-      var div = li.querySelector('[data-accueil-target="renameValide"]');
-      li.insertBefore(input, div);
-      input.focus();
-      input.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          _this6.finalizeRename(li, input.value);
-        }
-        if (e.key === "Escape") {
-          e.preventDefault();
-          e.stopPropagation();
-          _this6.finalizeRename(li, _this6.nomQcm);
-        }
-      });
-      qcmBtn.remove();
-      li.dataset.qcmId = id;
-    }
+    value: function () {
+      var _rename = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(event) {
+        var _this6 = this;
+        var ok, li, qcmBtn, id, input, div;
+        return _regenerator().w(function (_context3) {
+          while (1) switch (_context3.n) {
+            case 0:
+              _context3.n = 1;
+              return this.handleExistingRename();
+            case 1:
+              ok = _context3.v;
+              if (ok) {
+                _context3.n = 2;
+                break;
+              }
+              return _context3.a(2);
+            case 2:
+              li = this.getQcmItem(event.currentTarget);
+              li.querySelector('[data-accueil-target="rename"]').classList.add("is-hidden");
+              li.querySelector('[data-accueil-target="valide"]').classList.remove("is-hidden");
+              qcmBtn = li.querySelector('[data-accueil-target="QCM"]');
+              id = qcmBtn.dataset.qcmId;
+              this.nomQcm = qcmBtn.textContent;
+              input = document.createElement("input");
+              input.classList.add("flex-grow-1");
+              input.value = this.nomQcm;
+              input.dataset.accueilTarget = "name";
+              div = li.querySelector('[data-accueil-target="renameValide"]');
+              li.insertBefore(input, div);
+              input.focus();
+              input.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  _this6.finalizeRename(li, input.value);
+                }
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  _this6.finalizeRename(li, _this6.nomQcm);
+                }
+              });
+              qcmBtn.remove();
+              li.dataset.qcmId = id;
+            case 3:
+              return _context3.a(2);
+          }
+        }, _callee3, this);
+      }));
+      function rename(_x) {
+        return _rename.apply(this, arguments);
+      }
+      return rename;
+    }()
   }, {
     key: "valide",
     value: function valide(event) {
@@ -13354,15 +13424,37 @@ var _default = /*#__PURE__*/function (_Controller) {
     }
   }, {
     key: "handleExistingRename",
-    value: function handleExistingRename() {
-      var input = this.element.querySelector('[data-accueil-target="name"]');
-      if (!input) return true;
-      var li = input.closest("li");
-      var keep = confirm("Un renommage est déjà en cours.\nVoulez-vous conserver les modifications ?");
-      var value = keep ? input.value : this.nomQcm;
-      this.finalizeRename(li, value);
-      return true;
-    }
+    value: function () {
+      var _handleExistingRename = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+        var input, li, keep, value;
+        return _regenerator().w(function (_context4) {
+          while (1) switch (_context4.n) {
+            case 0:
+              input = this.element.querySelector('[data-accueil-target="name"]');
+              if (input) {
+                _context4.n = 1;
+                break;
+              }
+              return _context4.a(2, true);
+            case 1:
+              li = input.closest("li");
+              _context4.n = 2;
+              return (0,_helpers_confirmMess_js__WEBPACK_IMPORTED_MODULE_1__.confirmMess)(this.application, "Un renommage est déjà en cours.\nVoulez-vous conserver les modifications ?");
+            case 2:
+              keep = _context4.v;
+              // si annulation → on remet le nom initial sinon non
+              value = keep ? input.value : this.nomQcm;
+              this.finalizeRename(li, value);
+            case 3:
+              return _context4.a(2);
+          }
+        }, _callee4, this);
+      }));
+      function handleExistingRename() {
+        return _handleExistingRename.apply(this, arguments);
+      }
+      return handleExistingRename;
+    }()
   }, {
     key: "addCorbeille",
     value: function addCorbeille(liElement) {
@@ -13377,6 +13469,7 @@ var _default = /*#__PURE__*/function (_Controller) {
       var template = document.getElementById("corbeille-template");
       var tr = template.content.firstElementChild.cloneNode(true);
       tr.children[0].textContent = liElement.children[1].textContent;
+      tr.children[0].dataset.qcmId = liElement.children[1].dataset.qcmId;
       tr.children[1].textContent = "".concat(dd, "/").concat(mm, "/").concat(yyyy);
       tr.children[2].textContent = "".concat(dd7, "/").concat(mm, "/").concat(yyyy);
       this.corbeilleTarget.append(tr);
@@ -13386,8 +13479,9 @@ var _default = /*#__PURE__*/function (_Controller) {
     key: "recupQcm",
     value: function recupQcm(evt) {
       var nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
+      var id = evt.currentTarget.closest('tr').children[0].dataset.qcmId;
       if (this.modeValue !== 'modif') this.modif();
-      this.addQcm("", nameQCM);
+      this.addQcm("", id, nameQCM);
       evt.currentTarget.closest('tr').remove();
       if (this.modeValue !== 'normal') this.modif();
     }
@@ -13424,6 +13518,117 @@ _defineProperty(_default, "values", {
   }
 });
 
+
+/***/ },
+
+/***/ "./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/confirm_controller.js"
+/*!********************************************************************************************************************!*\
+  !*** ./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/confirm_controller.js ***!
+  \********************************************************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+var _default = /*#__PURE__*/function (_Controller) {
+  function _default() {
+    _classCallCheck(this, _default);
+    return _callSuper(this, _default, arguments);
+  }
+  _inherits(_default, _Controller);
+  return _createClass(_default, [{
+    key: "connect",
+    value: function connect() {
+      this.modal = new bootstrap__WEBPACK_IMPORTED_MODULE_1__.Modal(this.element);
+    }
+  }, {
+    key: "open",
+    value: function open(message) {
+      var _this = this;
+      this.messageTarget.textContent = message;
+      return new Promise(function (resolve) {
+        _this._resolve = resolve;
+        _this.modal.show();
+      });
+    }
+  }, {
+    key: "confirm",
+    value: function confirm() {
+      this.modal.hide();
+      this._resolve(true);
+    }
+  }, {
+    key: "cancel",
+    value: function cancel() {
+      this.modal.hide();
+      this._resolve(false);
+    }
+  }]);
+}(_hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller);
+_defineProperty(_default, "targets", ['message']);
+
+
+/***/ },
+
+/***/ "./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/helpers/confirmMess.js"
+/*!*********************************************************************************************************************!*\
+  !*** ./node_modules/@symfony/stimulus-bridge/lazy-controller-loader.js!./assets/controllers/helpers/confirmMess.js ***!
+  \*********************************************************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   confirmMess: () => (/* binding */ confirmMess)
+/* harmony export */ });
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+// assets/helpers/confirm.js
+function confirmMess(_x, _x2) {
+  return _confirmMess.apply(this, arguments);
+}
+function _confirmMess() {
+  _confirmMess = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(application, message) {
+    var el, controller;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          el = document.querySelector('[data-controller="confirm"]');
+          if (el) {
+            _context.n = 1;
+            break;
+          }
+          throw new Error('Confirm modal not found');
+        case 1:
+          controller = application.getControllerForElementAndIdentifier(el, 'confirm');
+          return _context.a(2, controller.open(message));
+      }
+    }, _callee);
+  }));
+  return _confirmMess.apply(this, arguments);
+}
 
 /***/ },
 
@@ -18007,7 +18212,6 @@ defineJQueryPlugin(Toast);
 //# sourceMappingURL=bootstrap.esm.js.map
 
 
->>>>>>> 1c4d4446e9dddb6404a3127fc66e183fa4eed3e4
 /***/ }
 
 },

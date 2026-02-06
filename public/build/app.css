@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-/*!**************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[1].use[1]!./assets/styles/app.css ***!
-  \**************************************************************************************************************/
-body {
-    background-color: skyblue;
-}
-
-=======
 /*!******************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[1].use[1]!./node_modules/bootstrap/dist/css/bootstrap.min.css ***!
   \******************************************************************************************************************************************/
@@ -27,8 +18,8 @@ body {
 @font-face {
   font-display: block;
   font-family: "bootstrap-icons";
-  src: url(/truc/qcm/public/build/fonts/bootstrap-icons.92ea18a8.woff2) format("woff2"),
-url(/truc/qcm/public/build/fonts/bootstrap-icons.1295669c.woff) format("woff");
+  src: url(/stage_fougeres_owen/qcm/public/build/fonts/bootstrap-icons.92ea18a8.woff2) format("woff2"),
+url(/stage_fougeres_owen/qcm/public/build/fonts/bootstrap-icons.1295669c.woff) format("woff");
 }
 
 .bi::before,
@@ -2321,4 +2312,3 @@ body {
   background-color: var(--fougeres-orange);
   border-color: var(--fougeres-orange-dark);
 }
->>>>>>> 1c4d4446e9dddb6404a3127fc66e183fa4eed3e4

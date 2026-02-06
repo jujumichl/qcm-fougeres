@@ -2,15 +2,12 @@
 
 namespace App\DataFixtures;
 
-<<<<<<< HEAD
 use App\Entity\Users;
 use App\Entity\Type;
 use App\Entity\Qcm;
 use App\Entity\QuestionQcm;
 use App\Entity\ReponseQcm;
 use App\Entity\RepUserQcm;
-=======
->>>>>>> 366ee937 (Mise en place de la normalisation)
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -18,7 +15,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-<<<<<<< HEAD
         /*
          * USERS
          */
@@ -194,10 +190,6 @@ class AppFixtures extends Fixture
 
             $manager->persist($ru);
         }
-=======
-        // $product = new Product();
-        // $manager->persist($product);
->>>>>>> 366ee937 (Mise en place de la normalisation)
 
         $manager->flush();
     }

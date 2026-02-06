@@ -68,8 +68,6 @@
 /******/ 		};
 /******/ 	})();
 /******/ 	
-<<<<<<< HEAD
-=======
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -82,7 +80,6 @@
 /******/ 		};
 /******/ 	})();
 /******/ 	
->>>>>>> 1c4d4446e9dddb6404a3127fc66e183fa4eed3e4
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
