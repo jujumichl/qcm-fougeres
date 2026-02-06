@@ -50,7 +50,7 @@
                 </div>
               </li>
             {% else %}
-              <div class="position-absolute top-50 start-50 translate-middle">
+              <div class="position-absolute top-50 start-50 translate-middle" data-accueil-target="txtMid">
                 <p class="text-center">Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</p>
               </div>
             {% endfor %}
@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    {% include './MessConfirm/confirmMessage.html.twig' %}
+    {% include './MessConfirm/default.html.twig' %}
     
     <!-- vérifier pour le all selected si au moins 2 cases sont séléctionnées -->
     <!-- CONTENU -->

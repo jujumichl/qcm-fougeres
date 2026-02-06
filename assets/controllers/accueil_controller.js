@@ -16,6 +16,7 @@ export default class extends Controller {
     'name',
     'corbeille',
     'QCMSuppr',
+    'txtMid',
   ];
 
   static values = {
@@ -37,13 +38,18 @@ export default class extends Controller {
   }
 
   addQcm(evt, id = Date.now().toString(), nameQCM = "") {
-    let nb = this.QCMTargets.length + 1;
-
-    if (nb > 1) {
-      if (Number(this.QCMTargets[nb - 2].textContent.split(" ")[1])) {
-        const lastQcm = this.QCMTargets[nb - 2];
+    let nb = this.QCMTargets.length;
+    if (nb >=4){
+      this.txtMidTarget.classList.add('is-hidden');
+    }
+    if (nb > 0) {
+      if (Number(this.QCMTargets[nb - 1].textContent.split(" ")[1])) {
+        const lastQcm = this.QCMTargets[nb - 1];
         nb = Number(lastQcm.textContent.split(" ")[1]) + 1;
       }
+    }
+    else {
+      nb = nb+1
     }
 
     const isModif = this.modeValue === "modif";
@@ -63,6 +69,7 @@ export default class extends Controller {
   }
 
   async delQcm() {
+
     if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
       this.caseTargets.forEach(box => {
         if (box.checked) {
@@ -70,6 +77,11 @@ export default class extends Controller {
         }
       });
       this.caseAllSelectTarget.checked = false;
+          let nb = this.QCMTargets.length;
+
+      if (nb < 5){
+        this.txtMidTarget.classList.remove('is-hidden');
+      }
     }
   }
 
