@@ -10,7 +10,7 @@ export default class extends Controller {
     "modalBody"
   ]
   static values = {
-    type: { Type: String, default: "liste" },
+    type: { Type: String, default: "unique" },
   }
 
   ajoutReponse() {
@@ -36,6 +36,7 @@ export default class extends Controller {
     }
 
     else {
+      
       const templateListe = document.getElementById("reponseListe");
 
       const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
@@ -47,14 +48,14 @@ export default class extends Controller {
   /** PENSER A recup l'input afin de garder les potentielles réponses déjà écrites */
   changerType() {
     // Récupère, parmi les éléments possédant la target : type, celui dont le bouton radio est coché.
-    const selectedType = this.typeTargets.find(r => r.checked).value;
-
-    // associe la valeur du bouton à la value Stimulus
-    this.typeValue = selectedType;
-
-    // Appel la fonction pour ajouté une réponse
+    this.typeTargets.forEach(r =>{
+      if (r.checked){
+        this.typeValue = r.dataset.editionTypeValue;
+        console.log(this.typeValue)
+      }
+    })
+    this.resetReponse();
     this.ajoutReponse();
-    //console.log (this.typeValue);
   }
 
   resetReponse(){
@@ -72,7 +73,11 @@ export default class extends Controller {
     const button = event.currentTarget;
 
     // on remonte à la div parente qui contient les inputs et le bouton supprimer
-    const reponseDiv = button.parentElement;
+    let reponseDiv = button.parentElement;
+    console.log(this.typeValue);
+    if (this.typeValue === "liste"){
+      reponseDiv = reponseDiv.parentElement;
+    }
 
     reponseDiv.remove();
   }

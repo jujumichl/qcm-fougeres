@@ -119,42 +119,39 @@
         <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
       </div>
     </form>
-  </div>
-
-
-
-  <!-- Modal(PopUp) pour choisir le type de réponse -->
-  <div class="modal fade" id="typeReponse" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5">Choisissez un type de réponse :</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-flex flex-column gap-3" data-edition-target="modalBody">
-          <!-- Affiche le choix "réponses multiple" -->
-          <div class="d-flex align-items-center gap-2">
-            <input type="radio" name="radio" id="radio1" value="multiple" class="form-check-input" data-edition-target="type" />
-            <label for="radio1" class="form-check-label">Choix multiple</label>
-            <i class="bi bi-check-square fs-5"></i>
+    <!-- Modal(PopUp) pour choisir le type de réponse -->
+    <div class="modal fade" id="typeReponse" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Choisissez un type de réponse :</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <!-- Affiche le choix "réponse unique" -->
-          <div class="d-flex align-items-center gap-2">
-            <input type="radio" name="radio" id="radio2" value="unique" class="form-check-input" data-edition-target="type" />
-            <label for="radio2" class="form-check-label">Choix unique</label>
-            <i class="bi bi-record-circle fs-5"></i>
+          <div class="modal-body d-flex flex-column gap-3" data-edition-target="modalBody">
+            <!-- Affiche le choix "réponses multiple" -->
+            <div class="d-flex align-items-center gap-2">
+              <input type="radio" name="radio" id="radio1" data-edition-type-value="multiple" class="form-check-input" data-edition-target="type" />
+              <label for="radio1" class="form-check-label">Choix multiple</label>
+              <i class="bi bi-check-square fs-5"></i>
+            </div>
+            <!-- Affiche le choix "réponse unique" -->
+            <div class="d-flex align-items-center gap-2">
+              <input type="radio" name="radio" id="radio2" data-edition-type-value="unique" class="form-check-input" data-edition-target="type" />
+              <label for="radio2" class="form-check-label">Choix unique</label>
+              <i class="bi bi-record-circle fs-5"></i>
+            </div>
+            <!-- Affiche une liste de réponse -->
+            <div class="d-flex align-items-center gap-2">
+              <input type="radio" name="radio" id="radio3" data-edition-type-value="liste" class="form-check-input" data-edition-target="type" checked />
+              <label for="radio3" class="form-check-label">Liste de réponse</label>
+              <i class="bi bi-menu-button-wide-fill fs-4"></i>
+            </div>
           </div>
-          <!-- Affiche une liste de réponse -->
-          <div class="d-flex align-items-center gap-2">
-            <input type="radio" name="radio" id="radio3" value="liste" class="form-check-input" data-edition-target="type" checked />
-            <label for="radio3" class="form-check-label">Liste de réponse</label>
-            <i class="bi bi-menu-button-wide-fill fs-4"></i>
-          </div>
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-action="click->edition#resetReponse click->edition#changerType">Valider</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-action="click->edition#resetReponse click->edition#changerType">Valider</button>
+          </div>
         </div>
       </div>
     </div>
