@@ -1,11 +1,16 @@
-// assets/controllers/login_controller.js
 import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-  static targets = ["reponse", "cardReponse", "divReponse", "type", "modalBody"]
+  static targets = [
+    "reponse", 
+    "cardReponse", 
+    "divReponse", 
+    "type", 
+    "modalBody"
+  ]
   static values = {
-    type: { Type: String, default: "liste" }
+    type: { Type: String, default: "liste" },
   }
 
   ajoutReponse() {
@@ -39,6 +44,7 @@ export default class extends Controller {
     }
   }
 
+  /** PENSER A recup l'input afin de garder les potentielles réponses déjà écrites */
   changerType() {
     // Récupère, parmi les éléments possédant la target : type, celui dont le bouton radio est coché.
     const selectedType = this.typeTargets.find(r => r.checked).value;
@@ -51,7 +57,7 @@ export default class extends Controller {
     //console.log (this.typeValue);
   }
 
-  resetReponse() {
+  resetReponse(){
     const modalBody = this.modalBodyTarget;
     const choixUser = modalBody.querySelector('input[name="radio"]:checked');
 
