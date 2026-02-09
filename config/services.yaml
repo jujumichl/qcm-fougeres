@@ -35,7 +35,7 @@ parameters:
     ldap_authorized_groups: []
     ldap_admin_groups:     # Liste des groupes AD avec droits d'administration dans l'application
         - CN=informatique,OU=Groupe_partagereseau,OU=GROUPES,DC=hdv,DC=local    
-    default_redirection: 'accueil'     # Page vers laquelle rediriger l'utilisateur après login réussi
+    default_redirection: 'app_accueil'     # Page vers laquelle rediriger l'utilisateur après login réussi
 
 # ---------------------------------
 # Services utilisés par l'application Symfony
