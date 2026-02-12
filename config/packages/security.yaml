@@ -11,9 +11,10 @@ security:
     providers:
         users_in_memory: { memory: null }
 
-        ldap_users:
-            id: App\Security\ADUserProvider # ← notre service ADUserProvider
-
+        ldap_provider:
+            entity:
+                class: App\Entity\Users
+                property: codeAd
     # -----------------------------
     # Les firewalls (zones sécurisées)
     # -----------------------------
@@ -25,26 +26,16 @@ security:
 
         main:
             lazy: true   # service chargé uniquement si nécessaire
-            provider: ldap_users    # Définit quel fournisseur d’utilisateurs utiliser
-            anonymous: true       # Autorise les utilisateurs anonymes (non connectés) à accéder notamment à la page login
+            provider: ldap_provider    # Définit quel fournisseur d’utilisateurs utiliser
             
-            # === Formulaire de login avec LDAP ===
-            form_login_ldap:
-                login_path: login         # URL du formulaire de connexion
-                check_path: login         # URL où Symfony vérifie les identifiants
-                username_parameter: _username
-                password_parameter: _password
-
-                service: Symfony\Component\Ldap\Ldap  # Service LDAP utilisé pour authentification
-                dn_string: "CN={username},OU=Users,DC=mondomaine,DC=com"
-                # Format du DN pour l'utilisateur à authentifier
-                # {username} sera remplacé par le login saisi
-                # Exemple : CN=jdupont,OU=Users,DC=mondomaine,DC=com
+            custom_authenticators:
+                - App\Security\LdapAuthenticator
 
             # === Déconnexion ===
             logout:
                 path: logout              # URL pour se déconnecter
                 target: login
+            
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall

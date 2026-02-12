@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,8 +14,8 @@ class Users
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'integer', unique: true)]
-    private ?int $codeAd = null;
+    #[ORM\Column(type: 'string', unique: true)]
+    private ?string $codeAd = null;
 
     #[ORM\Column]
     private ?bool $admin = null;
@@ -24,12 +25,12 @@ class Users
         return $this->id;
     }
 
-    public function getcodeAd(): ?int
+    public function getcodeAd(): ?string
     {
         return $this->codeAd;
     }
 
-    public function setcodeAd(int $codeAd): static
+    public function setcodeAd(string $codeAd): static
     {
         $this->codeAd = $codeAd;
 

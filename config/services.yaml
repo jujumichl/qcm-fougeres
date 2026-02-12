@@ -21,8 +21,8 @@ parameters:
     # Filtre LDAP pour rechercher l'utilisateur par login
     # '{username}' sera remplacé par le login saisi dans le formulaire
     ldap_query_string: '(sAMAccountName={username})'
-    ldap_identifier: 'srv_portail_web@hdv.local'     # Identifiant de connexion au serveur LDAP pour les recherches
-    ldap_password: 'ZtB107FB'       # Mot de passe de l'identifiant de connexion LDAP
+    ldap_searchId_dn: 'srv_portail_web@hdv.local'     # Identifiant de connexion au serveur LDAP pour les recherches
+    ldap_searchPassword: 'ZtB107FB'       # Mot de passe de l'identifiant de connexion LDAP
     ldap_port: 389
     ldap_protocol_version: 3
 
@@ -34,19 +34,30 @@ parameters:
     # Laisser vide [] si aucun filtrage n'est nécessaire
     ldap_authorized_groups: []
     ldap_admin_groups:     # Liste des groupes AD avec droits d'administration dans l'application
-        - CN=informatique,OU=Groupe_partagereseau,OU=GROUPES,DC=hdv,DC=local    
+        - CN=informatique,OU=Groupe_partagereseau,OU=GROUPES,DC=hdv,DC=local 
+    ldap_authorized_primary_groups: []   # liste de groupes LDAP (AD) que l’utilisateur doit obligatoirement appartenir pour être autorisé à se connecter
     default_redirection: 'app_accueil'     # Page vers laquelle rediriger l'utilisateur après login réussi
 
 # ---------------------------------
 # Services utilisés par l'application Symfony
 # ---------------------------------
 services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # -------------------------------
-    # Services LDAP
-    # -------------------------------
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/DataFixtures/'
+            - '../src/Kernel.php'
 
-    # Adaptateur qui gère la connexion tecnhique au serveur AD/LDAP
+    # === Services LDAP === #
+    # Adaptateur qui gère la connexion technique au serveur AD/LDAP
     Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
         arguments:
             - host: '%ldap_host%'
@@ -64,11 +75,4 @@ services:
     # Permet d’injecter Ldap dans les classe via l’interface Ldap
     Symfony\Component\Ldap\LdapInterface: '@Symfony\Component\Ldap\Ldap'
 
-    # Fournisseur d’utilisateurs LDAP personnalisé,  lie l'input de formulaire Login et l'AD
-    App\Security\ADUserProvider:
-        arguments:
-            - '@Symfony\Component\Ldap\Ldap'
-            - '%ldap_baseDn%'
-            - '%ldap_identifier%'
-            - '%ldap_password%'
 
