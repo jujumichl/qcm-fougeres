@@ -13,7 +13,7 @@ security:
 
         ldap_provider:
             entity:
-                class: App\Entity\Users
+                class: App\Entity\User
                 property: codeAd
     # -----------------------------
     # Les firewalls (zones sécurisées)
@@ -35,7 +35,6 @@ security:
             logout:
                 path: logout              # URL pour se déconnecter
                 target: login
-            
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall

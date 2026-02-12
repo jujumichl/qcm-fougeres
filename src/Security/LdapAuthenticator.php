@@ -2,8 +2,8 @@
 
 namespace App\Security;
 
-use App\Entity\Users; //
-use App\Repository\UsersRepository; //
+use App\Entity\User; //
+use App\Repository\UserRepository; //
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface; //
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;//
 use Symfony\Component\Ldap\Exception\InvalidCredentialsException; //
 use Symfony\Component\Ldap\Exception\ConnectionException; //
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge; //
 
 /**
  * @see https://symfony.com/doc/current/security/custom_authenticator.html
@@ -34,11 +35,11 @@ class LdapAuthenticator extends AbstractAuthenticator
      * crée automatiquement les propriétés de la classe et les initialise avec les valeurs injectées.
     */                   
     public function __construct(
-        LdapInterface $ldap, 
-        UrlGeneratorInterface $urlGenerator, 
-        UsersRepository $userRepository, 
-        EntityManagerInterface $em,
-        ParameterBagInterface $params
+        private LdapInterface $ldap, 
+        private UrlGeneratorInterface $urlGenerator, 
+        private UserRepository $userRepository, 
+        private EntityManagerInterface $em,
+        private ParameterBagInterface $params
     ) {}
 
     /**
@@ -81,21 +82,24 @@ class LdapAuthenticator extends AbstractAuthenticator
 
         // Retour du Passport avec UserBadge
         return new SelfValidatingPassport(
-            new UserBadge(userIdentifier: $username, userLoader: function (string $userIdentifier) use ($password): Users {
+            new UserBadge(userIdentifier: $username, userLoader: function (string $userIdentifier) use ($password): User {
                 try {
                     // Bind LDAP avec le compte de service pour les recherches
-                    $this->ldap->bind(
-                        $this->params->get('ldap_searchId_dn'),
-                        $this->params->get('ldap_searchPassword')
-                    );
+                    try{
+                        $this->ldap->bind( 
+                            $this->params->get('ldap_searchId_dn'),
+                            $this->params->get('ldap_searchPassword')
+                        );
+                    } catch (ConnectionException $e) {
+                        throw new CustomUserMessageAuthenticationException('Impossible de se connecter au serveur LDAP.');
+                    }
 
-                    // Préparer la requête LDAP
+                    // --------------------
+                    // Recherche de l'utilisateur dans AD
+                    // --------------------
                     $baseDn = $this->params->get('ldap_baseDn');
                     $queryString = $this->params->get('ldap_query_string');
                     $ldapDomain = $this->params->get('ldap_domain');
-                    $authorizedGroups = $this->params->get('ldap_authorized_groups', []);
-                    $authorizedPrimaryGroups = $this->params->get('ldap_authorized_primary_groups', []);
-                    $adminGroups = $this->params->get('ldap_admin_groups', []);
 
                     $usernameEscaped = $this->ldap->escape($userIdentifier, '', LdapInterface::ESCAPE_FILTER); // Échapper le nom d'utilisateur pour éviter les injections LDAP
                     $query = str_replace('{username}', $usernameEscaped, $queryString);
@@ -114,7 +118,7 @@ class LdapAuthenticator extends AbstractAuthenticator
                         try { 
                             $this->ldap->bind($userIdentifier . '@' . $ldapDomain, $password);
                         } catch (InvalidCredentialsException $e) {
-                            // Option 2: Bind avec le DN (Ditinguish Name) de l'utilisateur ex : (cn=John Doe,ou=Users,dc=example,dc=com)
+                            // Option 2: Bind avec le DN (Ditinguish Name) de l'utilisateur ex : (cn=John Doe,ou=User,dc=example,dc=com)
                             $this->ldap->bind($userDn, $password); 
                         }
 
@@ -124,32 +128,20 @@ class LdapAuthenticator extends AbstractAuthenticator
                         throw new CustomUserMessageAuthenticationException('Erreur de connexion au serveur LDAP: ' . $e->getMessage());
                     }
                     
-                    // Vérification des accès selon les groupes
-                    $hasAccess = false;
-                    $isAdmin = false; 
+                    // --------------------
+                    // Vérification des groupes
+                    // --------------------
+                    $authorizedGroups = $this->params->get('ldap_authorized_groups', []);
+                    $authorizedPrimaryGroups = $this->params->get('ldap_authorized_primary_groups', []);
+                    $adminGroups = $this->params->get('ldap_admin_groups', []);
 
-                    // Si aucun groupe n'est spécifié dans le service.yaml , on autorise tout le monde
-                    if (empty($authorizedGroups) && empty($authorizedPrimaryGroups)) {
-                        $hasAccess = true;
-                    }
-                    else {
-                        // Vérifie les groupes membres secondaires, si aucun alors retourne un tableau vide 
-                        $memberOf = $entry->getAttribute('memberOf') ?? []; // attribut LDAP contenant tous les groupes dont l’utilisateur est membre.
-                        foreach ($authorizedGroups as $groupDn) {
-                            if (in_array($groupDn, $memberOf)) {
-                                $hasAccess = true;
-                                break;
-                            }
-                        }
-                        // Vérifie si l'utilisateur appartient à un group Admin 
-                        if (!empty($adminGroups)) { 
-                            foreach ($adminGroups as $adminGroupDn) { 
-                                if (in_array($adminGroupDn, $memberOf)) { 
-                                    $isAdmin = true; break; 
-                                } 
-                            }
-                        } 
-                    }
+                    $memberOf = $entry->getAttribute('memberOf') ?? []; // attribut LDAP contenant tous les groupes dont l’utilisateur est membre.
+
+                    $isAdmin = count(array_intersect($adminGroups, $memberOf)) > 0; // Vérifie s’il y a au moins un élément en commun et renvoie true si oui
+
+                    // Si aucun groupe n'est spécifié dans le service.yaml , on autorise tous le monde
+                    // Si l'utilisateur appartient à un groupe secondaires autorisé, alors il a les accès  
+                    $hasAccess = empty($authorizedGroups) && empty($authorizedPrimaryGroups) || count(array_intersect($authorizedGroups, $memberOf)) > 0;
 
                     // Vérifie les groupes primaires autorisés si aucun groupe secondaires n'est autorisé
                     if (!$hasAccess && !empty($authorizedPrimaryGroups)) {
@@ -163,42 +155,39 @@ class LdapAuthenticator extends AbstractAuthenticator
                             }
                         }
                     } 
-
                     if (!$hasAccess) {
                         throw new CustomUserMessageAuthenticationException('Vous n\'avez pas accès à cette application.');
                     }
 
-                    // Charger l'utilisateur depuis la base ou le créer s'il n'existe pas
+                    // --------------------
+                    // Charger ou créer l'utilisateur en BDD s'il n'existe pas
+                    // -------------------- 
                     $user = $this->userRepository->findOneBy(['codeAd' => $userIdentifier]);
                     if (!$user) {
                         $user = new User();
                         $user->setcodeAd($userIdentifier);
-                        $user->setAdmin(false);
+                        $user->setAdmin($isAdmin);
                         $this->em->persist($user);
                         $this->em->flush();
-                    }
+                    } else {
+                        // Mettre à jour le flag admin si besoin
+                        if ($user->isAdmin() !== $isAdmin) {
+                            $user->setAdmin($isAdmin);
+                            $this->em->flush();
+                        }
+                    } 
+                    return $user;
 
-                } catch(test){
-
+                } catch (AuthenticationException $e) {   
+                    throw $e;
                 }
-            }
-        )
+            })
         );
-
-        // $apiToken = $request->headers->get('X-AUTH-TOKEN');
-        // if (null === $apiToken) {
-        // The token header was empty, authentication fails with HTTP Status
-        // Code 401 "Unauthorized"
-        // throw new CustomUserMessageAuthenticationException('No API token provided');
-        // }
-
-        // implement your own logic to get the user identifier from `$apiToken`
-        // e.g. by looking up a user in the database using its API key
-        // $userIdentifier = /** ... */;
-
-        // return new SelfValidatingPassport(new UserBadge($userIdentifier));
     }
 
+    /**
+     * Rédirection vers la page d'accueil en cas de succès dans l'authentification
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         // on success, let the request continue
