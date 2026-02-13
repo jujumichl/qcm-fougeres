@@ -2,26 +2,26 @@
 
 namespace App\Security;
 
-use App\Entity\User; //
-use App\Repository\UserRepository; //
+use App\Entity\User; // ajouter
+use App\Repository\UserRepository; // ajouter
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface; //
-use Symfony\Component\Ldap\LdapInterface; //
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface; // ajouter
+use Symfony\Component\Ldap\LdapInterface; // ajouter
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport; //suppress unused
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Doctrine\ORM\EntityManagerInterface; //
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface; //
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;//
-use Symfony\Component\Ldap\Exception\InvalidCredentialsException; //
-use Symfony\Component\Ldap\Exception\ConnectionException; //
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge; //
+use Doctrine\ORM\EntityManagerInterface; // ajouter
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface; // ajouter
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;// ajouter
+use Symfony\Component\Ldap\Exception\InvalidCredentialsException; // ajouter
+use Symfony\Component\Ldap\Exception\ConnectionException; // ajouter
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge; // ajouter
+use App\Repository\RoleRepository; // 
 
 /**
  * @see https://symfony.com/doc/current/security/custom_authenticator.html
@@ -43,9 +43,8 @@ class LdapAuthenticator extends AbstractAuthenticator
     ) {}
 
     /**
-     * Appelé à chaque demande pour décider si  authenticate() doit être
-     * Utilisé pour la demande. Si false est retourné alors authenticate()
-     * est ignoré
+     * Appelé à chaque demande pour décider si  authenticate() doit être Utilisé pour la demande.
+     * Si false est retourné alors authenticate() est ignoré.
      */
     public function supports(Request $request): ?bool
     {
@@ -56,13 +55,20 @@ class LdapAuthenticator extends AbstractAuthenticator
         return $isSupported;
     }
 
+    /**
+     * Fonction principale qui gère l'authentification de l'utilisateur via Active Directory.
+     * La vérification des credentials (login/mot de passe) est effectuée directement par l'AD, 
+     * D'où l'utilisation de SelfValidatingPassport et pas la classe Passport.
+     */
     public function authenticate(Request $request): SelfValidatingPassport
-    {
+    { 
         error_log(message: "authenticate() method entered");
 
+        // Récupération de l'input utilisateur
         $username = $request->request->get('username');
         $password = $request->request->get('password');
 
+        // récupération des paramètres globaux LDAP déclarés dans services.yaml
         $ldapHost = $this->params->get('ldap_host');
         $ldapPort = $this->params->get('ldap_port');
         $ldapBaseDn = $this->params->get('ldap_baseDn');
@@ -70,6 +76,7 @@ class LdapAuthenticator extends AbstractAuthenticator
         $ldapPassword = $this->params->get('ldap_searchPassword');
         $ldapDomain = $this->params->get('ldap_domain');
 
+        // Mise en place de log pour vérifier que nos paramètre LDAP sont bon
         error_log("Debug LDAP - Host: $ldapHost, Port: $ldapPort, BaseDn: $ldapBaseDn");
         error_log("Debug LDAP - Identifier: $ldapIdentifier, Domain: $ldapDomain");
         error_log("Debug LDAP - BaseDn: $ldapBaseDn, Identifier: $ldapIdentifier, Password: $ldapPassword");
@@ -80,18 +87,18 @@ class LdapAuthenticator extends AbstractAuthenticator
         throw new AuthenticationException('Nom d\'utilisateur ou mot de passe manquant.');
         }
 
-        // Retour du Passport avec UserBadge
+        // Retour du Passport avec UserBadge qui est configurer par une fonction anonyme
         return new SelfValidatingPassport(
             new UserBadge(userIdentifier: $username, userLoader: function (string $userIdentifier) use ($password): User {
                 try {
-                    // Bind LDAP avec le compte de service pour les recherches
+                    // Bind (connexion) LDAP avec le compte de service pour les recherches
                     try{
                         $this->ldap->bind( 
                             $this->params->get('ldap_searchId_dn'),
                             $this->params->get('ldap_searchPassword')
                         );
                     } catch (ConnectionException $e) {
-                        throw new CustomUserMessageAuthenticationException('Impossible de se connecter au serveur LDAP.');
+                        throw new CustomUserMessageAuthenticationException('Erreur d\'authentification LDAP: ' . $e->getMessage());
                     }
 
                     // --------------------
@@ -137,7 +144,7 @@ class LdapAuthenticator extends AbstractAuthenticator
 
                     $memberOf = $entry->getAttribute('memberOf') ?? []; // attribut LDAP contenant tous les groupes dont l’utilisateur est membre.
 
-                    $isAdmin = count(array_intersect($adminGroups, $memberOf)) > 0; // Vérifie s’il y a au moins un élément en commun et renvoie true si oui
+                    $isAdmin = count(array_intersect($adminGroups, $memberOf)) > 0; // Vérifie si l'utilisateur appartient à un groupe admin
 
                     // Si aucun groupe n'est spécifié dans le service.yaml , on autorise tous le monde
                     // Si l'utilisateur appartient à un groupe secondaires autorisé, alors il a les accès  
@@ -162,17 +169,23 @@ class LdapAuthenticator extends AbstractAuthenticator
                     // --------------------
                     // Charger ou créer l'utilisateur en BDD s'il n'existe pas
                     // -------------------- 
-                    $user = $this->userRepository->findOneBy(['codeAd' => $userIdentifier]);
+                    $user = $this->UserRepository->findOneBy(['codeAd' => $userIdentifier]);
+                    $userRole = $this->RoleRepository->findOneBy(['id' => 1]); // Role_User
+
+                    if($isAdmin){
+                        $userRole = $this->RoleRepository->findOneBy(['id' => 2]); // Role_Admin
+                    }
+                    
                     if (!$user) {
                         $user = new User();
                         $user->setcodeAd($userIdentifier);
-                        $user->setAdmin($isAdmin);
+                        $user->setRole($userRole);
                         $this->em->persist($user);
                         $this->em->flush();
                     } else {
                         // Mettre à jour le flag admin si besoin
-                        if ($user->isAdmin() !== $isAdmin) {
-                            $user->setAdmin($isAdmin);
+                        if ($user->getRole() !== $userRole) {
+                            $user->setRole($userRole);
                             $this->em->flush();
                         }
                     } 
@@ -190,8 +203,8 @@ class LdapAuthenticator extends AbstractAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // on success, let the request continue
-        return null;
+        // Redirection vers la route 'app_accueil'
+        return new RedirectResponse($this->urlGenerator->generate('app_accueil'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

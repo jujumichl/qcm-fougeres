@@ -29,7 +29,7 @@ security:
             provider: ldap_provider    # Définit quel fournisseur d’utilisateurs utiliser
             
             custom_authenticators:
-                - App\Security\LdapAuthenticator
+            - App\Security\LdapAuthenticator
 
             # === Déconnexion ===
             logout:

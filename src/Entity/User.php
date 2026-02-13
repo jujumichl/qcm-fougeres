@@ -17,8 +17,9 @@ class User
     #[ORM\Column(type: 'string', unique: true)]
     private ?string $codeAd = null;
 
-    #[ORM\Column]
-    private ?bool $admin = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
 
     public function getId(): ?int
     {
@@ -37,14 +38,14 @@ class User
         return $this;
     }
 
-    public function isAdmin(): ?bool
+    public function getRole(): ?Role
     {
-        return $this->admin;
+        return $this->role;
     }
 
-    public function setAdmin(bool $admin): static
+    public function setRole(?Role $role): static
     {
-        $this->admin = $admin;
+        $this->role = $role;
 
         return $this;
     }

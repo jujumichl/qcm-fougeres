@@ -30,7 +30,7 @@ class Qcm
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Users $createur = null;
+    private ?User $createur = null;
 
     public function getId(): ?string
     {
@@ -104,12 +104,12 @@ class Qcm
         return $this;
     }
 
-    public function getCreateur(): ?Users
+    public function getCreateur(): ?User
     {
         return $this->createur;
     }
 
-    public function setCreateur(?Users $createur): static
+    public function setCreateur(?User $createur): static
     {
         $this->createur = $createur;
 
