@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { confirmMess } from './helpers/confirmMess.js';
 
 // Connects to data-controller="login"
 export default class extends Controller {
@@ -7,11 +8,13 @@ export default class extends Controller {
     "cardReponse", 
     "divReponse", 
     "type", 
-    "modalBody"
+    "modalBody",
+    "dropdownRep",
   ]
   static values = {
     type: { Type: String, default: "unique" },
   }
+
 
   ajoutReponse() {
     // Boucle pour déterminer le type d'input générer
@@ -68,8 +71,8 @@ export default class extends Controller {
   }
 
   supprReponse(event) {
+
     event.preventDefault();
-    // bouton cliqué
     const button = event.currentTarget;
 
     // on remonte à la div parente qui contient les inputs et le bouton supprimer
@@ -81,6 +84,21 @@ export default class extends Controller {
 
     reponseDiv.remove();
   }
+
+  addRepDrop(evt){
+    evt.preventDefault();
+
+    let inputValue = evt.currentTarget.previousElementSibling.value;
+    
+    const templateListe = document.getElementById("dropdwonRep");
+
+    const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
+
+    cloneRepListe.children[0].children[1].textContent = inputValue;
+
+    this.dropdownRepTarget.append(cloneRepListe);
+  }
+
 
   /**
   ajoutQuestion(event) {

@@ -57,7 +57,7 @@
           <!-- Template qui contient la structure d'une liste de réponses -->
           <template id="reponseListe">
             <div class="btn-group mb-3 me-2 w-100">
-              <div class="d-flex align-items-center input-group me-1" data-controller="edition" data-edition-target="divReponse">
+              <div class="d-flex align-items-center input-group me-1" data-edition-target="divReponse">
                 <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
                 <!-- Input principal -->
                 <input type="text" name="editRep" class="form-control" placeholder="Mettez une réponse..." />
@@ -65,14 +65,14 @@
 
               <!-- Dropdown -->
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Modifier les options</button>
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Modifier les options</button>
 
                 <ul class="dropdown-menu p-3" style="min-width: 350px;">
                   <!-- Ajouter une réponse -->
                   <li class="mb-2">
                     <div class="d-flex">
                       <input type="text" class="form-control" placeholder="Ajouter une réponse..." />
-                      <button class="btn btn-outline-success"><i class="bi bi-plus"></i></button>
+                      <button class="btn btn-outline-success" data-action="click->edition#addRepDrop"><i class="bi bi-plus"></i></button>
                     </div>
                   </li>
 
@@ -80,20 +80,21 @@
                     <hr class="dropdown-divider" />
                   </li>
 
-                  <!-- Une réponse -->
-                  <li>
-                    <div class="d-flex align-items-center">
-                      <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+                  <div data-edition-target="dropdownRep">
+                    <!-- Une réponse -->
+                    <li>
+                      <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
 
-                      <!-- data-accueil-target="QCM" data-action="click->accueil#select" -->
-                      <button type="button" class="btn btn-light flex-grow-1 text-start">ah</button>
-                      <!-- data-accueil-target="rename" data-action="click->accueil#rename" -->
-                      <button type="button" class="btn btn-outline-warning"><i class="bi bi-pencil"></i></button>
-                      <!-- data-accueil-target="valide" data-action="click->accueil#valide" -->
-                      <button type="button" hidden class="btn btn-outline-success"><i class="bi bi-check"></i></button>
-                    </div>
-                  </li>
-
+                        <!-- data-accueil-target="QCM" data-action="click->accueil#select" -->
+                        <button type="button" class="btn btn-light flex-grow-1 text-start">ah</button>
+                        <!-- data-accueil-target="rename" data-action="click->accueil#rename" -->
+                        <button type="button" class="btn btn-outline-warning"><i class="bi bi-pencil"></i></button>
+                        <!-- data-accueil-target="valide" data-action="click->accueil#valide" -->
+                        <button type="button" hidden class="btn btn-outline-success"><i class="bi bi-check"></i></button>
+                      </div>
+                    </li>
+                  </div>
                   <li>
                     <hr class="dropdown-divider" />
                   </li>
@@ -106,6 +107,34 @@
               </div>
             </div>
           </template>
+
+          <!-- template d'une réponse à ajouter dans le menu dropdown -->
+          <template id="dropdwonRep">
+            <li>
+              <div class="d-flex align-items-center">
+                <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+
+                <!-- data-accueil-target="QCM" data-action="click->accueil#select" -->
+                <button type="button" class="btn btn-light flex-grow-1 text-start"></button>
+                <!-- data-accueil-target="rename" data-action="click->accueil#rename" -->
+                <button type="button" class="btn btn-outline-warning"><i class="bi bi-pencil"></i></button>
+                <!-- data-accueil-target="valide" data-action="click->accueil#valide" -->
+                <button type="button" hidden class="btn btn-outline-success"><i class="bi bi-check"></i></button>
+              </div>
+            </li>
+          </template>
+
+          <!-- Ajout de la réponse par défaut -->
+          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+            <!-- Bouton pour supprimer la réponse -->
+            <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+
+            <!-- Input visible côté utilisateur -->
+            <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
+
+            <!-- Input pour éditer la réponse -->
+            <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
+          </div>
         </div>
         <!-- Le type de réponse de base pour chaque question -->
         <div class="card-footer d-flex justify-content-between align-items-center p-1">
@@ -136,13 +165,13 @@
             </div>
             <!-- Affiche le choix "réponse unique" -->
             <div class="d-flex align-items-center gap-2">
-              <input type="radio" name="radio" id="radio2" data-edition-type-value="unique" class="form-check-input" data-edition-target="type" />
+              <input type="radio" name="radio" id="radio2" data-edition-type-value="unique" class="form-check-input" data-edition-target="type" checked />
               <label for="radio2" class="form-check-label">Choix unique</label>
               <i class="bi bi-record-circle fs-5"></i>
             </div>
             <!-- Affiche une liste de réponse -->
             <div class="d-flex align-items-center gap-2">
-              <input type="radio" name="radio" id="radio3" data-edition-type-value="liste" class="form-check-input" data-edition-target="type" checked />
+              <input type="radio" name="radio" id="radio3" data-edition-type-value="liste" class="form-check-input" data-edition-target="type" />
               <label for="radio3" class="form-check-label">Liste de réponse</label>
               <i class="bi bi-menu-button-wide-fill fs-4"></i>
             </div>
@@ -155,5 +184,6 @@
         </div>
       </div>
     </div>
+    {% include './MessConfirm/default.html.twig' %}
   </div>
 {% endblock %}
