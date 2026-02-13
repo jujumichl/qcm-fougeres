@@ -2,28 +2,44 @@ import { Controller } from '@hotwired/stimulus';
 import { Modal } from 'bootstrap';
 
 export default class extends Controller {
-    static targets = ['message'];
+    static targets = ['message', 'conf', 'ok'];
 
     connect() {
-        this.modal = new Modal(this.element);
+        this.okModal = new Modal(this.okTarget);
+        this.confModal = new Modal(this.confTarget);
     }
 
-    open(message) {
-        this.messageTarget.textContent = message;
+    openOk(message) {
+        this.messageTargets[1].textContent = message;
 
         return new Promise((resolve) => {
             this._resolve = resolve;
-            this.modal.show();
+            this.okModal.show();
         });
     }
 
-    confirm() {
-        this.modal.hide();
+    confirmOk() {
+        this.okModal.hide();
         this._resolve(true);
     }
 
-    cancel() {
-        this.modal.hide();
+
+    openConf(message) {
+        this.messageTargets[0].textContent = message;
+
+        return new Promise((resolve) => {
+            this._resolve = resolve;
+            this.confModal.show();
+        });
+    }
+
+    confirmConf() {
+        this.confModal.hide();
+        this._resolve(true);
+    }
+
+    cancelConf() {
+        this.confModal.hide();
         this._resolve(false);
     }
 }

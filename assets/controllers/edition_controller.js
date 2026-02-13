@@ -1,160 +1,195 @@
 import { Controller } from "@hotwired/stimulus";
-import { confirmMess } from './helpers/confirmMess.js';
+import { confirmMess } from "./helpers/confirmMess.js";
 
-// Connects to data-controller="login"
+// Connects to data-controller="edition"
 export default class extends Controller {
   static targets = [
-    "reponse", 
-    "cardReponse", 
-    "divReponse", 
-    "type", 
+    "reponse",
+    "cardReponse",
+    "divReponse",
+    "type",
     "modalBody",
-    "dropdownRep",
-  ]
+    "dropdownRep"
+  ];
+
   static values = {
-    type: { Type: String, default: "unique" },
+    type: { type: String, default: "unique" }
+  };
+
+  connect() {
+    this.currentRenameValue = null;
   }
 
+  /* =========================
+     GESTION DES REPONSES
+  ==========================*/
 
   ajoutReponse() {
-    // Boucle pour déterminer le type d'input générer
     if (this.typeValue === "unique") {
-
-      // récupère le template côté JS
-      const templateUnique = document.getElementById("reponseUnique");
-
-      // construit un clone du contenue de la template => représente une réponse
-      const cloneRepUnique = templateUnique.content.firstElementChild.cloneNode(true);
-
-      // Lie la réponse générer à la div qui contient les réponses
-      this.cardReponseTarget.append(cloneRepUnique);
-    }
-
-    else if (this.typeValue === "multiple") {
-      const templateMultiple = document.getElementById("reponseMultiple");
-
-      const cloneRepMultiple = templateMultiple.content.firstElementChild.cloneNode(true);
-
-      this.cardReponseTarget.append(cloneRepMultiple);
-    }
-
-    else {
-      
-      const templateListe = document.getElementById("reponseListe");
-
-      const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
-
-      this.cardReponseTarget.append(cloneRepListe);
+      const template = document.getElementById("reponseUnique");
+      const clone = template.content.firstElementChild.cloneNode(true);
+      this.cardReponseTarget.append(clone);
+    } else if (this.typeValue === "multiple") {
+      const template = document.getElementById("reponseMultiple");
+      const clone = template.content.firstElementChild.cloneNode(true);
+      this.cardReponseTarget.append(clone);
+    } else {
+      const template = document.getElementById("reponseListe");
+      const clone = template.content.firstElementChild.cloneNode(true);
+      this.cardReponseTarget.append(clone);
     }
   }
 
-  /** PENSER A recup l'input afin de garder les potentielles réponses déjà écrites */
   changerType() {
-    // Récupère, parmi les éléments possédant la target : type, celui dont le bouton radio est coché.
-    this.typeTargets.forEach(r =>{
-      if (r.checked){
+    this.typeTargets.forEach((r) => {
+      if (r.checked) {
         this.typeValue = r.dataset.editionTypeValue;
-        console.log(this.typeValue)
       }
-    })
+    });
+
     this.resetReponse();
     this.ajoutReponse();
   }
 
-  resetReponse(){
+  resetReponse() {
     const modalBody = this.modalBodyTarget;
-    const choixUser = modalBody.querySelector('input[name="radio"]:checked');
+    const choixUser = modalBody.querySelector(
+      'input[name="radio"]:checked'
+    );
+
+    if (!choixUser) return;
 
     if (this.typeValue !== choixUser.value) {
-      this.divReponseTargets.forEach(target => target.remove());
+      this.divReponseTargets.forEach((target) => target.remove());
     }
   }
 
   supprReponse(event) {
-
     event.preventDefault();
-    const button = event.currentTarget;
+    let reponseDiv = event.currentTarget.closest("[data-edition-target='divReponse']");
 
-    // on remonte à la div parente qui contient les inputs et le bouton supprimer
-    let reponseDiv = button.parentElement;
-    console.log(this.typeValue);
-    if (this.typeValue === "liste"){
-      reponseDiv = reponseDiv.parentElement;
+    if (!reponseDiv) {
+      reponseDiv = event.currentTarget.closest("li");
     }
 
-    reponseDiv.remove();
+    if (reponseDiv) reponseDiv.remove();
   }
 
-  addRepDrop(evt){
-    evt.preventDefault();
+  /* =========================
+     DROPDOWN REPONSES
+  ==========================*/
 
-    let inputValue = evt.currentTarget.previousElementSibling.value;
-    
-    const templateListe = document.getElementById("dropdwonRep");
+  addRepDrop(event) {
+    event.preventDefault();
 
-    const cloneRepListe = templateListe.content.firstElementChild.cloneNode(true);
+    const input = event.currentTarget.previousElementSibling;
+    const value = input.value.trim();
+    if (!value) {
+      confirmMess(this.application, 'Veuillez écrire votre réponse dans le champs text', "ok")
+      return
+    } ;
 
-    cloneRepListe.children[0].children[1].textContent = inputValue;
+    const template = document.getElementById("dropdwonRep");
+    const clone = template.content.firstElementChild.cloneNode(true);
 
-    this.dropdownRepTarget.append(cloneRepListe);
+    const labelBtn = clone.querySelector('[data-edition-target="dropRep"]');
+    labelBtn.textContent = value;
+
+    this.dropdownRepTarget.append(clone);
+
+    input.value = "";
   }
 
+  /* =========================
+     RENAME DROPDOWN
+  ==========================*/
 
-  /**
-  ajoutQuestion(event) {
-    event.preventDefault(); 
+  async renameRepDrop(event) {
+    event.preventDefault();
+    const li = event.currentTarget.closest("li");
 
-    const formQcm = this.formQcmTarget
-    let numQ = this.questionTargets.length + 1
+    await this.handleExistingRename();
 
-    const divCardMain = document.createElement("div");
-    divCardMain.className = "card mt-5 mx-auto";
+    const renameBtn = li.querySelector('[data-rename="rename"]');
+    const valideBtn = li.querySelector('[data-rename="valide"]');
+    const labelBtn = li.querySelector('[data-edition-target="dropRep"]');
 
-    //#region Card header (Questions)
-    const divCardHeader = document.createElement("div");
-    divCardHeader.className = "card-header d-flex align-items-start gap-2";
+    renameBtn.hidden = true;
+    valideBtn.hidden = false;
 
-    const questionLabel = document.createElement("label");
-    questionLabel.htmlFor = `q${numQ}`;
-    questionLabel.className = "col-form-label mt-2";
-    questionLabel.textContent = `${numQ}.`;
+    const originalValue = labelBtn.textContent.trim();
+    this.currentRenameValue = originalValue;
 
-    const questionTxt = document.createElement("textarea");
-    questionTxt.id = `q${numQ}`;
-    questionTxt.name = "question";
-    questionTxt.rows = 1;
-    questionTxt.dataset.editionTarget = "question"
-    questionTxt.style.resize = "none";
-    questionTxt.className = "form-control mt-1 mb-1";
-    questionTxt.placeholder = "Insérez votre question...";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "form-control flex-grow-1";
+    input.value = originalValue;
+    input.dataset.renameInput = "true";
 
-    divCardHeader.append(questionLabel, questionTxt);
-    //#endregion
+    labelBtn.replaceWith(input);
+    input.focus();
 
-    //#region Card body (Rep + icon suppression)
-    const divCardBody = document.createElement("div");
-    divCardBody.className = "card-body";
-    divCardBody.dataset.editionTarget = "divReponse";
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        this.finalizeRename(li, input.value);
+      }
 
-    const divRep = document.createElement("div");
-    divRep.className = "mt-auto text-end";
-    // divRep.dataset.editionTarget = "addRepBtn";
+      if (e.key === "Escape") {
+        e.preventDefault();
+        this.finalizeRename(li, this.currentRenameValue);
+      }
+    });
+  }
 
-    const addRepBtn = document.createElement("button");
-    addRepBtn.className = "btn btn-bottom-right";
-    addRepBtn.dataset.action = "click->edition#ajoutReponse";
-    addRepBtn.title = "Ajouter une Réponse";
+  valide(event) {
+    event.preventDefault();
 
-    const iconBtnRep = document.createElement("i");
-    iconBtnRep.className = "bi bi-plus-lg";
+    const li = event.currentTarget.closest("li");
+    const input = li.querySelector('input[data-rename-input="true"]');
+    if (!input) return;
 
-    addRepBtn.append(iconBtnRep);
-    divRep.append(addRepBtn);
-    divCardBody.append( divRep);
-     //#endregion
+    this.finalizeRename(li, input.value);
+  }
 
-    divCardMain.append(divCardHeader, divCardBody);
-    formQcm.append(divCardMain);
-  }*/
+  finalizeRename(li, value) {
+    const input = li.querySelector('input[data-rename-input="true"]');
+    if (!input) return;
 
+    const renameBtn = li.querySelector('[data-rename="rename"]');
+    const valideBtn = li.querySelector('[data-rename="valide"]');
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn btn-light flex-grow-1 text-start";
+    button.dataset.editionTarget = "dropRep";
+    button.textContent = value;
+
+    input.replaceWith(button);
+
+    renameBtn.hidden = false;
+    valideBtn.hidden = true;
+  }
+
+  async handleExistingRename() {
+    const input = this.element.querySelector(
+      'input[data-rename-input="true"]'
+    );
+
+    if (!input) return true;
+
+    const li = input.closest("li");
+
+    const keep = await confirmMess(
+      this.application,
+      "Un renommage est déjà en cours.\nVoulez-vous conserver les modifications ?"
+    );
+
+    const value = keep ? input.value : this.currentRenameValue;
+    this.finalizeRename(li, value);
+
+    return true;
+  }
+
+  
 }

@@ -65,7 +65,7 @@
 
               <!-- Dropdown -->
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Modifier les options</button>
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">Modifier les options</button>
 
                 <ul class="dropdown-menu p-3" style="min-width: 350px;">
                   <!-- Ajouter une réponse -->
@@ -85,12 +85,8 @@
                     <li>
                       <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-
-                        <!-- data-accueil-target="QCM" data-action="click->accueil#select" -->
                         <button type="button" class="btn btn-light flex-grow-1 text-start">ah</button>
-                        <!-- data-accueil-target="rename" data-action="click->accueil#rename" -->
                         <button type="button" class="btn btn-outline-warning"><i class="bi bi-pencil"></i></button>
-                        <!-- data-accueil-target="valide" data-action="click->accueil#valide" -->
                         <button type="button" hidden class="btn btn-outline-success"><i class="bi bi-check"></i></button>
                       </div>
                     </li>
@@ -101,7 +97,7 @@
 
                   <!-- Ajouter ma réponse -->
                   <li class="text-center">
-                    <button class="btn btn-outline-success w-100">AJOUTER MA REP</button>
+                    <button class="btn btn-outline-success w-100">Valider la bonne réponse</button>
                   </li>
                 </ul>
               </div>
@@ -114,12 +110,11 @@
               <div class="d-flex align-items-center">
                 <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
 
-                <!-- data-accueil-target="QCM" data-action="click->accueil#select" -->
-                <button type="button" class="btn btn-light flex-grow-1 text-start"></button>
-                <!-- data-accueil-target="rename" data-action="click->accueil#rename" -->
-                <button type="button" class="btn btn-outline-warning"><i class="bi bi-pencil"></i></button>
-                <!-- data-accueil-target="valide" data-action="click->accueil#valide" -->
-                <button type="button" hidden class="btn btn-outline-success"><i class="bi bi-check"></i></button>
+                <button type="button" class="btn btn-light flex-grow-1 text-start" data-edition-target="dropRep"></button>
+
+                <button type="button" class="btn btn-outline-warning" data-action="click->edition#renameRepDrop" data-rename="rename"><i class="bi bi-pencil"></i></button>
+
+                <button type="button" hidden class="btn btn-outline-success" data-action="click->edition#valide" data-rename="valide"><i class="bi bi-check"></i></button>
               </div>
             </li>
           </template>
@@ -184,6 +179,9 @@
         </div>
       </div>
     </div>
-    {% include './MessConfirm/default.html.twig' %}
+    <div data-controller="confirm">
+      {% include './MessConfirm/defaultConf.html.twig' %}
+      {% include './MessConfirm/defaultOk.html.twig' %}
+    </div>
   </div>
 {% endblock %}
