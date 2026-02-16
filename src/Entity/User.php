@@ -2,50 +2,70 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['usernameAD'])]
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', unique: true)]
-    private ?string $codeAd = null;
+    #[ORM\Column(length: 180)]
+    private ?string $usernameAD = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Role $role = null;
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getcodeAd(): ?string
+    public function getUsername(): ?string
     {
-        return $this->codeAd;
+        return $this->usernameAD;
     }
 
-    public function setcodeAd(string $codeAd): static
+    public function setUsername(string $username): static
     {
-        $this->codeAd = $codeAd;
+        $this->usernameAD = $username;
 
         return $this;
     }
 
-    public function getRole(): ?Role
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->role;
+        return (string) $this->usernameAD;
     }
 
-    public function setRole(?Role $role): static
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->role = $role;
+        return array_unique($this->roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }

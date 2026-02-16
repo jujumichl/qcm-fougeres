@@ -61,7 +61,7 @@ services:
         arguments:
             - host: '%ldap_host%'
               port: '%ldap_port%'
-              encryption: tls
+            # encryption: tls
               options:
                   protocol_version: '%ldap_protocol_version%'
                   referrals: false

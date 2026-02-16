@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;// ajouter
 use Symfony\Component\Ldap\Exception\InvalidCredentialsException; // ajouter
 use Symfony\Component\Ldap\Exception\ConnectionException; // ajouter
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge; // ajouter
-use App\Repository\RoleRepository; // 
+use Symfony\Component\HttpFoundation\RedirectResponse; //ajouter
 
 /**
  * @see https://symfony.com/doc/current/security/custom_authenticator.html
@@ -48,8 +48,14 @@ class LdapAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        $isSupported = $request->attributes->get(key: '_route') === self::LOGIN_ROUTE && $request->isMethod('POST'); 
+        $isSupported = self::LOGIN_ROUTE === $request->attributes->get(key: '_route') && $request->isMethod('POST'); 
         
+        /**
+         * if($isSupported){
+         *     dd(message: "supports() called, returning: " . ($isSupported ? 'true' : 'false'));
+         *   }
+         */ 
+
         error_log(message: "supports() called, returning: " . ($isSupported ? 'true' : 'false'));
 
         return $isSupported;
@@ -62,6 +68,8 @@ class LdapAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request): SelfValidatingPassport
     { 
+        //dump('AUTHENTICATE CALLED');
+        //dd($request->request->all()); // montre les données POST
         error_log(message: "authenticate() method entered");
 
         // Récupération de l'input utilisateur
@@ -167,25 +175,23 @@ class LdapAuthenticator extends AbstractAuthenticator
                     }
 
                     // --------------------
-                    // Charger ou créer l'utilisateur en BDD s'il n'existe pas
+                    // Charger ou créer l'utilisateur en BDD s'il n'existe pas + attribution des rôles
                     // -------------------- 
-                    $user = $this->UserRepository->findOneBy(['codeAd' => $userIdentifier]);
-                    $userRole = $this->RoleRepository->findOneBy(['id' => 1]); // Role_User
+                    $user = $this->userRepository->findOneBy(['usernameAD' => $userIdentifier]);
 
-                    if($isAdmin){
-                        $userRole = $this->RoleRepository->findOneBy(['id' => 2]); // Role_Admin
-                    }
+                    // Déterminer les rôles
+                    $roles = $isAdmin ? ['ROLE_ADMIN'] : ['ROLE_USER'];
                     
                     if (!$user) {
                         $user = new User();
-                        $user->setcodeAd($userIdentifier);
-                        $user->setRole($userRole);
+                        $user->setUsername($userIdentifier);
+                        $user->setRoles($roles);
                         $this->em->persist($user);
                         $this->em->flush();
                     } else {
                         // Mettre à jour le flag admin si besoin
-                        if ($user->getRole() !== $userRole) {
-                            $user->setRole($userRole);
+                        if ($user->getRoles() !== $roles) {
+                            $user->setRoles($roles);
                             $this->em->flush();
                         }
                     } 
@@ -199,7 +205,7 @@ class LdapAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * Rédirection vers la page d'accueil en cas de succès dans l'authentification
+     * Redirection vers la page d'accueil en cas de succès dans l'authentification
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {

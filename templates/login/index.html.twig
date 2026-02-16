@@ -24,6 +24,9 @@
 -->
       <div class="card-body p-4" data-controller="login" data-login-accueil-value="{{ path('app_accueil') }}">
         <form  action="{{ path('app_login') }}" method="POST">
+          {% if error %}
+                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+          {% endif %}
           <fieldset>
             <div class="mb-3">
               <label for="_username" class="form-label">Nom d'utilisateur</label>
@@ -40,7 +43,7 @@
                 → Appelle la méthode redirectVersAccueil() du controller "login"
                 → Permet d’intercepter le clic pour gérer la redirection en JavaScript
             -->
-            <button type="submit" class="btn-orange btn-size w-100" data-action="click->login#redirectVersAccueil">S'identifier</button>
+            <button type="submit" class="btn-orange btn-size w-100">S'identifier</button>
           </fieldset>
         </form>          
       </div>

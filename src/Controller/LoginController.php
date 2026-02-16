@@ -12,14 +12,21 @@ final class LoginController extends AbstractController
     #[Route(path: '/', name: 'app_home')]
     public function index(): Response
     {
-        return $this->redirectToRoute(route: 'page_login');
+        return $this->redirectToRoute(route: 'app_login');
     }
 
     #[Route(path: '/login', name: 'app_login', methods: ['GET', 'POST'])]
-    public function login(): Response
+    public function login(AuthenticationUtils $authUtils): Response
     {
+        // Récupération des erreurs
+        $error = $authUtils->getLastAuthenticationError();
+
+        // Nom de compte
+        $lastUsername = $authUtils->getLastUsername();
+
         return $this->render(view: 'login/index.html.twig', parameters: [
-            'controller_name' => 'LoginController',
+            'last_username' => $lastUsername,
+            'error' => $error,
         ]);
     }
 }

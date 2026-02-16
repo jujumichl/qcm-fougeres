@@ -11,10 +11,11 @@ security:
     providers:
         users_in_memory: { memory: null }
 
+        # used to reload user from session & other features (e.g. switch_user)
         ldap_provider:
             entity:
                 class: App\Entity\User
-                property: codeAd
+                property: usernameAD
     # -----------------------------
     # Les firewalls (zones sécurisées)
     # -----------------------------
@@ -28,13 +29,13 @@ security:
             lazy: true   # service chargé uniquement si nécessaire
             provider: ldap_provider    # Définit quel fournisseur d’utilisateurs utiliser
             
-            custom_authenticators:
-            - App\Security\LdapAuthenticator
+            custom_authenticator:
+                - App\Security\LdapAuthenticator
 
             # === Déconnexion ===
             logout:
-                path: logout              # URL pour se déconnecter
-                target: login
+                path: app_logout              # URL pour se déconnecter
+                target: app_login
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -49,8 +50,9 @@ security:
     # -----------------------------
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/, roles: [ROLE_USER, ROLE_ADMIN]}
 
 when@test:
     security:
