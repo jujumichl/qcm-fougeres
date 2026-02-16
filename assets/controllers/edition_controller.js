@@ -9,7 +9,8 @@ export default class extends Controller {
     "divReponse",
     "type",
     "modalBody",
-    "dropdownRep"
+    "dropdownRep",
+    "select",
   ];
 
   static values = {
@@ -34,11 +35,25 @@ export default class extends Controller {
       const clone = template.content.firstElementChild.cloneNode(true);
       this.cardReponseTarget.append(clone);
     } else {
-      const template = document.getElementById("reponseListe");
-      const clone = template.content.firstElementChild.cloneNode(true);
+      const template = document.getElementById("bodyList");
+      let clone = template.content.cloneNode(true);
       this.cardReponseTarget.append(clone);
+      // quand dropdown fermer complet (ui compris) = hidden.bs.dropdown
+      // quand dropdown ouvert complet (ui compris) = shown.bs.dropdown
+      document.getElementById('dropdownMenu').addEventListener('shown.bs.dropdown', evt => {
+        document.getElementById('DropdownInput').focus();
+      });
+      if (this.selectTargets.length > 1) {
+        let opt = this.selectTargets[0].options
+        for (let o of opt)
+          this.addOpt(o)
+      }
     }
+
   }
+
+
+
 
   changerType() {
     this.typeTargets.forEach((r) => {
@@ -47,6 +62,11 @@ export default class extends Controller {
       }
     });
 
+    if (this.typeValue === "liste") {
+      const template = document.getElementById("headerList");
+      const clone = template.content.cloneNode(true);
+      this.cardReponseTarget.append(clone);
+    }
     this.resetReponse();
     this.ajoutReponse();
   }
@@ -68,6 +88,7 @@ export default class extends Controller {
     event.preventDefault();
     let reponseDiv = event.currentTarget.closest("[data-edition-target='divReponse']");
 
+
     if (!reponseDiv) {
       reponseDiv = event.currentTarget.closest("li");
     }
@@ -87,7 +108,7 @@ export default class extends Controller {
     if (!value) {
       confirmMess(this.application, 'Veuillez écrire votre réponse dans le champs text', "ok")
       return
-    } ;
+    };
 
     const template = document.getElementById("dropdwonRep");
     const clone = template.content.firstElementChild.cloneNode(true);
@@ -96,6 +117,7 @@ export default class extends Controller {
     labelBtn.textContent = value;
 
     this.dropdownRepTarget.append(clone);
+    this.addOptAllSelect(value);
 
     input.value = "";
   }
@@ -120,8 +142,7 @@ export default class extends Controller {
     const originalValue = labelBtn.textContent.trim();
     this.currentRenameValue = originalValue;
 
-    const input = document.createElement("input");
-    input.type = "text";
+    const input = document.createElement("textarea");
     input.className = "form-control flex-grow-1";
     input.value = originalValue;
     input.dataset.renameInput = "true";
@@ -135,10 +156,7 @@ export default class extends Controller {
         this.finalizeRename(li, input.value);
       }
 
-      if (e.key === "Escape") {
-        e.preventDefault();
-        this.finalizeRename(li, this.currentRenameValue);
-      }
+
     });
   }
 
@@ -146,14 +164,14 @@ export default class extends Controller {
     event.preventDefault();
 
     const li = event.currentTarget.closest("li");
-    const input = li.querySelector('input[data-rename-input="true"]');
+    const input = li.querySelector('textarea[data-rename-input="true"]');
     if (!input) return;
 
     this.finalizeRename(li, input.value);
   }
 
   finalizeRename(li, value) {
-    const input = li.querySelector('input[data-rename-input="true"]');
+    const input = li.querySelector('textarea[data-rename-input="true"]');
     if (!input) return;
 
     const renameBtn = li.querySelector('[data-rename="rename"]');
@@ -173,7 +191,7 @@ export default class extends Controller {
 
   async handleExistingRename() {
     const input = this.element.querySelector(
-      'input[data-rename-input="true"]'
+      'textarea[data-rename-input="true"]'
     );
 
     if (!input) return true;
@@ -191,5 +209,31 @@ export default class extends Controller {
     return true;
   }
 
-  
+  /* =========================
+     ADD OPTION
+  ==========================*/
+  /**
+   * Add one option to select element
+   * @param {Option} option 
+   */
+  addOpt(option) {
+    if (!option.hidden) {
+      let last = this.selectTargets.length - 1;
+      this.selectTargets[last].append(option.cloneNode(true));
+    }
+  }
+
+  /**
+   * Add one option with text to all select elements
+   * @param {String} text 
+   */
+  addOptAllSelect(text) {
+    let opt = document.createElement('option');
+    opt.textContent = text;
+    for (let select of this.selectTargets) {
+      select.append(opt.cloneNode(true));
+    }
+  }
 }
+
+

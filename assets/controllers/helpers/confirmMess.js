@@ -23,6 +23,9 @@ export async function confirmMess(application, message, type="conf") {
         if (type.toLowerCase() === "conf"){
             return controller.openConf(message);
         }
+        else if (type.toLowerCase() === "warning"){
+            return controller.openWarn(message);
+        }
         else {
             controller.openOk(message);
         }

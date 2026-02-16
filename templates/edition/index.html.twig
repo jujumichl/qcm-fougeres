@@ -55,55 +55,72 @@
           </template>
 
           <!-- Template qui contient la structure d'une liste de réponses -->
-          <template id="reponseListe">
+          <template id="headerList">
+            <nav class="navbar navbar-expand-lg justify-content-center" id="dropdownMenu">
+              <ul class="navbar-nav mx-auto">
+                <li class="nav-item dropdown text-center">
+                  <div class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">Modifier les options</div>
+                  <ul class="dropdown-menu p-3" style="min-width: 350px;">
+                    <!-- Ajouter une réponse -->
+                    <li class="mb-2">
+                      <div class="d-flex">
+                        <input type="text" class="form-control" placeholder="Ajouter une réponse..." id="DropdownInput" />
+                        <button class="btn btn-outline-success" data-action="click->edition#addRepDrop"><i class="bi bi-plus"></i></button>
+                      </div>
+                    </li>
+
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+
+                    <div data-edition-target="dropdownRep">
+                      <!-- Une réponse -->
+                      <li>
+                        <div class="d-flex align-items-center">
+                          <li>
+                            <div class="d-flex align-items-center">
+                              <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+
+                              <button type="button" class="btn btn-light flex-grow-1 text-start" data-edition-target="dropRep">adadadadad</button>
+
+                              <button type="button" class="btn btn-outline-warning" data-action="click->edition#renameRepDrop" data-rename="rename"><i class="bi bi-pencil"></i></button>
+
+                              <button type="button" hidden class="btn btn-outline-success" data-action="click->edition#valide" data-rename="valide"><i class="bi bi-check"></i></button>
+                            </div>
+                          </li>
+                        </div>
+                      </li>
+
+                      {#  <li>
+                        <hr class="dropdown-divider" />
+                      </li>
+
+                      <!-- Ajouter ma réponse -->
+                      <li class="text-center">
+                        <button class="btn btn-outline-success w-100" data-action="click->edition#syncSelect">Enregistrer les modifications</button>
+                      </li> #}
+                    </div>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+
+            <hr />
+          </template>
+
+          <template id="bodyList">
             <div class="btn-group mb-3 me-2 w-100">
               <div class="d-flex align-items-center input-group me-1" data-edition-target="divReponse">
                 <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
                 <!-- Input principal -->
                 <input type="text" name="editRep" class="form-control" placeholder="Mettez une réponse..." />
-              </div>
-
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">Modifier les options</button>
-
-                <ul class="dropdown-menu p-3" style="min-width: 350px;">
-                  <!-- Ajouter une réponse -->
-                  <li class="mb-2">
-                    <div class="d-flex">
-                      <input type="text" class="form-control" placeholder="Ajouter une réponse..." />
-                      <button class="btn btn-outline-success" data-action="click->edition#addRepDrop"><i class="bi bi-plus"></i></button>
-                    </div>
-                  </li>
-
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-
-                  <div data-edition-target="dropdownRep">
-                    <!-- Une réponse -->
-                    <li>
-                      <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-                        <button type="button" class="btn btn-light flex-grow-1 text-start">ah</button>
-                        <button type="button" class="btn btn-outline-warning"><i class="bi bi-pencil"></i></button>
-                        <button type="button" hidden class="btn btn-outline-success"><i class="bi bi-check"></i></button>
-                      </div>
-                    </li>
-                  </div>
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-
-                  <!-- Ajouter ma réponse -->
-                  <li class="text-center">
-                    <button class="btn btn-outline-success w-100">Valider la bonne réponse</button>
-                  </li>
-                </ul>
+                <select class="form-select" aria-label="Default select example" data-edition-target="select">
+                  <option selected hidden>Sélectionner une option...</option>
+                </select>
               </div>
             </div>
           </template>
-
+          
           <!-- template d'une réponse à ajouter dans le menu dropdown -->
           <template id="dropdwonRep">
             <li>
@@ -182,6 +199,7 @@
     <div data-controller="confirm">
       {% include './MessConfirm/defaultConf.html.twig' %}
       {% include './MessConfirm/defaultOk.html.twig' %}
+      {% include './MessConfirm/defaultWarn.html.twig' %}
     </div>
   </div>
 {% endblock %}

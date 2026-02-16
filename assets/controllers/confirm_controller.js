@@ -2,11 +2,12 @@ import { Controller } from '@hotwired/stimulus';
 import { Modal } from 'bootstrap';
 
 export default class extends Controller {
-    static targets = ['message', 'conf', 'ok'];
+    static targets = ['message', 'conf', 'ok', 'warn'];
 
     connect() {
         this.okModal = new Modal(this.okTarget);
         this.confModal = new Modal(this.confTarget);
+        this.warnModal = new Modal(this.warnTarget);
     }
 
     openOk(message) {
