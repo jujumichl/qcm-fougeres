@@ -25,7 +25,9 @@
       <div class="card-body p-4" data-controller="login" data-login-accueil-value="{{ path('app_accueil') }}">
         <form  action="{{ path('app_login') }}" method="POST">
           {% if error %}
-                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="alert alert-danger">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
           {% endif %}
           <fieldset>
             <div class="mb-3">

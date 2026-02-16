@@ -31,6 +31,9 @@ security:
             
             custom_authenticator:
                 - App\Security\LdapAuthenticator
+            
+            # Ajouter un point d'entrée pour gérer les redirections
+            entry_point: App\Security\LdapAuthenticator
 
             # === Déconnexion ===
             logout:

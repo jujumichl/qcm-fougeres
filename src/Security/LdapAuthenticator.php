@@ -17,16 +17,18 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Doctrine\ORM\EntityManagerInterface; // ajouter
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface; // ajouter
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;// ajouter
 use Symfony\Component\Ldap\Exception\InvalidCredentialsException; // ajouter
 use Symfony\Component\Ldap\Exception\ConnectionException; // ajouter
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge; // ajouter
 use Symfony\Component\HttpFoundation\RedirectResponse; //ajouter
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface; // ajouter
+use Symfony\Component\Security\Http\SecurityRequestAttributes; // ajouter
+
 
 /**
  * @see https://symfony.com/doc/current/security/custom_authenticator.html
  */
-class LdapAuthenticator extends AbstractAuthenticator
+class LdapAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     private const LOGIN_ROUTE = 'app_login';
 
@@ -122,7 +124,7 @@ class LdapAuthenticator extends AbstractAuthenticator
                     // Préparation de la requête pour chercher l'utilisateur
                     $result = $this->ldap->query($baseDn, $query)->execute();
                     if (1 !== $result->count()) {
-                        throw new BadCredentialsException('Nom d\'utilisateur invalide.');
+                        throw new CustomUserMessageAuthenticationException('Nom d\'utilisateur invalide.');
                     }
 
                     $entry = $result[0];
@@ -138,7 +140,7 @@ class LdapAuthenticator extends AbstractAuthenticator
                         }
 
                     }  catch (InvalidCredentialsException $e) {
-                        throw new BadCredentialsException('Mot de passe incorrect.');
+                        throw new CustomUserMessageAuthenticationException('Mot de passe incorrect.');
                     } catch (ConnectionException $e) {
                         throw new CustomUserMessageAuthenticationException('Erreur de connexion au serveur LDAP: ' . $e->getMessage());
                     }
@@ -215,25 +217,43 @@ class LdapAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $data = [
+        // Sauvegarde l’erreur dans la session
+        $request->getSession()->set(
+            SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception
+        );
+
+         // Sauvegarde le dernier username saisi
+        $request->getSession()->set(
+            SecurityRequestAttributes::LAST_USERNAME,
+            $request->request->get('username')
+        );
+
+        return new RedirectResponse(
+            $this->urlGenerator->generate(self::LOGIN_ROUTE)
+        );
+        //$data = [
             // you may want to customize or obfuscate the message first
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
+            //'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-        ];
-
-        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        //];
+        //return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
-    // public function start(Request $request, ?AuthenticationException $authException = null): Response
-    // {
-    //     /*
-    //      * If you would like this class to control what happens when an anonymous user accesses a
-    //      * protected page (e.g. redirect to /login), uncomment this method and make this class
-    //      * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface.
-    //      *
-    //      * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
-    //      */
-    // }
+
+
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
+    {
+
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
+
+        /*
+        * If you would like this class to control what happens when an anonymous user accesses a
+         * protected page (e.g. redirect to /login), uncomment this method and make this class
+         * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface.
+        *
+         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
+         */
+    }
 }
