@@ -17,7 +17,8 @@ class AppFixtures extends Fixture
     {
         /*
          * USERS
-         */
+         
+        
         $users = [
             
         ];
@@ -31,7 +32,7 @@ class AppFixtures extends Fixture
 
         /*
          * TYPES
-         */
+         
         $types = [];
         $typesData = [
             1 => 'liste',
@@ -48,7 +49,7 @@ class AppFixtures extends Fixture
 
         /*
          * QCM
-         */
+         
         $qcms = [];
 
         $qcmData = [
@@ -77,7 +78,7 @@ class AppFixtures extends Fixture
 
         /*
          * QUESTIONS
-         */
+         
         $questions = [];
 
         $questionsData = [
@@ -98,7 +99,7 @@ class AppFixtures extends Fixture
 
         /*
          * REPONSES
-         */
+         
         $reponses = [];
 
         $reponsesData = [
@@ -137,7 +138,7 @@ class AppFixtures extends Fixture
 
         /*
          * LIENS QUESTION <-> REPONSES
-         */
+         
         $links = [
             1 => [1, 2, 3],
             2 => [4, 5, 6],
@@ -157,7 +158,7 @@ class AppFixtures extends Fixture
 
         /*
          * REPONSES DES USERS
-         */
+         
         $repUserData = [
             [2, 1, 'ABC0001'],
             [5, 1, 'ABC0002'],
@@ -191,6 +192,6 @@ class AppFixtures extends Fixture
             $manager->persist($ru);
         }
 
-        $manager->flush();
+        $manager->flush();*/
     }
 }

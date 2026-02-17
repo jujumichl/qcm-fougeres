@@ -23,16 +23,21 @@
     → Ici, on transmet l’URL de la page d’accueil générée par Symfony
 -->
       <div class="card-body p-4" data-controller="login" data-login-accueil-value="{{ path('app_accueil') }}">
-        <form  action="{{ path('page_login') }}" method="POST">
+        <form  action="{{ path('app_login') }}" method="POST">
+          {% if error %}
+            <div class="alert alert-danger py-2" role="alert">
+                {{ error.messageKey}}
+            </div>
+          {% endif %}
           <fieldset>
             <div class="mb-3">
               <label for="_username" class="form-label">Nom d'utilisateur</label>
-              <input type="text" id="_username" name="_username" class="form-control" required placeholder="Identifiant" />
+              <input type="text" id="_username" name="username" class="form-control" value="{{last_username}}" required placeholder="Identifiant" />
             </div>
 
             <div class="mb-4">
               <label for="_password" class="form-label">Mot de passe</label>
-              <input type="password" id="_password" name="_password" class="form-control" required minlength="8" placeholder="Mot de passe" />
+              <input type="password" id="_password" name="password" class="form-control" required placeholder="Mot de passe" />
             </div>
             <!--
                 data-action="click->login#redirectVersAccueil"
@@ -40,7 +45,7 @@
                 → Appelle la méthode redirectVersAccueil() du controller "login"
                 → Permet d’intercepter le clic pour gérer la redirection en JavaScript
             -->
-            <button type="submit" class="btn-orange btn-size w-100" data-action="click->login#redirectVersAccueil">S'identifier</button>
+            <button type="submit" class="btn-orange btn-size w-100">S'identifier</button>
           </fieldset>
         </form>          
       </div>
