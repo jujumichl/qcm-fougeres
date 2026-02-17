@@ -217,12 +217,12 @@ class LdapAuthenticator extends AbstractAuthenticator implements AuthenticationE
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // Sauvegarde l’erreur dans la session
+        // Sauvegarde l’erreur dans la session via 
         $request->getSession()->set(
             SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception
         );
 
-         // Sauvegarde le dernier username saisi
+         // Sauvegarde le dernier username saisi en session
         $request->getSession()->set(
             SecurityRequestAttributes::LAST_USERNAME,
             $request->request->get('username')

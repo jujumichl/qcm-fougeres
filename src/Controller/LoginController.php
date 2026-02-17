@@ -18,7 +18,7 @@ final class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authUtils): Response
     {
-        // Récupération des erreurs
+        // Récupération des erreurs en session
         $error = $authUtils->getLastAuthenticationError();
 
         // Nom de compte
