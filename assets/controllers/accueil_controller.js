@@ -43,11 +43,17 @@ export default class extends Controller {
     return element.closest("li");
   }
 
-  addQcm(evt, id = Date.now().toString(), nameQCM = "") {
+  async addQcm(evt, id = Date.now().toString(), nameQCM = "") {
+
+    // nb de QCM
     let nb = this.QCMTargets.length;
-    if (nb >=4){
+    // si plus de 3 alors on cache le text de tuto
+    if (nb >=3){
       this.txtMidTarget.classList.add('is-hidden');
     }
+
+    ///
+    /// déternmination de ce qu'on vas mettre pour le nom générique : "QCM numéros..."
     if (nb > 0) {
       if (Number(this.QCMTargets[nb - 1].textContent.split(" ")[1])) {
         const lastQcm = this.QCMTargets[nb - 1];
@@ -57,21 +63,40 @@ export default class extends Controller {
     else {
       nb = nb+1
     }
+    ///
 
+    // mode dans lequel on se trouve
     const isModif = this.modeValue === "modif";
 
+    /// Création d'un nouveau QCM 
     const template = document.getElementById("qcm-template");
     const li = template.content.firstElementChild.cloneNode(true);
-
+    // création en bdd du QCM + récup du nom + id du QCM
+    const rep = await this.createQcm(nameQCM || `QCM ${nb}`);
+    console.log(rep);
     const btn = this.createQcmButton(id, nameQCM || `QCM ${nb}`);
     this.replaceQcmButton(li, btn);
+    ///
 
+    // afficher ou non les cases de modification en fonction du mode
     if (isModif) {
       li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
       li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
     }
 
+
+    // ajout du QCM dans le DOM
     this.listTarget.append(li);
+    
+  }
+
+  async createQcm(nameQcm){
+    const response = await fetch('/qcm/create', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: nameQcm})})
+  return response;
+
   }
 
   async delQcm() {
