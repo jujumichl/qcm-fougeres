@@ -45,6 +45,7 @@
                 → Appelle la méthode redirectVersAccueil() du controller "login"
                 → Permet d’intercepter le clic pour gérer la redirection en JavaScript
             -->
+            <input type="hidden" name="_csrf_token_login" value="{{ csrf_token('authenticate') }}">
             <button type="submit" class="btn-orange btn-size w-100">S'identifier</button>
           </fieldset>
         </form>          

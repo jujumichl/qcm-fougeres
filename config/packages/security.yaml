@@ -39,6 +39,7 @@ security:
             logout:
                 path: app_logout              # URL pour se déconnecter
                 target: app_login
+                invalidate_session: true # détruit la session server pour éviter les problèmes de sécurité
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
