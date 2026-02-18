@@ -52,9 +52,13 @@ class LdapUserManager
             }
 
             // --------------------
-            // Recherche de l'utilisateur dans AD
+            // Recherche de l'utilisateur dans AD + Utilisation du cache
             // --------------------
             $ldapQueryString = $this->params->get('ldap_query_string');
+
+            $ldapData = $this->ldapCache->get('ldap_user_' . $userIdentifier, function (ItemInterface $item) use ($userIdentifier, $ldapBaseDn, $ldapQueryString, $ldapDomain) {
+            // TTL du cache : 5 minutes
+            $item->expiresAfter(300);});
 
             $usernameEscaped = $this->ldap->escape($userIdentifier, '', LdapInterface::ESCAPE_FILTER); // Échapper le nom d'utilisateur pour éviter les injections LDAP
             $query = str_replace('{username}', $usernameEscaped, $ldapQueryString);
