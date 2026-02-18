@@ -1,8 +1,20 @@
 import { Controller } from "@hotwired/stimulus";
 import { confirmMess } from "./helpers/confirmMess.js";
 
-// Connects to data-controller="edition"
+/**
+ * Controller Edition
+ * Gestion complète :
+ * - Type de question
+ * - Réponses dynamiques
+ * - Dropdown éditable
+ * - Synchronisation des <select>
+ */
 export default class extends Controller {
+
+  /* =====================================================
+   * CONFIGURATION STIMULUS
+  ===================================================== */
+
   static targets = [
     "reponse",
     "cardReponse",
@@ -11,6 +23,8 @@ export default class extends Controller {
     "modalBody",
     "dropdownRep",
     "select",
+    "dropRep",
+    "Questions",
   ];
 
   static values = {
@@ -21,39 +35,9 @@ export default class extends Controller {
     this.currentRenameValue = null;
   }
 
-  /* =========================
-     GESTION DES REPONSES
-  ==========================*/
-
-  ajoutReponse() {
-    if (this.typeValue === "unique") {
-      const template = document.getElementById("reponseUnique");
-      const clone = template.content.firstElementChild.cloneNode(true);
-      this.cardReponseTarget.append(clone);
-    } else if (this.typeValue === "multiple") {
-      const template = document.getElementById("reponseMultiple");
-      const clone = template.content.firstElementChild.cloneNode(true);
-      this.cardReponseTarget.append(clone);
-    } else {
-      const template = document.getElementById("bodyList");
-      let clone = template.content.cloneNode(true);
-      this.cardReponseTarget.append(clone);
-      // quand dropdown fermer complet (ui compris) = hidden.bs.dropdown
-      // quand dropdown ouvert complet (ui compris) = shown.bs.dropdown
-      document.getElementById('dropdownMenu').addEventListener('shown.bs.dropdown', evt => {
-        document.getElementById('DropdownInput').focus();
-      });
-      if (this.selectTargets.length > 1) {
-        let opt = this.selectTargets[0].options
-        for (let o of opt)
-          this.addOpt(o)
-      }
-    }
-
-  }
-
-
-
+  /* =====================================================
+   * ACTIONS — CHANGEMENT DE TYPE
+  ===================================================== */
 
   changerType() {
     this.typeTargets.forEach((r) => {
@@ -62,178 +46,160 @@ export default class extends Controller {
       }
     });
 
+    this.resetReponse();
+
     if (this.typeValue === "liste") {
       const template = document.getElementById("headerList");
       const clone = template.content.cloneNode(true);
       this.cardReponseTarget.append(clone);
     }
-    this.resetReponse();
+
     this.ajoutReponse();
   }
 
-  resetReponse() {
-    const modalBody = this.modalBodyTarget;
-    const choixUser = modalBody.querySelector(
-      'input[name="radio"]:checked'
-    );
+  /* =====================================================
+   * ACTIONS — GESTION DES REPONSES
+  ===================================================== */
+  syncSelectOpt() {
+    // Synchronisation options si plusieurs select
+    let btnListe = this.dropRepTarget.querySelectorAll('[data-edition-target="dropRep"]');
+    let btnContent;
+    btnListe.forEach(btn => btnContent = [btn.textContent]);
+    return btnContent;
+  }
 
-    if (!choixUser) return;
+  ajoutReponse() {
 
-    if (this.typeValue !== choixUser.value) {
-      this.divReponseTargets.forEach((target) => target.remove());
+    if (this.typeValue === "unique") {
+      const template = document.getElementById("reponseUnique");
+      const clone = template.content.firstElementChild.cloneNode(true);
+      this.cardReponseTarget.append(clone);
     }
+
+    else if (this.typeValue === "multiple") {
+      const template = document.getElementById("reponseMultiple");
+      const clone = template.content.firstElementChild.cloneNode(true);
+      this.cardReponseTarget.append(clone);
+    }
+
+    else {
+      const template = document.getElementById("bodyList");
+      let clone = template.content.cloneNode(true);
+      this.cardReponseTarget.append(clone);
+
+      // Focus automatique sur input dropdown
+      document.getElementById('dropdownMenu')
+        .addEventListener('shown.bs.dropdown', () => {
+          document.getElementById('DropdownInput').focus();
+        });
+      if (this.dropdownRepTarget.childElementCount > 0) {
+        let contentDPD = this.syncSelectOpt();
+        let compt = 0;
+        contentDPD.forEach(content => clone.append(new Option(content, select.options.length)))
+      }
+    }
+  }
+
+  resetReponse() {
+    this.cardReponseTarget.remove();
+
+    const cardRep = document.createElement('div');
+    cardRep.classList.add('card-body', 'position-relative');
+    cardRep.dataset.editionTarget = "cardReponse";
+
+    this.QuestionsTarget.insertAdjacentElement("afterend", cardRep);
   }
 
   supprReponse(event) {
     event.preventDefault();
-    let reponseDiv = event.currentTarget.closest("[data-edition-target='divReponse']");
 
+    let elem = event.currentTarget.closest("[data-edition-target='divReponse']");
+    if (!elem) elem = event.currentTarget.closest("li");
 
-    if (!reponseDiv) {
-      reponseDiv = event.currentTarget.closest("li");
+    if (elem) {
+      elem.remove();
+
+      if (elem.localName === "li") {
+        let btnValue = elem.children[0].children[1].value;
+        this.delOpt(Number(btnValue));
+      }
     }
-
-    if (reponseDiv) reponseDiv.remove();
   }
 
-  /* =========================
-     DROPDOWN REPONSES
-  ==========================*/
+  /* =====================================================
+   * ACTIONS — DROPDOWN
+  ===================================================== */
 
   addRepDrop(event) {
     event.preventDefault();
 
     const input = event.currentTarget.previousElementSibling;
     const value = input.value.trim();
+
     if (!value) {
-      confirmMess(this.application, 'Veuillez écrire votre réponse dans le champs text', "ok")
-      return
-    };
+      confirmMess(
+        this.application,
+        'Veuillez écrire votre réponse dans le champs text',
+        "ok"
+      );
+      return;
+    }
 
     const template = document.getElementById("dropdwonRep");
     const clone = template.content.firstElementChild.cloneNode(true);
 
-    const labelBtn = clone.querySelector('[data-edition-target="dropRep"]');
-    labelBtn.textContent = value;
+    const Btn = clone.querySelector('[data-edition-target="dropRep"]');
+    Btn.textContent = value;
+
+    // Value = position (1-based)
+    Btn.value = document
+      .querySelector('[data-edition-target="dropdownRep"]')
+      .childElementCount + 1;
 
     this.dropdownRepTarget.append(clone);
+    sessionStorage
     this.addOptAllSelect(value);
 
     input.value = "";
   }
 
-  /* =========================
-     RENAME DROPDOWN
-  ==========================*/
+  /* =====================================================
+   * ACTIONS — OPTIONS / SELECT
+  ===================================================== */
 
-  async renameRepDrop(event) {
-    event.preventDefault();
-    const li = event.currentTarget.closest("li");
+  addOpt(text) {
+    let lastSelect = this.selectTargets[this.selectTargets.length - 1];
+    let opt = new Option (text, lastSelect.options.length);
+    lastSelect.append(opt);
+  }
 
-    await this.handleExistingRename();
+  addOptAllSelect(text) {
+    for (let select of this.selectTargets) {
+      const opt = new Option(text, select.options.length);
+      select.add(opt);
+    }
+  }
 
-    const renameBtn = li.querySelector('[data-rename="rename"]');
-    const valideBtn = li.querySelector('[data-rename="valide"]');
-    const labelBtn = li.querySelector('[data-edition-target="dropRep"]');
-
-    renameBtn.hidden = true;
-    valideBtn.hidden = false;
-
-    const originalValue = labelBtn.textContent.trim();
-    this.currentRenameValue = originalValue;
-
-    const input = document.createElement("textarea");
-    input.className = "form-control flex-grow-1";
-    input.value = originalValue;
-    input.dataset.renameInput = "true";
-
-    labelBtn.replaceWith(input);
-    input.focus();
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        this.finalizeRename(li, input.value);
+  delOpt(index) {
+    for (let select of this.selectTargets) {
+      if (select.options[index]) {
+        select.remove(index);
       }
+    }
+    this.reindexAllOptions();
+  }
 
+  reindexAllOptions() {
+    for (let select of this.selectTargets) {
+      Array.from(select.options).forEach((opt, i) => {
+        opt.value = i + 1;
+      });
+    }
 
+    this.dropRepTargets.forEach((btn, i) => {
+      btn.value = i + 1;
     });
   }
 
-  valide(event) {
-    event.preventDefault();
 
-    const li = event.currentTarget.closest("li");
-    const input = li.querySelector('textarea[data-rename-input="true"]');
-    if (!input) return;
-
-    this.finalizeRename(li, input.value);
-  }
-
-  finalizeRename(li, value) {
-    const input = li.querySelector('textarea[data-rename-input="true"]');
-    if (!input) return;
-
-    const renameBtn = li.querySelector('[data-rename="rename"]');
-    const valideBtn = li.querySelector('[data-rename="valide"]');
-
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "btn btn-light flex-grow-1 text-start";
-    button.dataset.editionTarget = "dropRep";
-    button.textContent = value;
-
-    input.replaceWith(button);
-
-    renameBtn.hidden = false;
-    valideBtn.hidden = true;
-  }
-
-  async handleExistingRename() {
-    const input = this.element.querySelector(
-      'textarea[data-rename-input="true"]'
-    );
-
-    if (!input) return true;
-
-    const li = input.closest("li");
-
-    const keep = await confirmMess(
-      this.application,
-      "Un renommage est déjà en cours.\nVoulez-vous conserver les modifications ?"
-    );
-
-    const value = keep ? input.value : this.currentRenameValue;
-    this.finalizeRename(li, value);
-
-    return true;
-  }
-
-  /* =========================
-     ADD OPTION
-  ==========================*/
-  /**
-   * Add one option to select element
-   * @param {Option} option 
-   */
-  addOpt(option) {
-    if (!option.hidden) {
-      let last = this.selectTargets.length - 1;
-      this.selectTargets[last].append(option.cloneNode(true));
-    }
-  }
-
-  /**
-   * Add one option with text to all select elements
-   * @param {String} text 
-   */
-  addOptAllSelect(text) {
-    let opt = document.createElement('option');
-    opt.textContent = text;
-    for (let select of this.selectTargets) {
-      select.append(opt.cloneNode(true));
-    }
-  }
 }
-
-
