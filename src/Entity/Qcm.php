@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Qcm
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 7)]
+    #[ORM\Column(length: 8, unique: true)]
     private ?string $id = null;
 
     #[ORM\Column(length: 255)]
@@ -32,6 +32,14 @@ class Qcm
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createur = null;
 
+
+     public function __construct()
+    {
+        // Génère un ID hex de 8 caractères
+        $this->id = bin2hex(random_bytes(4)); // 4 bytes → 8 caractères hex
+        $this->createdAt = new \DateTime();
+    }
+    
     public function getId(): ?string
     {
         return $this->id;
