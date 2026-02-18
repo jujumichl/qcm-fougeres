@@ -33,6 +33,12 @@ export default class extends Controller {
     }
   }
 
+  disconnect() {
+    // Nettoyage lors de la déconnexion du contrôleur
+    this.selectedQcms.clear();
+    console.log("Accueil controller disconnected");
+  }
+
   getQcmItem(element) {
     return element.closest("li");
   }

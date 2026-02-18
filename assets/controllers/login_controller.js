@@ -5,9 +5,14 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
    static values = { accueil: String } 
 
-   // Vérifie que le controller est bien connecté et fontionnelle
    connect() {
-    console.log("🔥 STIMULUS FONCTIONNE 🔥");
+    console.log("Login controller connected");
+
+  }
+
+  disconnect() {
+    // Nettoyage lors de la déconnexion du contrôleur
+    console.log("Login controller disconnected");
   }
 
   redirectVersAccueil() {

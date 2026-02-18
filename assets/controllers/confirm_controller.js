@@ -5,7 +5,27 @@ export default class extends Controller {
     static targets = ['message'];
 
     connect() {
-        this.modal = new Modal(this.element);
+        try {
+            // Initialiser la modal avec les options de sécurité
+            this.modal = new Modal(this.element, {
+                backdrop: 'static',
+                keyboard: false
+            });
+        } catch (error) {
+            console.error('Erreur lors de l\'initialisation du modal confirm:', error);
+        }
+    }
+
+    disconnect() {
+        // Nettoyage lors de la déconnexion du contrôleur
+        if (this.modal) {
+            try {
+                this.modal.hide();
+                this.modal.dispose();
+            } catch (error) {
+                console.warn('Erreur lors du nettoyage du modal:', error);
+            }
+        }
     }
 
     open(message) {
@@ -13,17 +33,23 @@ export default class extends Controller {
 
         return new Promise((resolve) => {
             this._resolve = resolve;
-            this.modal.show();
+            if (this.modal) {
+                this.modal.show();
+            }
         });
     }
 
     confirm() {
-        this.modal.hide();
+        if (this.modal) {
+            this.modal.hide();
+        }
         this._resolve(true);
     }
 
     cancel() {
-        this.modal.hide();
+        if (this.modal) {
+            this.modal.hide();
+        }
         this._resolve(false);
     }
 }
