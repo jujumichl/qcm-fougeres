@@ -77,7 +77,7 @@ class LdapAuthenticator extends AbstractAuthenticator implements AuthenticationE
         return new SelfValidatingPassport(
             new UserBadge(userIdentifier: $username, userLoader: fn (string $userIdentifier) => $this->ldapUserManager->loadOrCreateUser($username, $password)),
             badges: [
-                // Vérification du token CSRF pour protéger contre les attaques CSRF
+                //Vérification du token CSRF pour protéger contre les attaques CSRF
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token_login')),
             ]
         );
@@ -119,7 +119,11 @@ class LdapAuthenticator extends AbstractAuthenticator implements AuthenticationE
     }
 
 
-
+    /**
+     * Si un utilisateur anonyme tente d'accéder à une page protégée, 
+     * Cette méthode est appelée pour décider de la réponse à retourner.
+     * Ici, on redirige simplement vers la page de login.
+     */
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
 
