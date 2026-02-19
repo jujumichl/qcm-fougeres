@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { confirmMess } from './helpers/confirmMess.js';
 
 export default class extends Controller {
+  //#region init Controller
   static targets = [
     'QCM',
     'case',
@@ -31,6 +32,9 @@ export default class extends Controller {
       const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
       offcanvas.show();
     }
+    if (this.QCMTargets.length >= 3) {
+      this.txtMidTarget.classList.add('is-hidden');
+    }
   }
 
   disconnect() {
@@ -38,17 +42,21 @@ export default class extends Controller {
     this.selectedQcms.clear();
     console.log("Accueil controller disconnected");
   }
+  //#endregion
 
+  //#region get
   getQcmItem(element) {
     return element.closest("li");
   }
+  //#endregion
 
-  async addQcm(evt, id = Date.now().toString(), nameQCM = "") {
+  //#region add QCM
+  async addQcm(evt, nameQCM = "") {
 
     // nb de QCM
     let nb = this.QCMTargets.length;
     // si plus de 3 alors on cache le text de tuto
-    if (nb >=3){
+    if (nb >= 3) {
       this.txtMidTarget.classList.add('is-hidden');
     }
 
@@ -61,44 +69,45 @@ export default class extends Controller {
       }
     }
     else {
-      nb = nb+1
+      nb = nb + 1
     }
     ///
 
     // mode dans lequel on se trouve
     const isModif = this.modeValue === "modif";
+    try {
+      /// Création d'un nouveau QCM 
+      const template = document.getElementById("qcm-template");
+      const li = template.content.firstElementChild.cloneNode(true);
+      // création en bdd du QCM + récup du nom + id du QCM
+      const repHttp = await this.createQcmEntity(nameQCM || `QCM ${nb}`);
+      const statusHttp = repHttp.ok;
+      console.log(repHttp);
+      if (!statusHttp) {
+        throw new Error(`Code HTTP différent de 200, création non effectuée (code HTTP : ${repHttp.status})`)
+      }
+      const btn = this.createQcmButton(repHttp.id, repHttp.name || `QCM ${nb}`);
+      this.replaceQcmButton(li, btn);
+      ///
 
-    /// Création d'un nouveau QCM 
-    const template = document.getElementById("qcm-template");
-    const li = template.content.firstElementChild.cloneNode(true);
-    // création en bdd du QCM + récup du nom + id du QCM
-    const rep = await this.createQcm(nameQCM || `QCM ${nb}`);
-    console.log(rep);
-    const btn = this.createQcmButton(id, nameQCM || `QCM ${nb}`);
-    this.replaceQcmButton(li, btn);
-    ///
+      // afficher ou non les cases de modification en fonction du mode
+      if (isModif) {
+        li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
+        li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+      }
 
-    // afficher ou non les cases de modification en fonction du mode
-    if (isModif) {
-      li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
-      li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+
+      // ajout du QCM dans le DOM
+      this.listTarget.append(li);
+    }
+    catch (e) {
+      console.error(e);
     }
 
-
-    // ajout du QCM dans le DOM
-    this.listTarget.append(li);
-    
   }
+  //#endregion
 
-  async createQcm(nameQcm){
-    const response = await fetch('/qcm/create', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: nameQcm})})
-  return response;
-
-  }
-
+  //#region delete QCM
   async delQcm() {
 
     if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
@@ -108,14 +117,48 @@ export default class extends Controller {
         }
       });
       this.caseAllSelectTarget.checked = false;
-          let nb = this.QCMTargets.length;
+      let nb = this.QCMTargets.length;
 
-      if (nb < 5){
+      if (nb < 5) {
         this.txtMidTarget.classList.remove('is-hidden');
       }
     }
   }
+  addCorbeille(liElement) {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1;
+    let dd = today.getDate();
+    let dd7 = dd + 7;
 
+    if (dd < 10) dd = '0' + dd;
+    if (dd7 < 10) dd7 = '0' + dd7;
+    if (mm < 10) mm = '0' + mm;
+
+    const template = document.getElementById("corbeille-template");
+    const tr = template.content.firstElementChild.cloneNode(true);
+
+    tr.children[0].textContent = liElement.children[1].textContent;
+    tr.children[0].dataset.qcmId = liElement.children[1].dataset.qcmId;
+    tr.children[1].textContent = `${dd}/${mm}/${yyyy}`;
+    tr.children[2].textContent = `${dd7}/${mm}/${yyyy}`;
+
+    this.corbeilleTarget.append(tr);
+    liElement.remove();
+  }
+
+  recupQcm(evt) {
+    let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
+    let id = evt.currentTarget.closest('tr').children[0].dataset.qcmId;
+    if (this.modeValue !== 'modif') this.modif();
+    this.addQcm("", id, nameQCM);
+    evt.currentTarget.closest('tr').remove();
+    if (this.modeValue !== 'normal') this.modif();
+  }
+
+  //#endregion
+
+  //#region select QCM
   select(event) {
     const btn = event.currentTarget;
     const id = btn.dataset.qcmId;
@@ -176,7 +219,9 @@ export default class extends Controller {
 
     this.renderSelection();
   }
+  //#endregion
 
+  //#region edit menu
   async modif() {
     const isModif = this.modeValue !== "modif";
     this.modeValue = isModif ? "modif" : "normal";
@@ -219,7 +264,7 @@ export default class extends Controller {
       await this.handleExistingRename();
     }
   }
-
+  //#region renaming logic
   async rename(event) {
     const ok = await this.handleExistingRename();
     if (!ok) return;
@@ -303,39 +348,11 @@ export default class extends Controller {
     const value = keep ? input.value : this.nomQcm;
     this.finalizeRename(li, value);
   }
-
-  addCorbeille(liElement) {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1;
-    let dd = today.getDate();
-    let dd7 = dd + 7;
-
-    if (dd < 10) dd = '0' + dd;
-    if (dd7 < 10) dd7 = '0' + dd7;
-    if (mm < 10) mm = '0' + mm;
-
-    const template = document.getElementById("corbeille-template");
-    const tr = template.content.firstElementChild.cloneNode(true);
-
-    tr.children[0].textContent = liElement.children[1].textContent;
-    tr.children[0].dataset.qcmId = liElement.children[1].dataset.qcmId;
-    tr.children[1].textContent = `${dd}/${mm}/${yyyy}`;
-    tr.children[2].textContent = `${dd7}/${mm}/${yyyy}`;
-
-    this.corbeilleTarget.append(tr);
-    liElement.remove();
-  }
-
-  recupQcm(evt) {
-    let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
-    let id = evt.currentTarget.closest('tr').children[0].dataset.qcmId;
-    if (this.modeValue !== 'modif') this.modif();
-    this.addQcm("", id, nameQCM);
-    evt.currentTarget.closest('tr').remove();
-    if (this.modeValue !== 'normal') this.modif();
-  }
-
+  //#endregion
+  
+  //#endregion
+  
+  //#region Helpers
   createQcmButton(id, name) {
     const btn = document.createElement("button");
     btn.dataset.qcmId = id;
@@ -357,4 +374,23 @@ export default class extends Controller {
       li.insertBefore(btn, div);
     }
   }
+  //#endregion
+
+
+  //#region Entity
+
+  async createQcmEntity(nameQcm) {
+    const response = await fetch('qcm/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: nameQcm
+      })
+    })
+    return response;
+
+  }
+
+  //#endregion
+
 }
