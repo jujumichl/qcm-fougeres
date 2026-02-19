@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -49,9 +51,14 @@ final class AccueilController extends AbstractController
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        dump($data);
+        /* if (!$this->isCsrfTokenValid('delete_item', $data['_token'])) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], 403);
+        } */
 
         $qcm = new Qcm();
-        $qcm->setName($data['name'] ?? 'Nouveau QCM');
+        $qcm->setNom($data['name'] ?? 'Nouveau QCM');
+        $qcm->setEtat(true);
 
         $qcm->setCreateur($this->getUser());
 
@@ -60,7 +67,7 @@ final class AccueilController extends AbstractController
 
         return new JsonResponse([
             'id' => $qcm->getId(),
-            'name' => $qcm->getName()
+            'name' => $qcm->getNom()
         ]);
     }
 

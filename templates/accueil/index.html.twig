@@ -37,6 +37,9 @@
                 </div>
               </li>
             </template>
+            <div class="position-absolute top-50 start-50 translate-middle" data-accueil-target="txtMid">
+              <p class="text-center">Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</p>
+            </div>
             {% for Qcm in Qcms %}
               <li class="list-group-item p-0 d-flex align-items-center gap-2">
                 <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
@@ -49,10 +52,6 @@
                   <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
                 </div>
               </li>
-            {% else %}
-              <div class="position-absolute top-50 start-50 translate-middle" data-accueil-target="txtMid">
-                <p class="text-center">Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</p>
-              </div>
             {% endfor %}
           </ul>
 
@@ -160,7 +159,7 @@
     </div>
 
     {% include './MessConfirm/default.html.twig' %}
-    
+
     <!-- vérifier pour le all selected si au moins 2 cases sont séléctionnées -->
     <!-- CONTENU -->
     <main data-accueil-target="content" class="container mt-4">

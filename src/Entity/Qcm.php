@@ -37,7 +37,6 @@ class Qcm
     {
         // Génère un ID hex de 8 caractères
         $this->id = bin2hex(random_bytes(4)); // 4 bytes → 8 caractères hex
-        $this->createdAt = new \DateTime();
     }
     
     public function getId(): ?string
