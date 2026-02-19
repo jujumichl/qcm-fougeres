@@ -3,7 +3,7 @@ security:
     # Gestion des mots de passe : https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     # ---------------------------
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto' # Définit comment Symfony doit hasher les mots de passe
 
     # -----------------------------
     # Les providers (qui "fournissent" les utilisateurs) : https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -15,7 +15,7 @@ security:
         ldap_provider:
             entity:
                 class: App\Entity\User
-                property: usernameAD
+                property: usernameAD # Propriété utilisée pour charger l'utilisateur (ici, le nom d'utilisateur AD)
     # -----------------------------
     # Les firewalls (zones sécurisées)
     # -----------------------------
@@ -29,8 +29,7 @@ security:
             lazy: true   # service chargé uniquement si nécessaire
             provider: ldap_provider    # Définit quel fournisseur d’utilisateurs utiliser
             
-            custom_authenticator:
-                - App\Security\LdapAuthenticator
+            custom_authenticator: App\Security\LdapAuthenticator
             
             # Ajouter un point d'entrée pour gérer les redirections
             entry_point: App\Security\LdapAuthenticator
@@ -55,7 +54,7 @@ security:
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/$, roles: PUBLIC_ACCESS }
-        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: [ROLE_USER, ROLE_ADMIN]}
         - { path: ^/, roles: [ROLE_USER, ROLE_ADMIN]}
 
 when@test:
