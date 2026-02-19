@@ -14,9 +14,9 @@
       <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
         <div class="offcanvas-header">
           <a href="{{ path('app_logout') }}" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
+          <p class="text-center">utilisateur : {{ app.user.username }}</p>
           <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
         </div>
-
         <div class="bg-white sticky-top">
           <input type="checkbox" class="p-4 ms-4 sticky-top is-hidden" title="Tout sélectionner" data-accueil-target="caseAllSelect" data-action="click->accueil#allSelect" />
         </div>
