@@ -16,17 +16,17 @@ class Qcm
     #[ORM\Column(length: 255)]
     private ?string $nom = null; 
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $dateDeb = null;
+    #[ORM\Column(nullable: true)]
+    private ?string $dateDeb = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $dateFin = null;
+    #[ORM\Column(nullable: true)]
+    private ?string $dateFin = null;
 
     #[ORM\Column]
     private ?bool $etat = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $deletedAt = null;
+    #[ORM\Column(nullable: true)]
+    private ?string $deletedAt = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -44,13 +44,6 @@ class Qcm
         return $this->id;
     }
 
-    public function setId(string $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -63,24 +56,24 @@ class Qcm
         return $this;
     }
 
-    public function getDateDeb(): ?\DateTime
+    public function getDateDeb(): ?string
     {
         return $this->dateDeb;
     }
 
-    public function setDateDeb(?\DateTime $dateDeb): static
+    public function setDateDeb(?string $dateDeb): static
     {
         $this->dateDeb = $dateDeb;
 
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFin(): ?string
     {
         return $this->dateFin;
     }
 
-    public function setDateFin(?\DateTime $dateFin): static
+    public function setDateFin(?string $dateFin): static
     {
         $this->dateFin = $dateFin;
 
@@ -99,12 +92,12 @@ class Qcm
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTime
+    public function getDeletedAt(): ?string
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTime $deletedAt): static
+    public function setDeletedAt(?string $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 
