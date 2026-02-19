@@ -86,7 +86,9 @@ export default class extends Controller {
       if (!statusHttp) {
         throw new Error(`Code HTTP différent de 200, création non effectuée (code HTTP : ${repHttp.status})`)
       }
-      const btn = this.createQcmButton(repHttp.id, repHttp.name || `QCM ${nb}`);
+      const data = await repHttp.json();
+      console.log(data.id + " ------ " + data.name);
+      const btn = this.createQcmButton(data.id, data.name || `QCM ${nb}`);
       this.replaceQcmButton(li, btn);
       ///
 
@@ -108,45 +110,61 @@ export default class extends Controller {
   //#endregion
 
   //#region delete QCM
+
+  /**
+   * main function for make QCM in trash
+   */
   async delQcm() {
+    try {
+      if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
+        for (let box of this.caseTargets) {
+          if (box.checked) {
+            console.info(box.nextElementSibling.dataset.qcmId);
+            const repHttp = await this.trashQcm(box.nextElementSibling.dataset.qcmId);
+            if (!repHttp.ok) {
+              throw new Error(`Erreur lors de la tentative de supprission du QCM (code http: ${repHttp.status})`)
+            }
+            const data = await repHttp.json()
+            console.log(data.id + " ---------  " + data.date)
+            this.addCorbeille(box.closest("li"), data.date);
+          }
+        };
+        this.caseAllSelectTarget.checked = false;
+        let nb = this.QCMTargets.length;
 
-    if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
-      this.caseTargets.forEach(box => {
-        if (box.checked) {
-          this.addCorbeille(box.closest("li"));
+        if (nb < 5) {
+          this.txtMidTarget.classList.remove('is-hidden');
         }
-      });
-      this.caseAllSelectTarget.checked = false;
-      let nb = this.QCMTargets.length;
-
-      if (nb < 5) {
-        this.txtMidTarget.classList.remove('is-hidden');
       }
     }
+    catch (e) {
+      console.error(e);
+    }
   }
-  addCorbeille(liElement) {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1;
-    let dd = today.getDate();
-    let dd7 = dd + 7;
 
-    if (dd < 10) dd = '0' + dd;
-    if (dd7 < 10) dd7 = '0' + dd7;
-    if (mm < 10) mm = '0' + mm;
+  /**
+   * Add HMTL <li> in trash
+   * @param {HTMLElement} liElement <li> element
+   * @param {Date} date current date
+   */
+  addCorbeille(liElement, date) {
 
     const template = document.getElementById("corbeille-template");
     const tr = template.content.firstElementChild.cloneNode(true);
 
     tr.children[0].textContent = liElement.children[1].textContent;
     tr.children[0].dataset.qcmId = liElement.children[1].dataset.qcmId;
-    tr.children[1].textContent = `${dd}/${mm}/${yyyy}`;
-    tr.children[2].textContent = `${dd7}/${mm}/${yyyy}`;
+    tr.children[1].textContent = date;
+    tr.children[2].textContent = date;
 
     this.corbeilleTarget.append(tr);
     liElement.remove();
   }
 
+  /**
+   * retrieval QCM function
+   * @param {Event} evt 
+   */
   recupQcm(evt) {
     let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
     let id = evt.currentTarget.closest('tr').children[0].dataset.qcmId;
@@ -349,9 +367,9 @@ export default class extends Controller {
     this.finalizeRename(li, value);
   }
   //#endregion
-  
+
   //#endregion
-  
+
   //#region Helpers
   createQcmButton(id, name) {
     const btn = document.createElement("button");
@@ -389,6 +407,17 @@ export default class extends Controller {
     })
     return response;
 
+  }
+
+  async trashQcm(QCMId) {
+    const response = await fetch('qcm/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: QCMId
+      })
+    })
+    return response;
   }
 
   //#endregion
