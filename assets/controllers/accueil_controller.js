@@ -52,7 +52,7 @@ export default class extends Controller {
           
           this.addCorbeille(corb.id, corb.nom, corb.deletedAt, date.addDays(7));
         }
-      })
+      });
 
   }
 
@@ -390,23 +390,27 @@ export default class extends Controller {
 
     const input = li.querySelector('[data-accueil-target="name"]');
 
+    this.renameQcm(id, value);
+
     const btn = this.createQcmButton(id, input.value);
     this.replaceQcmButton(li, btn);
 
     input.remove();
   }
 
-  finalizeRename(li, value) {
+  async finalizeRename(li, value) {
     const input = li.querySelector('[data-accueil-target="name"]');
     if (!input) return;
 
     const id = li.dataset.qcmId;
+    
+    this.renameQcm(id, value);
 
     const btn = this.createQcmButton(id, value);
     this.replaceQcmButton(li, btn);
 
     input.remove();
-
+    
     li.querySelector('[data-accueil-target="valide"]').classList.add("is-hidden");
     li.querySelector('[data-accueil-target="rename"]').classList.remove("is-hidden");
   }
@@ -471,7 +475,7 @@ export default class extends Controller {
 
   async trashQcm(QCMId) {
     const response = await fetch('qcm/delete', {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id: QCMId
@@ -485,7 +489,7 @@ export default class extends Controller {
    */
   async retrieve(QCMId) {
     const response = await fetch('qcm/retrieve', {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id: QCMId
@@ -493,7 +497,17 @@ export default class extends Controller {
     })
     return response;
   }
-
+  async renameQcm(QCMId, newName){
+    const response = await fetch('qcm/rename', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: QCMId,
+        name: newName
+      })
+    })
+    return response;
+    }
   //#endregion
 
 }
