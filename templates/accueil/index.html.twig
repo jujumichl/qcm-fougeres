@@ -41,17 +41,19 @@
               <p class="text-center">Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</p>
             </div>
             {% for Qcm in Qcms %}
-              <li class="list-group-item p-0 d-flex align-items-center gap-2">
-                <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
+              {% if Qcm.etat == 1 %}
+                <li class="list-group-item p-0 d-flex align-items-center gap-2">
+                  <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
 
-                <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-qcm-id="{{ Qcm.id }}" data-action="click->accueil#select">{{ Qcm.nom }}</button>
+                  <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-qcm-id="{{ Qcm.id }}" data-action="click->accueil#select">{{ Qcm.nom }}</button>
 
-                <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
-                  <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
+                  <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
+                    <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
 
-                  <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
-                </div>
-              </li>
+                    <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
+                  </div>
+                </li>
+              {% endif %}
             {% endfor %}
           </ul>
 
