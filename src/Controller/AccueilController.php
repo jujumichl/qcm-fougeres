@@ -26,11 +26,11 @@ final class AccueilController extends AbstractController
     $userQcm = $unQcmRepo->createQueryBuilder('q')
             ->leftJoin('q.createur', 'u')
             ->addSelect('u')
+            ->where('q.etat = 1')
             ->andWhere('u.usernameAD = :usernameAD')
             ->setParameter('usernameAD', $user->getUsername())
             ->getQuery()
             ->getResult();
-        
         dump($userQcm);
         dump($user);
         return $this->render('accueil/index.html.twig', [
@@ -76,6 +76,7 @@ final class AccueilController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $date = new \DateTimeImmutable();
+        $datePlus7 = $date->modify('+7 days');
         dump($date);
         dump($data);
         /* if (!$this->isCsrfTokenValid('delete_item', $data['_token'])) {
@@ -96,6 +97,7 @@ final class AccueilController extends AbstractController
             'id' => $qcm->getId(),
             'name' => $qcm->getNom(),
             'date' => $date->format('d/m/Y'),
+            'dateSuppr' => $datePlus7->format('d/m/Y'),
         ]);
     }
 
@@ -123,6 +125,28 @@ final class AccueilController extends AbstractController
             'name' => $qcm->getNom(),
         ]);
     }
+
+    #[Route('/qcm/corbeille', name: 'qcm_corbeille', methods: ['GET'])]
+    public function corbeille(QcmRepository $unQcmRepo): JsonResponse
+    {
+    $user = $this->getUser();
+
+    $corbeille = $unQcmRepo->createQueryBuilder('q')
+            ->leftJoin('q.createur', 'u')
+            ->addSelect('u')
+            ->where('q.etat = 0')
+            ->andWhere('u.usernameAD = :usernameAD')
+            ->setParameter('usernameAD', $user->getUsername())
+            ->getQuery()
+            ->getArrayResult();
+
+        dump($corbeille);
+
+        return $this->json([
+            'corbeille' => $corbeille
+        ]);
+    }
+
 }
 
 
