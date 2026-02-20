@@ -71,7 +71,7 @@ final class AccueilController extends AbstractController
         ]);
     }
 
-    #[Route('/qcm/delete', name: 'qcm_delete', methods: ['POST'])]
+    #[Route('/qcm/delete', name: 'qcm_delete', methods: ['PUT'])]
     public function delete(Request $request, EntityManagerInterface $em, QcmRepository $unQcmRepo): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -101,7 +101,7 @@ final class AccueilController extends AbstractController
         ]);
     }
 
-    #[Route('/qcm/retrieve', name: 'qcm_retrieve', methods:['POST'])]
+    #[Route('/qcm/retrieve', name: 'qcm_retrieve', methods:['PUT'])]
     public function retrieve(Request $request, EntityManagerInterface $em, QcmRepository $unQcmRepo): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -147,6 +147,29 @@ final class AccueilController extends AbstractController
         ]);
     }
 
+    #[Route('/qcm/rename', name: 'qcm_rename', methods:['PUT'])]
+    public function renmae(Request $request, EntityManagerInterface $em, QcmRepository $unQcmRepo): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        dump($data);
+        /* if (!$this->isCsrfTokenValid('delete_item', $data['_token'])) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], 403);
+        } */
+
+        $qcm = $unQcmRepo->find($data['id']);
+        if (!$qcm) {
+            return new JsonResponse(['error' => 'QCM not found'], 404);
+        }
+        $qcm->setNom($data['name']);
+
+        $em->persist($qcm);
+        $em->flush();
+
+        return new JsonResponse([
+            'id' => $qcm->getId(),
+            'name' => $qcm->getNom(),
+        ]);
+    }
 }
 
 
