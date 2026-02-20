@@ -24,8 +24,9 @@ export default class extends Controller {
     mode: { type: String, default: "normal" },
   }
 
-  connect() {
+  async connect() {
     this.selectedQcms = new Set();
+    this.liElement = new Set();
 
     const offcanvasEl = document.getElementById('offcanvasMenu');
     if (offcanvasEl) {
@@ -35,6 +36,24 @@ export default class extends Controller {
     if (this.QCMTargets.length >= 3) {
       this.txtMidTarget.classList.add('is-hidden');
     }
+
+    Date.prototype.addDays = function (days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date.toLocaleDateString('fr-FR');
+          }
+
+    await fetch('qcm/corbeille')
+      .then(response => response.json())
+      .then(data => {
+        for (let corb of data.corbeille) {
+          let date = corb.deletedAt.split('/');
+          date = new Date(Date.UTC(Number(date[2]), Number(date[1]), Number(date[0])));
+          
+          this.addCorbeille(corb.id, corb.nom, corb.deletedAt, date.addDays(7));
+        }
+      })
+
   }
 
   disconnect() {
@@ -51,7 +70,7 @@ export default class extends Controller {
   //#endregion
 
   //#region add QCM
-  async addQcm(evt, nameQCM = "", id = "") {
+  async addQcm() {
 
     // nb de QCM
     let nb = this.QCMTargets.length;
@@ -80,7 +99,7 @@ export default class extends Controller {
       const template = document.getElementById("qcm-template");
       const li = template.content.firstElementChild.cloneNode(true);
       // création en bdd du QCM + récup du nom + id du QCM
-      const repHttp = await this.createQcmEntity(nameQCM || `QCM ${nb}`);
+      const repHttp = await this.createQcmEntity(`QCM ${nb}`);
       const statusHttp = repHttp.ok;
       if (!statusHttp) {
         throw new Error(`Création non effectuée (code HTTP : ${repHttp.status})`)
@@ -150,8 +169,9 @@ export default class extends Controller {
               throw new Error(`Erreur lors de la tentative de suppression du QCM (code http: ${repHttp.status})`)
             }
             const data = await repHttp.json()
-            console.info("qcm id : " + data.id + " --- Date de suppression : " + data.date)
-            this.addCorbeille(box.closest("li"), data.id, data.name, data.date);
+            console.info("qcm id : " + data.id + " --- Date de suppression : " + data.dateSuppr)
+            this.liElement.add(box.closest("li"));
+            this.addCorbeille(data.id, data.name, data.date, data.dateSuppr);
           }
         };
         this.caseAllSelectTarget.checked = false;
@@ -172,7 +192,7 @@ export default class extends Controller {
    * @param {HTMLElement} liElement <li> element
    * @param {Date} date current date
    */
-  addCorbeille(liElement, id, name, date) {
+  addCorbeille(id, name, date, date7) {
 
     const template = document.getElementById("corbeille-template");
     const tr = template.content.firstElementChild.cloneNode(true);
@@ -180,10 +200,16 @@ export default class extends Controller {
     tr.children[0].textContent = name;
     tr.children[0].dataset.qcmId = id;
     tr.children[1].textContent = date;
-    tr.children[2].textContent = date;
+    tr.children[2].textContent = date7;
 
     this.corbeilleTarget.append(tr);
-    liElement.remove();
+    if (this.liElement.size > 0) {
+      const iterator = this.liElement.values();
+
+      iterator.next().value.remove();
+      this.liElement.delete(this.liElement.values().next().value);
+    }
+
   }
 
   /**
@@ -193,7 +219,6 @@ export default class extends Controller {
   async recupQcm(evt) {
 
     let id = evt.target.closest('tr').children[0].dataset.qcmId;
-    console.warn(id);
     const repHttp = await this.retrieve(id);
     const data = await repHttp.json();
 
@@ -202,9 +227,7 @@ export default class extends Controller {
     }
 
     if (this.modeValue !== 'modif') this.modif();
-    console.log(data);
     this.retrieveQcm(data.id, data.name);
-    console.log(evt);
     evt.target.closest('tr').remove();
 
     if (this.modeValue !== 'normal') this.modif();
