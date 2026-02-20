@@ -40,7 +40,7 @@ export default class extends Controller {
   disconnect() {
     // Nettoyage lors de la déconnexion du contrôleur
     this.selectedQcms.clear();
-    console.log("Accueil controller disconnected");
+    console.info("Accueil controller disconnected");
   }
   //#endregion
 
@@ -51,7 +51,7 @@ export default class extends Controller {
   //#endregion
 
   //#region add QCM
-  async addQcm(evt, nameQCM = "") {
+  async addQcm(evt, nameQCM = "", id = "") {
 
     // nb de QCM
     let nb = this.QCMTargets.length;
@@ -82,12 +82,11 @@ export default class extends Controller {
       // création en bdd du QCM + récup du nom + id du QCM
       const repHttp = await this.createQcmEntity(nameQCM || `QCM ${nb}`);
       const statusHttp = repHttp.ok;
-      console.log(repHttp);
       if (!statusHttp) {
-        throw new Error(`Code HTTP différent de 200, création non effectuée (code HTTP : ${repHttp.status})`)
+        throw new Error(`Création non effectuée (code HTTP : ${repHttp.status})`)
       }
       const data = await repHttp.json();
-      console.log(data.id + " ------ " + data.name);
+      console.info("id qcm : " + data.id + " ------ Nom qcm : " + data.name);
       const btn = this.createQcmButton(data.id, data.name || `QCM ${nb}`);
       this.replaceQcmButton(li, btn);
       ///
@@ -107,6 +106,33 @@ export default class extends Controller {
     }
 
   }
+
+  retrieveQcm(id, name) {
+    const isModif = this.modeValue === "modif";
+
+    try {
+      if (!id || !name) {
+        throw new Error('id ou nom du QCM manquant')
+      }
+      /// Création d'un nouveau QCM 
+      const template = document.getElementById("qcm-template");
+      const li = template.content.firstElementChild.cloneNode(true);
+      const btn = this.createQcmButton(id, name);
+      this.replaceQcmButton(li, btn);
+      ///
+
+      // afficher ou non les cases de modification en fonction du mode
+      if (isModif) {
+        li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
+        li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+      }
+      // ajout du QCM dans le DOM
+      this.listTarget.append(li);
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
   //#endregion
 
   //#region delete QCM
@@ -119,14 +145,13 @@ export default class extends Controller {
       if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
         for (let box of this.caseTargets) {
           if (box.checked) {
-            console.info(box.nextElementSibling.dataset.qcmId);
             const repHttp = await this.trashQcm(box.nextElementSibling.dataset.qcmId);
             if (!repHttp.ok) {
-              throw new Error(`Erreur lors de la tentative de supprission du QCM (code http: ${repHttp.status})`)
+              throw new Error(`Erreur lors de la tentative de suppression du QCM (code http: ${repHttp.status})`)
             }
             const data = await repHttp.json()
-            console.log(data.id + " ---------  " + data.date)
-            this.addCorbeille(box.closest("li"), data.date);
+            console.info("qcm id : " + data.id + " --- Date de suppression : " + data.date)
+            this.addCorbeille(box.closest("li"), data.id, data.name, data.date);
           }
         };
         this.caseAllSelectTarget.checked = false;
@@ -147,13 +172,13 @@ export default class extends Controller {
    * @param {HTMLElement} liElement <li> element
    * @param {Date} date current date
    */
-  addCorbeille(liElement, date) {
+  addCorbeille(liElement, id, name, date) {
 
     const template = document.getElementById("corbeille-template");
     const tr = template.content.firstElementChild.cloneNode(true);
 
-    tr.children[0].textContent = liElement.children[1].textContent;
-    tr.children[0].dataset.qcmId = liElement.children[1].dataset.qcmId;
+    tr.children[0].textContent = name;
+    tr.children[0].dataset.qcmId = id;
     tr.children[1].textContent = date;
     tr.children[2].textContent = date;
 
@@ -165,13 +190,25 @@ export default class extends Controller {
    * retrieval QCM function
    * @param {Event} evt 
    */
-  recupQcm(evt) {
-    let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
-    let id = evt.currentTarget.closest('tr').children[0].dataset.qcmId;
+  async recupQcm(evt) {
+
+    let id = evt.target.closest('tr').children[0].dataset.qcmId;
+    console.warn(id);
+    const repHttp = await this.retrieve(id);
+    const data = await repHttp.json();
+
+    if (!repHttp.ok) {
+      throw new Error(`Erreur lors de la tentative de récupération du QCM (code http: ${repHttp.status})`)
+    }
+
     if (this.modeValue !== 'modif') this.modif();
-    this.addQcm("", id, nameQCM);
-    evt.currentTarget.closest('tr').remove();
+    console.log(data);
+    this.retrieveQcm(data.id, data.name);
+    console.log(evt);
+    evt.target.closest('tr').remove();
+
     if (this.modeValue !== 'normal') this.modif();
+
   }
 
   //#endregion
@@ -411,6 +448,20 @@ export default class extends Controller {
 
   async trashQcm(QCMId) {
     const response = await fetch('qcm/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: QCMId
+      })
+    })
+    return response;
+  }
+  /**
+   * retrieval QCM function
+   * @param {Event} evt 
+   */
+  async retrieve(QCMId) {
+    const response = await fetch('qcm/retrieve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

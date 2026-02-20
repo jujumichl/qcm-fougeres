@@ -95,8 +95,32 @@ final class AccueilController extends AbstractController
         return new JsonResponse([
             'id' => $qcm->getId(),
             'name' => $qcm->getNom(),
-            'state' => $qcm->isEtat(),
-            'date' => $date->format('d/m/Y')
+            'date' => $date->format('d/m/Y'),
+        ]);
+    }
+
+    #[Route('/qcm/retrieve', name: 'qcm_retrieve', methods:['POST'])]
+    public function retrieve(Request $request, EntityManagerInterface $em, QcmRepository $unQcmRepo): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        dump($data);
+        /* if (!$this->isCsrfTokenValid('delete_item', $data['_token'])) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], 403);
+        } */
+
+        $qcm = $unQcmRepo->find($data['id']);
+        if (!$qcm) {
+            return new JsonResponse(['error' => 'QCM not found'], 404);
+        }
+        $qcm->setDeletedAt(NULL);
+        $qcm->setEtat(true);
+
+        $em->persist($qcm);
+        $em->flush();
+
+        return new JsonResponse([
+            'id' => $qcm->getId(),
+            'name' => $qcm->getNom(),
         ]);
     }
 }
