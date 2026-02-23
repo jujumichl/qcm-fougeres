@@ -1,0 +1,11 @@
+# Code Status HTTP
+- Informational responses (100 – 199)
+    - regex = `/^1\d{2}$/gm`
+- Successful responses (200 – 299)
+    - regex = `/^2\d{2}$/gm`
+- Redirection messages (300 – 399)
+    - regex = `/^3\d{2}$/gm`
+- Client error responses (400 – 499)
+    - regex = `/^4\d{2}$/gm`
+- Server error responses (500 – 599)
+    - regex = `/^5\d{2}$/gm`
