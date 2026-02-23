@@ -74,4 +74,8 @@ services:
     # Permet d’injecter Ldap dans les classe via l’interface Ldap
     Symfony\Component\Ldap\LdapInterface: '@Symfony\Component\Ldap\Ldap'
 
+    # App\Security\LdapUserManager:
+        # arguments:
+            # $ldapCache: '@ldap_cache'  # On injecte explicitement le pool de cache personnalisé "ldap_cache"
+
 
