@@ -1,6 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
+import { confirmMess } from './helpers/confirmMess.js';
 
 export default class extends Controller {
+  //#region init Controller
   static targets = [
     'QCM',
     'case',
@@ -15,57 +17,226 @@ export default class extends Controller {
     'name',
     'corbeille',
     'QCMSuppr',
+    'txtMid',
   ];
 
   static values = {
-    mode: { type: String, default: "normal" }
+    mode: { type: String, default: "normal" },
   }
 
-  connect() {
+  async connect() {
     this.selectedQcms = new Set();
+    this.liElement = new Set();
+
+    const offcanvasEl = document.getElementById('offcanvasMenu');
+    if (offcanvasEl) {
+      const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+      offcanvas.show();
+    }
+    if (this.QCMTargets.length >= 3) {
+      this.txtMidTarget.classList.add('is-hidden');
+    }
+
+    Date.prototype.addDays = function (days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date.toLocaleDateString('fr-FR');
+          }
+
+    await fetch('qcm/corbeille')
+      .then(response => response.json())
+      .then(data => {
+        for (let corb of data.corbeille) {
+          let date = corb.deletedAt.split('/');
+          date = new Date(Date.UTC(Number(date[2]), Number(date[1]), Number(date[0])));
+          
+          this.addCorbeille(corb.id, corb.nom, corb.deletedAt, date.addDays(7));
+        }
+      });
+
   }
 
+  disconnect() {
+    // Nettoyage lors de la déconnexion du contrôleur
+    this.selectedQcms.clear();
+    console.info("Accueil controller disconnected");
+  }
+  //#endregion
+
+  //#region get
   getQcmItem(element) {
     return element.closest("li");
   }
+  //#endregion
 
-  addQcm(evt, nameQCM = "") {
-    let nb = this.QCMTargets.length + 1;
+  //#region add QCM
+  async addQcm() {
 
-    if (nb > 1) {
-      if (Number(this.QCMTargets[nb - 2].textContent.split(" ")[1])) {
-        const lastQcm = this.QCMTargets[nb - 2];
+    // nb de QCM
+    let nb = this.QCMTargets.length;
+    // si plus de 3 alors on cache le text de tuto
+    if (nb >= 3) {
+      this.txtMidTarget.classList.add('is-hidden');
+    }
+
+    ///
+    /// déternmination de ce qu'on vas mettre pour le nom générique : "QCM numéros..."
+    if (nb > 0) {
+      if (Number(this.QCMTargets[nb - 1].textContent.split(" ")[1])) {
+        const lastQcm = this.QCMTargets[nb - 1];
         nb = Number(lastQcm.textContent.split(" ")[1]) + 1;
       }
     }
+    else {
+      nb = nb + 1
+    }
+    ///
 
+    // mode dans lequel on se trouve
     const isModif = this.modeValue === "modif";
-    const template = document.getElementById("qcm-template");
-    const li = template.content.firstElementChild.cloneNode(true);
+    try {
+      /// Création d'un nouveau QCM 
+      const template = document.getElementById("qcm-template");
+      const li = template.content.firstElementChild.cloneNode(true);
+      // création en bdd du QCM + récup du nom + id du QCM
+      const repHttp = await this.createQcmEntity(`QCM ${nb}`);
+      const statusHttp = repHttp.ok;
+      if (!statusHttp) {
+        throw new Error(`Création non effectuée (code HTTP : ${repHttp.status})`)
+      }
+      const data = await repHttp.json();
+      console.info("id qcm : " + data.id + " ------ Nom qcm : " + data.name);
+      const btn = this.createQcmButton(data.id, data.name || `QCM ${nb}`);
+      this.replaceQcmButton(li, btn);
+      ///
 
-    const id = Date.now().toString();
-    const btn = this.createQcmButton(id, nameQCM || `QCM ${nb}`);
-    this.replaceQcmButton(li, btn);
+      // afficher ou non les cases de modification en fonction du mode
+      if (isModif) {
+        li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
+        li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+      }
 
-    if (isModif) {
-      li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
-      li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+
+      // ajout du QCM dans le DOM
+      this.listTarget.append(li);
+    }
+    catch (e) {
+      console.error(e);
     }
 
-    this.listTarget.append(li);
   }
 
-  delQcm() {
-    if (confirm("Voulez vous vraiment supprimer ces QCM ?")) {
-      this.caseTargets.forEach(box => {
-        if (box.checked) {
-          this.addCorbeille(box.closest("li"));
+  retrieveQcm(id, name) {
+    const isModif = this.modeValue === "modif";
+
+    try {
+      if (!id || !name) {
+        throw new Error('id ou nom du QCM manquant')
+      }
+      /// Création d'un nouveau QCM 
+      const template = document.getElementById("qcm-template");
+      const li = template.content.firstElementChild.cloneNode(true);
+      const btn = this.createQcmButton(id, name);
+      this.replaceQcmButton(li, btn);
+      ///
+
+      // afficher ou non les cases de modification en fonction du mode
+      if (isModif) {
+        li.querySelector('[data-accueil-target="case"]').classList.remove("is-hidden");
+        li.querySelector('[data-accueil-target="renameValide"]').classList.remove("is-hidden");
+      }
+      // ajout du QCM dans le DOM
+      this.listTarget.append(li);
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
+  //#endregion
+
+  //#region delete QCM
+
+  /**
+   * main function for make QCM in trash
+   */
+  async delQcm() {
+    try {
+      if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
+        for (let box of this.caseTargets) {
+          if (box.checked) {
+            const repHttp = await this.trashQcm(box.nextElementSibling.dataset.qcmId);
+            if (!repHttp.ok) {
+              throw new Error(`Erreur lors de la tentative de suppression du QCM (code http: ${repHttp.status})`)
+            }
+            const data = await repHttp.json()
+            console.info("qcm id : " + data.id + " --- Date de suppression : " + data.dateSuppr)
+            this.liElement.add(box.closest("li"));
+            this.addCorbeille(data.id, data.name, data.date, data.dateSuppr);
+          }
+        };
+        this.caseAllSelectTarget.checked = false;
+        let nb = this.QCMTargets.length;
+
+        if (nb < 5) {
+          this.txtMidTarget.classList.remove('is-hidden');
         }
-      });
-      this.caseAllSelectTarget.checked = false;
+      }
+    }
+    catch (e) {
+      console.error(e);
     }
   }
 
+  /**
+   * Add HMTL <li> in trash
+   * @param {HTMLElement} liElement <li> element
+   * @param {Date} date current date
+   */
+  addCorbeille(id, name, date, date7) {
+
+    const template = document.getElementById("corbeille-template");
+    const tr = template.content.firstElementChild.cloneNode(true);
+
+    tr.children[0].textContent = name;
+    tr.children[0].dataset.qcmId = id;
+    tr.children[1].textContent = date;
+    tr.children[2].textContent = date7;
+
+    this.corbeilleTarget.append(tr);
+    if (this.liElement.size > 0) {
+      const iterator = this.liElement.values();
+
+      iterator.next().value.remove();
+      this.liElement.delete(this.liElement.values().next().value);
+    }
+
+  }
+
+  /**
+   * retrieval QCM function
+   * @param {Event} evt 
+   */
+  async recupQcm(evt) {
+
+    let id = evt.target.closest('tr').children[0].dataset.qcmId;
+    const repHttp = await this.retrieve(id);
+    const data = await repHttp.json();
+
+    if (!repHttp.ok) {
+      throw new Error(`Erreur lors de la tentative de récupération du QCM (code http: ${repHttp.status})`)
+    }
+
+    if (this.modeValue !== 'modif') this.modif();
+    this.retrieveQcm(data.id, data.name);
+    evt.target.closest('tr').remove();
+
+    if (this.modeValue !== 'normal') this.modif();
+
+  }
+
+  //#endregion
+
+  //#region select QCM
   select(event) {
     const btn = event.currentTarget;
     const id = btn.dataset.qcmId;
@@ -126,8 +297,10 @@ export default class extends Controller {
 
     this.renderSelection();
   }
+  //#endregion
 
-  modif() {
+  //#region edit menu
+  async modif() {
     const isModif = this.modeValue !== "modif";
     this.modeValue = isModif ? "modif" : "normal";
 
@@ -164,13 +337,15 @@ export default class extends Controller {
       }
     });
 
+    // attente de la réponse de utilisateur
     if (this.hasNameTarget) {
-      this.handleExistingRename();
+      await this.handleExistingRename();
     }
   }
-
-  rename(event) {
-    this.handleExistingRename();
+  //#region renaming logic
+  async rename(event) {
+    const ok = await this.handleExistingRename();
+    if (!ok) return;
 
     const li = this.getQcmItem(event.currentTarget);
 
@@ -215,72 +390,51 @@ export default class extends Controller {
 
     const input = li.querySelector('[data-accueil-target="name"]');
 
+    this.renameQcm(id, value);
+
     const btn = this.createQcmButton(id, input.value);
     this.replaceQcmButton(li, btn);
 
     input.remove();
   }
 
-  finalizeRename(li, value) {
+  async finalizeRename(li, value) {
     const input = li.querySelector('[data-accueil-target="name"]');
     if (!input) return;
 
     const id = li.dataset.qcmId;
+    
+    this.renameQcm(id, value);
 
     const btn = this.createQcmButton(id, value);
     this.replaceQcmButton(li, btn);
 
     input.remove();
-
+    
     li.querySelector('[data-accueil-target="valide"]').classList.add("is-hidden");
     li.querySelector('[data-accueil-target="rename"]').classList.remove("is-hidden");
   }
 
-  handleExistingRename() {
+  async handleExistingRename() {
     const input = this.element.querySelector('[data-accueil-target="name"]');
     if (!input) return true;
 
     const li = input.closest("li");
-    const keep = confirm(
+
+    const keep = await confirmMess(
+      this.application,
       "Un renommage est déjà en cours.\nVoulez-vous conserver les modifications ?"
     );
 
+    // si annulation → on remet le nom initial sinon non
     const value = keep ? input.value : this.nomQcm;
     this.finalizeRename(li, value);
-
-    return true;
   }
+  //#endregion
 
-  addCorbeille(liElement) {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1;
-    let dd = today.getDate();
-    let dd7 = dd + 7;
+  //#endregion
 
-    if (dd < 10) dd = '0' + dd;
-    if (dd7 < 10) dd7 = '0' + dd7;
-    if (mm < 10) mm = '0' + mm;
-
-    const template = document.getElementById("corbeille-template");
-    const tr = template.content.firstElementChild.cloneNode(true);
-
-    tr.children[0].textContent = liElement.children[1].textContent;
-    tr.children[1].textContent = `${dd}/${mm}/${yyyy}`;
-    tr.children[2].textContent = `${dd7}/${mm}/${yyyy}`;
-
-    this.corbeilleTarget.append(tr);
-    liElement.remove();
-  }
-
-  recupQcm(evt) {
-    let nameQCM = evt.currentTarget.closest('tr').children[0].textContent;
-    if (this.modeValue !== 'modif') this.modif();
-    this.addQcm("", nameQCM);
-    evt.currentTarget.closest('tr').remove();
-    if (this.modeValue !== 'normal') this.modif();
-  }
-
+  //#region Helpers
   createQcmButton(id, name) {
     const btn = document.createElement("button");
     btn.dataset.qcmId = id;
@@ -302,4 +456,58 @@ export default class extends Controller {
       li.insertBefore(btn, div);
     }
   }
+  //#endregion
+
+
+  //#region Entity
+
+  async createQcmEntity(nameQcm) {
+    const response = await fetch('qcm/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: nameQcm
+      })
+    })
+    return response;
+
+  }
+
+  async trashQcm(QCMId) {
+    const response = await fetch('qcm/delete', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: QCMId
+      })
+    })
+    return response;
+  }
+  /**
+   * retrieval QCM function
+   * @param {Event} evt 
+   */
+  async retrieve(QCMId) {
+    const response = await fetch('qcm/retrieve', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: QCMId
+      })
+    })
+    return response;
+  }
+  async renameQcm(QCMId, newName){
+    const response = await fetch('qcm/rename', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: QCMId,
+        name: newName
+      })
+    })
+    return response;
+    }
+  //#endregion
+
 }

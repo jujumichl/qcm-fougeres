@@ -1,20 +1,44 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    # -----------------------------
+    # Gestion des mots de passe : https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    # ---------------------------
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto' # Définit comment Symfony doit hasher les mots de passe
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    # -----------------------------
+    # Les providers (qui "fournissent" les utilisateurs) : https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    # -----------------------------
     providers:
         users_in_memory: { memory: null }
 
+        # used to reload user from session & other features (e.g. switch_user)
+        ldap_provider:
+            entity:
+                class: App\Entity\User
+                property: usernameAD # Propriété utilisée pour charger l'utilisateur (ici, le nom d'utilisateur AD)
+    # -----------------------------
+    # Les firewalls (zones sécurisées)
+    # -----------------------------
     firewalls:
         dev:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+
         main:
-            lazy: true
-            provider: users_in_memory
+            lazy: true   # service chargé uniquement si nécessaire
+            provider: ldap_provider    # Définit quel fournisseur d’utilisateurs utiliser
+            
+            custom_authenticator: App\Security\LdapAuthenticator
+            
+            # Ajouter un point d'entrée pour gérer les redirections
+            entry_point: App\Security\LdapAuthenticator
+
+            # === Déconnexion ===
+            logout:
+                path: app_logout              # URL pour se déconnecter
+                target: app_login
+                invalidate_session: true # détruit la session server pour éviter les problèmes de sécurité
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -23,9 +47,15 @@ security:
             # switch_user: true
 
     # Note: Only the *first* matching rule is applied
+
+    # -----------------------------
+    # Les rôles et contrôle d'accès
+    # -----------------------------
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: [ROLE_USER, ROLE_ADMIN]}
+        - { path: ^/, roles: [ROLE_USER, ROLE_ADMIN]}
 
 when@test:
     security:

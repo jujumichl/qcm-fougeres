@@ -19,7 +19,7 @@ class RepUserQcm
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Users $User = null;
+    private ?User $User = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -42,12 +42,12 @@ class RepUserQcm
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): ?User
     {
         return $this->User;
     }
 
-    public function setUser(?Users $User): static
+    public function setUser(?User $User): static
     {
         $this->User = $User;
 

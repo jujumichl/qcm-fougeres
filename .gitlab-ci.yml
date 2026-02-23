@@ -1,0 +1,4 @@
+include:
+  - project: 'e.peyrot/cicd-reference'
+    ref: main
+    file: '/.gitlab-template.yml'

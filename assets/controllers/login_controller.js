@@ -1,17 +1,19 @@
-// assets/controllers/login_controller.js
 import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="login"
 export default class extends Controller {
-   static values = { accueil: String } 
+  // Définir une cible pour le CSRF token
+   static targets = ["csrfToken"];
 
-   // Vérifie que le controller est bien connecté et fontionnelle
-   connect() {
-    console.log("🔥 STIMULUS FONCTIONNE 🔥");
-  }
+    // Cette méthode est appelée lorsque le controller est connecté à l'élément HTML
+    connect() {
+        // Récupérer le CSRF token depuis l'élément HTML
+        const csrfToken = this.csrfTokenTarget.value;
 
-  redirectVersAccueil() {
-    // Redirection vers la route Symfony '/accueil'
-    window.location.href = this.accueilValue;
-  }
+        // Stocker le CSRF token dans le sessionStorage
+        sessionStorage.setItem("csrf_token", csrfToken);
+
+        // Vérifier si le token est correctement stocké
+        console.log("CSRF Token stored in sessionStorage:", sessionStorage.getItem("csrf_token"));
+    }
 }
