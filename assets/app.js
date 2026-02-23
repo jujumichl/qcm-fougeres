@@ -1,4 +1,5 @@
 import { startStimulusApp } from '@symfony/stimulus-bridge';
+
 // Bootstrap
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';

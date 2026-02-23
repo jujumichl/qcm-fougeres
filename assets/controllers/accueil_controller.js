@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { confirmMess } from './helpers/confirmMess.js';
 
 export default class extends Controller {
   static targets = [
@@ -15,44 +16,51 @@ export default class extends Controller {
     'name',
     'corbeille',
     'QCMSuppr',
+    'txtMid',
   ];
 
   static values = {
-    mode: { type: String, default: "normal" }
+    mode: { type: String, default: "normal" },
   }
 
   connect() {
     this.selectedQcms = new Set();
 
     const offcanvasEl = document.getElementById('offcanvasMenu');
-
     if (offcanvasEl) {
       const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
       offcanvas.show();
     }
   }
 
-
+  disconnect() {
+    // Nettoyage lors de la déconnexion du contrôleur
+    this.selectedQcms.clear();
+    console.log("Accueil controller disconnected");
+  }
 
   getQcmItem(element) {
     return element.closest("li");
   }
 
   addQcm(evt, id = Date.now().toString(), nameQCM = "") {
-    let nb = this.QCMTargets.length + 1;
-
-    if (nb > 1) {
-      if (Number(this.QCMTargets[nb - 2].textContent.split(" ")[1])) {
-        const lastQcm = this.QCMTargets[nb - 2];
+    let nb = this.QCMTargets.length;
+    if (nb >=4){
+      this.txtMidTarget.classList.add('is-hidden');
+    }
+    if (nb > 0) {
+      if (Number(this.QCMTargets[nb - 1].textContent.split(" ")[1])) {
+        const lastQcm = this.QCMTargets[nb - 1];
         nb = Number(lastQcm.textContent.split(" ")[1]) + 1;
       }
+    }
+    else {
+      nb = nb+1
     }
 
     const isModif = this.modeValue === "modif";
 
-    // Récupération de la template qui nous intéresse
     const template = document.getElementById("qcm-template");
-    // Puis clone template
     const li = template.content.firstElementChild.cloneNode(true);
 
     const btn = this.createQcmButton(id, nameQCM || `QCM ${nb}`);
@@ -66,14 +74,20 @@ export default class extends Controller {
     this.listTarget.append(li);
   }
 
-  delQcm() {
-    if (confirm("Voulez vous vraiment supprimer ces QCM ?")) {
+  async delQcm() {
+
+    if (await confirmMess(this.application, "Voulez vous vraiment supprimer ces QCM ?")) {
       this.caseTargets.forEach(box => {
         if (box.checked) {
           this.addCorbeille(box.closest("li"));
         }
       });
       this.caseAllSelectTarget.checked = false;
+          let nb = this.QCMTargets.length;
+
+      if (nb < 5){
+        this.txtMidTarget.classList.remove('is-hidden');
+      }
     }
   }
 
@@ -138,7 +152,7 @@ export default class extends Controller {
     this.renderSelection();
   }
 
-  modif() {
+  async modif() {
     const isModif = this.modeValue !== "modif";
     this.modeValue = isModif ? "modif" : "normal";
 
@@ -175,13 +189,15 @@ export default class extends Controller {
       }
     });
 
+    // attente de la réponse de utilisateur
     if (this.hasNameTarget) {
-      this.handleExistingRename();
+      await this.handleExistingRename();
     }
   }
 
-  rename(event) {
-    this.handleExistingRename();
+  async rename(event) {
+    const ok = await this.handleExistingRename();
+    if (!ok) return;
 
     const li = this.getQcmItem(event.currentTarget);
 
@@ -247,19 +263,20 @@ export default class extends Controller {
     li.querySelector('[data-accueil-target="rename"]').classList.remove("is-hidden");
   }
 
-  handleExistingRename() {
+  async handleExistingRename() {
     const input = this.element.querySelector('[data-accueil-target="name"]');
     if (!input) return true;
 
     const li = input.closest("li");
-    const keep = confirm(
+
+    const keep = await confirmMess(
+      this.application,
       "Un renommage est déjà en cours.\nVoulez-vous conserver les modifications ?"
     );
 
+    // si annulation → on remet le nom initial sinon non
     const value = keep ? input.value : this.nomQcm;
     this.finalizeRename(li, value);
-
-    return true;
   }
 
   addCorbeille(liElement) {

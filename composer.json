@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "api-platform/doctrine-orm": "^4.2",
         "api-platform/symfony": "^4.2",
+        "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "*",
         "doctrine/orm": "^3.6",
@@ -21,7 +22,7 @@
         "symfony/doctrine-messenger": "8.0.*",
         "symfony/dotenv": "8.0.*",
         "symfony/expression-language": "8.0.*",
-        "symfony/flex": "^2",
+        "symfony/flex": "^2.10",
         "symfony/form": "8.0.*",
         "symfony/framework-bundle": "8.0.*",
         "symfony/http-client": "8.0.*",
@@ -29,7 +30,7 @@
         "symfony/ldap": "8.0.*",
         "symfony/mailer": "8.0.*",
         "symfony/mime": "8.0.*",
-        "symfony/monolog-bundle": "^3.0|^4.0",
+        "symfony/monolog-bundle": "^4.0",
         "symfony/notifier": "8.0.*",
         "symfony/process": "8.0.*",
         "symfony/property-access": "8.0.*",
@@ -47,8 +48,8 @@
         "symfony/web-link": "8.0.*",
         "symfony/webpack-encore-bundle": "^2.4",
         "symfony/yaml": "8.0.*",
-        "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/extra-bundle": "^3.23",
+        "twig/twig": "^3.23"
     },
     "config": {
         "allow-plugins": {
@@ -109,7 +110,8 @@
         "symfony/browser-kit": "8.0.*",
         "symfony/css-selector": "8.0.*",
         "symfony/debug-bundle": "8.0.*",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.65",
+        "symfony/phpunit-bridge": "^8.0",
         "symfony/stopwatch": "8.0.*",
         "symfony/var-dumper": "8.0.*",
         "symfony/web-profiler-bundle": "8.0.*"
