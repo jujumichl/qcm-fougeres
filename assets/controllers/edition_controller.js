@@ -1,19 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import { confirmMess } from "./helpers/confirmMess.js";
 
-/**
- * Controller Edition
- * Gestion complète :
- * - Type de question
- * - Réponses dynamiques
- * - Dropdown éditable
- * - Synchronisation des <select>
- */
 export default class extends Controller {
-
-  /* =====================================================
-   * CONFIGURATION STIMULUS
-  ===================================================== */
 
   static targets = [
     "reponse",
@@ -46,12 +34,18 @@ export default class extends Controller {
       }
     });
 
-    this.resetReponse();
-
     if (this.typeValue === "liste") {
       const template = document.getElementById("headerList");
       const clone = template.content.cloneNode(true);
       this.cardReponseTarget.append(clone);
+
+      // ✅ Utilisation de la cible Stimulus plutôt que getElementById
+      this.cardReponseTarget
+        .querySelector('[data-bs-toggle="dropdown"]')
+        ?.closest('.nav-item')
+        ?.addEventListener('shown.bs.dropdown', () => {
+          this.cardReponseTarget.querySelector('#DropdownInput')?.focus();
+        });
     }
 
     this.ajoutReponse();
@@ -60,16 +54,15 @@ export default class extends Controller {
   /* =====================================================
    * ACTIONS — GESTION DES REPONSES
   ===================================================== */
+
+  // ✅ Corrigé : accumulation dans un tableau
   syncSelectOpt() {
-    // Synchronisation options si plusieurs select
-    let btnListe = this.dropRepTarget.querySelectorAll('[data-edition-target="dropRep"]');
-    let btnContent;
-    btnListe.forEach(btn => btnContent = [btn.textContent]);
+    let btnContent = [];
+    this.dropRepTargets.forEach(btn => btnContent.push(btn.textContent.trim()));
     return btnContent;
   }
 
   ajoutReponse() {
-
     if (this.typeValue === "unique") {
       const template = document.getElementById("reponseUnique");
       const clone = template.content.firstElementChild.cloneNode(true);
@@ -84,18 +77,17 @@ export default class extends Controller {
 
     else {
       const template = document.getElementById("bodyList");
-      let clone = template.content.cloneNode(true);
+      const clone = template.content.cloneNode(true);
       this.cardReponseTarget.append(clone);
 
-      // Focus automatique sur input dropdown
-      document.getElementById('dropdownMenu')
-        .addEventListener('shown.bs.dropdown', () => {
-          document.getElementById('DropdownInput').focus();
-        });
+      // ✅ Synchronisation des options existantes sur le nouveau <select>
       if (this.dropdownRepTarget.childElementCount > 0) {
-        let contentDPD = this.syncSelectOpt();
-        let compt = 0;
-        contentDPD.forEach(content => clone.append(new Option(content, select.options.length)))
+        const contentDPD = this.syncSelectOpt();
+        // On cible le dernier select ajouté
+        const lastSelect = this.selectTargets[this.selectTargets.length - 1];
+        contentDPD.forEach((content, i) => {
+          lastSelect.add(new Option(content, i + 1));
+        });
       }
     }
   }
@@ -117,11 +109,20 @@ export default class extends Controller {
     if (!elem) elem = event.currentTarget.closest("li");
 
     if (elem) {
-      elem.remove();
-
       if (elem.localName === "li") {
-        let btnValue = elem.children[0].children[1].value;
-        this.delOpt(Number(btnValue));
+        // ✅ Utilisation de querySelector plutôt que children[0].children[1]
+        const btn = elem.querySelector('[data-edition-target="dropRep"]');
+        if (btn) {
+          const btnValue = Number(btn.value);
+          this.delOpt(btnValue);
+        }
+        elem.remove();
+      }
+      else if (this.typeValue === "liste") {
+        elem.parentElement.remove();
+      }
+      else {
+        elem.remove();
       }
     }
   }
@@ -148,16 +149,15 @@ export default class extends Controller {
     const template = document.getElementById("dropdwonRep");
     const clone = template.content.firstElementChild.cloneNode(true);
 
-    const Btn = clone.querySelector('[data-edition-target="dropRep"]');
-    Btn.textContent = value;
+    const btn = clone.querySelector('[data-edition-target="dropRep"]');
+    btn.textContent = value;
 
-    // Value = position (1-based)
-    Btn.value = document
-      .querySelector('[data-edition-target="dropdownRep"]')
-      .childElementCount + 1;
+    // ✅ Value cohérente avec reindexAllOptions (1-based)
+    btn.value = this.dropdownRepTarget.childElementCount + 1;
 
     this.dropdownRepTarget.append(clone);
-    sessionStorage
+
+    // ✅ sessionStorage orphelin supprimé
     this.addOptAllSelect(value);
 
     input.value = "";
@@ -167,11 +167,7 @@ export default class extends Controller {
    * ACTIONS — OPTIONS / SELECT
   ===================================================== */
 
-  addOpt(text) {
-    let lastSelect = this.selectTargets[this.selectTargets.length - 1];
-    let opt = new Option (text, lastSelect.options.length);
-    lastSelect.append(opt);
-  }
+  // ✅ addOpt() supprimée car jamais utilisée (remplacée par addOptAllSelect)
 
   addOptAllSelect(text) {
     for (let select of this.selectTargets) {
@@ -180,18 +176,27 @@ export default class extends Controller {
     }
   }
 
-  delOpt(index) {
-    for (let select of this.selectTargets) {
-      if (select.options[index]) {
-        select.remove(index);
-      }
+ delOpt(index) {
+  for (let select of this.selectTargets) {
+    let optToRemove = Array.from(select.options).find(opt => Number(opt.value) === index);
+
+    if (optToRemove) {
+      select.remove(optToRemove.index);
+    } else {
+      // Supprime toutes les options dynamiques si désynchronisé
+      Array.from(select.options)
+        .filter(opt => opt.value !== "" && !opt.hidden)
+        .forEach(opt => select.remove(opt.index));
     }
-    this.reindexAllOptions();
   }
+  // Toujours réindexer, même après un fallback
+  this.reindexAllOptions();
+}
 
   reindexAllOptions() {
     for (let select of this.selectTargets) {
-      Array.from(select.options).forEach((opt, i) => {
+      // On saute l'option placeholder (index 0)
+      Array.from(select.options).slice(1).forEach((opt, i) => {
         opt.value = i + 1;
       });
     }
@@ -200,6 +205,4 @@ export default class extends Controller {
       btn.value = i + 1;
     });
   }
-
-
 }
