@@ -14,7 +14,7 @@
       <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
         <div class="offcanvas-header">
           <a href="{{ path('app_logout') }}" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
-          <p class="text-center">utilisateur : {{ app.user.username }}</p>
+          <p class="text-center">Utilisateur : {{ app.user.username }}</p>
           <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
         </div>
         <div class="bg-white sticky-top">
@@ -37,22 +37,21 @@
                 </div>
               </li>
             </template>
+            <div class="position-absolute top-50 start-50 translate-middle" data-accueil-target="txtMid">
+              <p class="text-center">Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</p>
+            </div>
             {% for Qcm in Qcms %}
               <li class="list-group-item p-0 d-flex align-items-center gap-2">
-                <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
+                  <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
 
-                <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-qcm-id="{{ Qcm.id }}" data-action="click->accueil#select">{{ Qcm.nom }}</button>
+                  <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-qcm-id="{{ Qcm.id }}" data-action="click->accueil#select">{{ Qcm.nom }}</button>
 
-                <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
-                  <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
+                  <div class="d-flex gap-1 is-hidden" data-accueil-target="renameValide">
+                    <button type="button" class="btn btn-outline-warning no-border" data-accueil-target="rename" data-action="click->accueil#rename"><i class="bi bi-pencil"></i></button>
 
-                  <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
-                </div>
-              </li>
-            {% else %}
-              <div class="position-absolute top-50 start-50 translate-middle" data-accueil-target="txtMid">
-                <p class="text-center">Aucun QCM créer, vous pouvez en créer si vous appuyer sur "modifier" puis "+"</p>
-              </div>
+                    <button type="button" data-qcm-id="" class="btn btn-outline-success no-border is-hidden" data-accueil-target="valide" data-action="click->accueil#valide"><i class="bi bi-check"></i></button>
+                  </div>
+                </li>
             {% endfor %}
           </ul>
 
@@ -160,7 +159,7 @@
     </div>
 
     {% include './MessConfirm/default.html.twig' %}
-    
+
     <!-- vérifier pour le all selected si au moins 2 cases sont séléctionnées -->
     <!-- CONTENU -->
     <main data-accueil-target="content" class="container mt-4">
