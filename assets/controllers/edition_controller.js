@@ -39,7 +39,7 @@ export default class extends Controller {
       const clone = template.content.cloneNode(true);
       this.cardReponseTarget.append(clone);
 
-      // ✅ Utilisation de la cible Stimulus plutôt que getElementById
+      // Utilisation de la cible Stimulus plutôt que getElementById
       this.cardReponseTarget
         .querySelector('[data-bs-toggle="dropdown"]')
         ?.closest('.nav-item')
@@ -55,7 +55,7 @@ export default class extends Controller {
    * ACTIONS — GESTION DES REPONSES
   ===================================================== */
 
-  // ✅ Corrigé : accumulation dans un tableau
+  // accumulation dans un tableau
   syncSelectOpt() {
     let btnContent = [];
     this.dropRepTargets.forEach(btn => btnContent.push(btn.textContent.trim()));
@@ -80,7 +80,7 @@ export default class extends Controller {
       const clone = template.content.cloneNode(true);
       this.cardReponseTarget.append(clone);
 
-      // ✅ Synchronisation des options existantes sur le nouveau <select>
+      // Synchronisation des options existantes sur le nouveau <select>
       if (this.dropdownRepTarget.childElementCount > 0) {
         const contentDPD = this.syncSelectOpt();
         // On cible le dernier select ajouté
@@ -110,7 +110,6 @@ export default class extends Controller {
 
     if (elem) {
       if (elem.localName === "li") {
-        // ✅ Utilisation de querySelector plutôt que children[0].children[1]
         const btn = elem.querySelector('[data-edition-target="dropRep"]');
         if (btn) {
           const btnValue = Number(btn.value);
@@ -152,12 +151,10 @@ export default class extends Controller {
     const btn = clone.querySelector('[data-edition-target="dropRep"]');
     btn.textContent = value;
 
-    // ✅ Value cohérente avec reindexAllOptions (1-based)
     btn.value = this.dropdownRepTarget.childElementCount + 1;
 
     this.dropdownRepTarget.append(clone);
 
-    // ✅ sessionStorage orphelin supprimé
     this.addOptAllSelect(value);
 
     input.value = "";
@@ -167,7 +164,6 @@ export default class extends Controller {
    * ACTIONS — OPTIONS / SELECT
   ===================================================== */
 
-  // ✅ addOpt() supprimée car jamais utilisée (remplacée par addOptAllSelect)
 
   addOptAllSelect(text) {
     for (let select of this.selectTargets) {
