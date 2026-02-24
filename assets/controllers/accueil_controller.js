@@ -18,6 +18,7 @@ export default class extends Controller {
     'corbeille',
     'QCMSuppr',
     'txtMid',
+    'confirm',
   ];
 
   static values = {

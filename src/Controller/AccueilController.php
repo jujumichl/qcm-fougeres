@@ -35,8 +35,6 @@ final class AccueilController extends AbstractController
         dump($user);
         return $this->render('accueil/index.html.twig', [
             'controller_name' => 'AccueilController',
-<<<<<<< HEAD
-=======
             'Qcms' => $userQcm,
         ]);
     }
@@ -170,7 +168,6 @@ final class AccueilController extends AbstractController
         return new JsonResponse([
             'id' => $qcm->getId(),
             'name' => $qcm->getNom(),
->>>>>>> origin/develop
         ]);
     }
 }

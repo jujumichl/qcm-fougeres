@@ -24,43 +24,47 @@
         </div>
       </div>
 
-      <!-- Corps principal (les questions)-->
-      <div class="card mt-5 mx-auto">
-        <div class="card-header d-flex align-items-start gap-2" data-edition-target="Questions">
-          <label for="q1" class="form-label mt-2">1.</label>
-          <textarea id="q1" name="_question" rows="1" class="form-control" placeholder="Insérez votre question..."></textarea>
-        </div>
-        <!-- Réponses -->
-        <div class="card-body position-relative" data-edition-target="cardReponse">
+      <!-- Corps principal (les questions) -->
+      <div class="d-flex align-items-start mt-5">
+        <!-- Bouton à gauche, aligné avec le header -->
+        <button type="button" class="btn flex-shrink-0 mt-2" title="supprimer" data-action="click->edition#delQuest"><i class="bi bi-dash-circle"></i></button>
 
-          <!-- Ajout de la réponse par défaut -->
-          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
-            <!-- Bouton pour supprimer la réponse -->
-            <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+        <!-- Carte question -->
+        <div class="card flex-grow-1">
+          <div class="card-header d-flex align-items-start gap-2" data-edition-target="Questions">
+            <label for="q1" class="form-label mt-2">1.</label>
+            <textarea id="q1" name="_question" rows="1" class="form-control" placeholder="Insérez votre question..."></textarea>
+          </div>
+          <!-- Réponses -->
+          <div class="card-body position-relative" data-edition-target="cardReponse">
+            <!-- Ajout de la réponse par défaut -->
+            <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+              <!-- Bouton pour supprimer la réponse -->
+              <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
 
-            <!-- Input visible côté utilisateur -->
-            <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
+              <!-- Input visible côté utilisateur -->
+              <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
 
-            <!-- Input pour éditer la réponse -->
-            <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
+              <!-- Input pour éditer la réponse -->
+              <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
+            </div>
+          </div>
+
+          <!-- Le type de réponse de base pour chaque question -->
+          <div class="card-footer d-flex justify-content-between align-items-center p-1">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-orange btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#typeReponse">Type de réponse</button>
+            <button type="button" class="btn" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
           </div>
         </div>
 
-        <!-- Le type de réponse de base pour chaque question -->
-        <div class="card-footer d-flex justify-content-between align-items-center p-1">
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-orange btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#typeReponse">Type de réponse</button>
-          <button type="button" class="btn" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
+        <div class="text-center mt-4 mb-4">
+          <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
         </div>
-      </div>
-
-      <div class="text-center mt-4 mb-4">
-        <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
       </div>
     </form>
 
-
-              <!-- Template qui contient la structure d'une réponse à choix unique -->
+    <!-- Template qui contient la structure d'une réponse à choix unique -->
 
     <template id="reponseUnique">
       <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
@@ -135,7 +139,6 @@
           <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
 
           <button type="button" class="btn btn-light flex-grow-1 text-start" data-edition-target="dropRep"></button>
-
         </div>
       </li>
     </template>
