@@ -1464,6 +1464,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     builds?: array<string, scalar|Param|null>,
  *     script_attributes?: array<string, scalar|Param|null>,
  *     link_attributes?: array<string, scalar|Param|null>,
+<<<<<<< HEAD
+=======
  * }
  * @psalm-type NelmioCorsConfig = array{
  *     defaults?: array{
@@ -1747,6 +1749,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         item_uri_template?: mixed,
  *         ...<mixed>
  *     },
+>>>>>>> origin/develop
  * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,

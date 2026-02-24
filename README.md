@@ -1,96 +1,284 @@
-# Projet QCM (Symfony + Bootstrap + Webpack Encore)
-
-## Description
-Application de gestion de QCM avec interface Bootstrap.  
-Utilise Symfony pour le backend et Webpack Encore pour compiler les assets (JS/CSS).
+Voici une version professionnelle du README adaptée exactement à ton architecture actuelle et orientée déploiement.
 
 ---
 
-## Structure
-- `assets/` : fichiers sources (JS, SCSS)
-- `public/build/` : fichiers compilés (générés par Webpack Encore)
-- `templates/` : templates Twig
+# Projet QCM
+
+Application de gestion de QCM développée avec :
+
+* Backend : Symfony
+* ORM : Doctrine ORM
+* Frontend : Bootstrap
+* JavaScript : Stimulus (Hotwired)
+* Bundler : Webpack Encore
 
 ---
 
-## Installation (dev)
+# Architecture du projet
 
-### 1. Installer les dépendances
+```
+├── assets/
+│   ├── controllers/        # Contrôleurs Stimulus
+│   ├── styles/             # Fichiers SCSS
+│   ├── vendor/             # Dépendances front (@hotwired)
+│   ├── app.js              # Entrée principale JS
+│   └── controllers.json
+│
+├── config/                 # Configuration Symfony
+│   ├── packages/           # Doctrine, Security, Twig, etc.
+│   ├── routes/
+│   ├── bundles.php
+│   └── services.yaml
+│
+├── docs/                   # Documentation interne
+│
+├── migrations/             # Migrations Doctrine
+│
+├── public/                 # Point d’entrée web
+│   ├── index.php
+│   └── bundles/
+│
+├── src/
+│   ├── Controller/         # Contrôleurs HTTP
+│   ├── Entity/             # Entités Doctrine
+│   ├── Repository/         # Repositories
+│   └── Kernel.php
+│
+├── templates/              # Templates Twig
+├── tests/                  # Tests PHPUnit
+├── translations/           # Fichiers de traduction
+│
+├── compose.yaml            # Docker (si utilisé)
+├── composer.json
+├── package.json
+├── webpack.config.js
+└── README.md
+```
+
+---
+
+# Prérequis
+
+* PHP ≥ 8.x
+* Composer
+* Node.js ≥ 18
+* MySQL ou MariaDB
+* Apache ou Nginx
+* (Optionnel) Docker + Docker Compose
+
+---
+
+# Installation
+
+## 1. Cloner le projet
+
+```bash
+git clone <repository-url>
+cd projet-qcm
+```
+
+## 2. Installer les dépendances
+
 ```bash
 composer install
 npm install
 ```
 
-### 2. Lancer Webpack Encore (dev)
+En production :
 
 ```bash
-npm run dev
+composer install --no-dev --optimize-autoloader
 ```
+
 ---
 
-## Commandes utiles
+# Configuration de l’environnement
 
-### Compilation en mode dev
+Créer ou adapter le fichier :
+
+```
+.env.local
+```
+
+Configuration minimale :
+
+```
+APP_ENV=prod
+APP_DEBUG=0
+DATABASE_URL="mysql://user:password@127.0.0.1:3306/qcm_db"
+```
+
+Ne jamais versionner `.env.local`.
+
+---
+
+# Base de données et entités (Doctrine)
+
+Les entités sont situées dans :
+
+```
+src/Entity/
+```
+
+Les repositories sont dans :
+
+```
+src/Repository/
+```
+
+Les migrations versionnées sont dans :
+
+```
+migrations/
+```
+
+## Création de la base (si nécessaire)
+
+```bash
+php bin/console doctrine:database:create
+```
+
+## Application des migrations
+
+En environnement de déploiement, ne jamais utiliser :
+
+```
+doctrine:schema:update --force
+```
+
+Utiliser uniquement les migrations :
+
+```bash
+php bin/console doctrine:migrations:migrate --no-interaction
+```
+
+Cela garantit la synchronisation entre :
+
+* Les entités (`src/Entity`)
+* Les fichiers de migration
+* La base de données
+
+## Validation du mapping
+
+```bash
+php bin/console doctrine:schema:validate
+```
+
+Permet de vérifier la cohérence entre le mapping Doctrine et la base.
+
+## Fixtures (développement uniquement)
+
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+Attention : supprime les données existantes.
+Ne pas utiliser en production sauf initialisation contrôlée.
+
+---
+
+# Assets et Webpack Encore
+
+Les sources frontend sont dans :
+
+```
+assets/
+```
+
+Point d’entrée principal :
+
+```
+assets/app.js
+```
+
+Configuration :
+
+```
+webpack.config.js
+```
+
+## Compilation en développement
 
 ```bash
 npm run dev
 ```
 
-### Compilation en mode production
+## Compilation en production
 
 ```bash
 npm run build
 ```
 
-### Serveur Symfony
+Ne pas versionner les fichiers compilés si générés dynamiquement.
+
+---
+
+# Cache (production)
 
 ```bash
-symfony server:start
+php bin/console cache:clear --env=prod
+php bin/console cache:warmup
 ```
 
 ---
 
-## Assets (SCSS / JS)
+# Permissions
 
-Les fichiers sources se trouvent dans :
+Vérifier les droits d’écriture sur :
 
-* `assets/app.js`
-* `assets/styles/app.scss`
-
-Ils sont compilés dans :
-
-* `public/build/app.js`
-* `public/build/app.css`
-
----
-
-## IMPORTANT (Git)
-
-Le dossier `public/build/` **ne doit pas** être commité.
-
-## 💡 Astuce
-
-Si le build ne fonctionne pas :
-
-```bash
-npm run dev
+```
+var/
 ```
 
-Si `encore` n’est pas reconnu :
+Exemple Linux :
 
 ```bash
-npm install @symfony/webpack-encore --save-dev
+chmod -R 775 var
 ```
 
 ---
 
-## 🧠 Stimulus
+# Déploiement avec Docker (si utilisé)
 
-Stimulus est un micro-framework JS utilisé pour organiser le JS côté front.
+Fichiers présents :
 
-Fichiers :
+```
+compose.yaml
+compose.override.yaml
+```
 
-* `assets/controllers/`
-* `assets/stimulus_bootstrap.js`
+Lancement :
+
+```bash
+docker compose up -d
+```
+
+Puis exécuter les migrations dans le conteneur :
+
+```bash
+docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+```
 
 ---
+
+# Checklist de déploiement
+
+* Installer dépendances PHP
+* Installer dépendances Node
+* Configurer `.env.local`
+* Créer la base de données
+* Exécuter les migrations
+* Compiler les assets (`npm run build`)
+* Vider et réchauffer le cache
+* Vérifier permissions
+* Vérifier configuration serveur (DocumentRoot → `public/`)
+
+---
+
+# Bonnes pratiques
+
+* Toute modification d’entité doit générer une migration
+* Les migrations doivent être versionnées
+* Ne jamais modifier la base directement en production
+* Ne pas exposer les fichiers d’environnement
+* Ne pas utiliser `schema:update --force` en production

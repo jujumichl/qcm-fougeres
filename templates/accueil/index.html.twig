@@ -10,6 +10,22 @@
       <!-- Bouton toggle -->
       <button class="btn mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu"><i class="bi bi-arrow-bar-right"></i></button>
 
+<<<<<<< HEAD
+  <!-- OFFCANVAS -->
+  <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
+    <div class="offcanvas-header">
+      <a href="{{ path('page_login') }}" class="btn btn-outline-danger mb-3"><i class="bi bi-box-arrow-right"></i></a>
+      <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><i class="bi bi-arrow-bar-left"></i></button>
+    </div>
+
+    <div class="offcanvas-body pb-5">
+      <div data-controller="acceuil">
+        <ul class="list-group list-group-flush" id="QMC-list">
+          <li class="list-group-item p-0">
+            <input type="checkbox" class="p-4 m-2" />
+            <button type="button" class="qcm-btn is-selected" data-acceuil-target="count" data-action="click->acceuil#select">QCM 1</button>
+          </li>
+=======
       <!-- OFFCANVAS -->
       <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" data-bs-backdrop="false" data-bs-scroll="true">
         <div class="offcanvas-header">
@@ -27,6 +43,7 @@
             <template id="qcm-template">
               <li class="list-group-item p-0 d-flex align-items-center gap-2">
                 <input type="checkbox" class="p-4 m-2 is-hidden" data-accueil-target="case" data-action="click->accueil#caseSelectedM" />
+>>>>>>> origin/develop
 
                 <button type="button" class="qcm-btn flex-grow-1" data-accueil-target="QCM" data-action="click->accueil#select"></button>
 
@@ -126,6 +143,36 @@
                 </tbody>
               </table>
             </div>
+<<<<<<< HEAD
+          </form>
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <button type="button" class="btn btn-primary mb-3 me-3">Send message</button>
+          <button type="button" class="btn btn-secondary mb-3 me-3" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>y
+
+  <!--          Implémentation des QCM créer ici, format : 
+        <div data-controller="acceuil" data-acceuil-nb-value="0">
+        <button type="button" class="btn" data-action="click->acceuil#AddQcm" id="">
+          <li class="list-group-item">
+            QCM 3
+          </li>
+        </button>
+        </li>
+                 -->
+
+  <!-- CONTENU -->
+  <section id="QCM-content" class="container-fluid mt-4">
+    <p>
+      Contenu principal…<br />
+      Le scroll fonctionne normalement.<br />
+      Ajoute beaucoup de texte pour tester.
+    </p>
+  </section>
+=======
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -166,4 +213,5 @@
       {% include './accueil/defaultContent.html.twig' %}
     </main>
   </div>
+>>>>>>> origin/develop
 {% endblock %}
