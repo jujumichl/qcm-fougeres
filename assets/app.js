@@ -1,4 +1,5 @@
 import { startStimulusApp } from '@symfony/stimulus-bridge';
+
 // Bootstrap
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,7 +8,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/app.scss';
 import './styles/login.scss';
 import './styles/accueil.scss';
-
+// Stimulus
 export const app = startStimulusApp(require.context(
   '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
   true,

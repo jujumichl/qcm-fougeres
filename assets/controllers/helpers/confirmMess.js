@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Application } from "@hotwired/stimulus";
 
 /**
@@ -12,10 +13,19 @@ export async function confirmMess(application, message, type="conf") {
 
     if (!el) {
         throw new Error('Modal not found');
+=======
+// assets/helpers/confirm.js
+export async function confirmMess(application, message) {
+    const el = document.querySelector('[data-controller="confirm"]');
+
+    if (!el) {
+        throw new Error('Confirm modal not found');
+>>>>>>> origin/develop
     }
 
     const controller =
         application.getControllerForElementAndIdentifier(el, 'confirm');
+<<<<<<< HEAD
     if (!type){
         throw new Error('Type is not defined');
     }
@@ -30,4 +40,8 @@ export async function confirmMess(application, message, type="conf") {
             controller.openOk(message);
         }
     }
+=======
+
+    return controller.open(message);
+>>>>>>> origin/develop
 }
