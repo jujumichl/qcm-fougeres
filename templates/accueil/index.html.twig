@@ -81,7 +81,7 @@
                       <button class="btn btn-outline-danger no-border" title="Supprimer les QCM séléctionner" data-bs-toggle="modal" data-bs-target="#confirmModal" data-action="click->accueil#delQcm"><i class="bi bi-trash"></i></button>
                     </div>
                     <div class="col">
-                      <button class="btn btn-outline-success no-border" data-action="click->accueil#addQcm"><i class="bi bi-plus-square"></i></button>
+                      <button class="btn btn-outline-success no-border" data-bs-toggle="modal" data-bs-target="#createQcmModal"><i class="bi bi-plus-square"></i></button>
                     </div>
                   </div>
                 </div>
@@ -158,16 +158,46 @@
       </div>
     </div>
 
+    <!-- MODAL de création d'un QCM -->
+    <div class="modal fade" id="createQcmModal" tabindex="-1" aria-labelledby="createQcmModalLibelle" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="d-flex flex-row-reverse">
+            <button type="button" class="btn-close mt-3 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- CODE DU QCM, A Gérer plus tard -->
+            <form data-accueil-target="titleDesc">
+              <div class="mb-3">
+                <label for="QCM-title" class="col-form-label fs-5">Titre du QCM :</label>
+                <input type="text" id="QCM-title" name="QCM-title" class="form-control" placeholder="Votre titre..." required/>
+              </div>
+              <div class="mb-3">
+                <label for="QCM-descr" class="col-form-label fs-5">Description du QCM :</label>
+                <textarea id="QCM-descr" name="QCM-descr" rows="5" class="form-control" placeholder="Ecrivez votre description..." required></textarea>
+              </div>
+              <div class="d-flex flex-row-reverse">
+                <button type="submit" class="btn btn-outline-success mb-3 me-3" data-action="click->accueil#addQcm" data-bs-dismiss="modal">Enregistrer</button>
+                <button type="button" class="btn btn-outline-danger mb-3 me-3" data-bs-dismiss="modal">Annuler</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div data-controller="confirm">
       {% include './MessConfirm/defaultConf.html.twig' %}
       {% include './MessConfirm/defaultOk.html.twig' %}
       {% include './MessConfirm/defaultWarn.html.twig' %}
     </div>
-    
+
     <!-- vérifier pour le all selected si au moins 2 cases sont séléctionnées -->
     <!-- CONTENU -->
-    <main data-accueil-target="content" class="container mt-4">
-      {% include './accueil/defaultContent.html.twig' %}
-    </main>
+    <turbo-frame id="main-content">
+      <main data-accueil-target="content" class="container mt-4">
+        {% include './accueil/defaultContent.html.twig' %}
+      </main>
+    </turbo-frame>
   </div>
 {% endblock %}

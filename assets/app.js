@@ -1,5 +1,5 @@
 import { startStimulusApp } from '@symfony/stimulus-bridge';
-
+import '@hotwired/turbo';
 // Bootstrap
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';

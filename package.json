@@ -1,15 +1,14 @@
 {
   "private": true,
   "license": "UNLICENSED",
-
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
+    "@hotwired/turbo": "^8.0.23",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1"
   },
-
   "devDependencies": {
     "@babel/core": "^7.17.0",
     "@babel/preset-env": "^7.16.0",
@@ -22,7 +21,6 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^5.1.0"
   },
-
   "scripts": {
     "dev-server": "encore dev-server",
     "dev": "encore dev",

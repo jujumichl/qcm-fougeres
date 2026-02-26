@@ -30,6 +30,10 @@ class ReponseQcm
     #[ORM\JoinColumn(nullable: false)]
     private ?Type $type = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?QuestionQcm $idQuestion = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +95,18 @@ class ReponseQcm
     public function setType(?Type $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getIdQuestion(): ?QuestionQcm
+    {
+        return $this->idQuestion;
+    }
+
+    public function setIdQuestion(?QuestionQcm $idQuestion): static
+    {
+        $this->idQuestion = $idQuestion;
 
         return $this;
     }

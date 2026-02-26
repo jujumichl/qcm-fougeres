@@ -16,6 +16,16 @@ class QcmRepository extends ServiceEntityRepository
         parent::__construct($registry, Qcm::class);
     }
 
+     public function findTitleAndDesc(string $id): ?array
+    {
+        return $this->createQueryBuilder('q')
+            ->select('q.titre', 'q.description')
+            ->where('q.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+
     //    /**
     //     * @return Qcm[] Returns an array of Qcm objects
     //     */

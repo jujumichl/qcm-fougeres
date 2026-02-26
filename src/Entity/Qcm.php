@@ -32,6 +32,12 @@ class Qcm
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createur = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $titre = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
 
      public function __construct()
     {
@@ -112,6 +118,30 @@ class Qcm
     public function setCreateur(?User $createur): static
     {
         $this->createur = $createur;
+
+        return $this;
+    }
+
+     public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
