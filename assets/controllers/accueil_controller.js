@@ -30,6 +30,7 @@ export default class extends Controller {
 
   async connect() {
     this.selectedQcms = new Set();
+
     // File d'attente des <li> à retirer après un passage en corbeille
     this.liQueue = [];
 
@@ -153,15 +154,15 @@ export default class extends Controller {
       const template = document.getElementById('qcm-template');
       const li = template.content.firstElementChild.cloneNode(true);
 
-      const repHttp = await this.createQcmEntity(`QCM ${nb}`, val);
+      const repHttp = await this.createQcmEntity(val['title'] || `QCM ${nb}`, val["desc"]);
       if (!repHttp.ok) {
         throw new Error(`Création non effectuée (code HTTP : ${repHttp.status})`);
       }
       const data = await repHttp.json();
-      console.info(`id qcm : ${data.id} ------ Nom qcm : ${data.name}`);
+      console.info(`id qcm : ${data.id} ------ Nom qcm : ${data.titre}`);
 
 
-      const btn = this.createQcmButton(data.id, data.name || `QCM ${nb}`);
+      const btn = this.createQcmButton(data.id, data.titre);
       this.replaceQcmButton(li, btn);
 
       if (isModif) {
@@ -281,6 +282,12 @@ export default class extends Controller {
 
       const frame = document.querySelector('turbo-frame#main-content');
       frame.src = `edition/${id}`;
+      const offcanvasEl = document.getElementById('offcanvasMenu');
+      if (offcanvasEl) {
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+        offcanvas.hide();
+      }
+
     } else {
       this.selectedQcms.has(id)
         ? this.selectedQcms.delete(id)
@@ -463,12 +470,36 @@ export default class extends Controller {
   }
   //#endregion
 
+  //#region Paramétrage d'un QCM
+  async sauvegarderParam(evt) {
+    const dateDebut = document.getElementById('dateDebut').value;
+    const dateFin = document.getElementById('dateFin').value;
+    const erreur = document.getElementById('dateError');
+
+    let spanIdContentArray = evt.target.closest('[data-controller="edition"]').querySelector('span').textContent.split(' ');
+    const idQcm = spanIdContentArray[spanIdContentArray.length-1];
+    // Validation
+    if (dateDebut && dateFin && dateFin < dateDebut) {
+      erreur.classList.remove('d-none');
+      return;
+    }
+
+    erreur.classList.add('d-none');
+
+    // Envoi au serveur
+    let $res = await this.sauveParam(dateDebut, dateFin, idQcm);
+    if (!$res.ok){
+      console.log("erreur dans la mise a jours de la date");
+    };
+  }
+  //#endregion
+
   //#region Appels API
-  async createQcmEntity(nameQcm, val) {
+  async createQcmEntity(titre, desc) {
     return fetch('qcm/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: nameQcm, title: val['title'], description: val['desc'], _token: this._getCsrfToken() }),
+      body: JSON.stringify({ title: titre, description: desc, _token: this._getCsrfToken() }),
     });
   }
 
@@ -498,6 +529,19 @@ export default class extends Controller {
 
   async getQcm(id) {
     return fetch(`qcm/${id}`);
+  }
+
+  async sauveParam(dateDebut, dateFin, idQcm) {
+    return fetch('qcm/parametres', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: idQcm,
+        dateDeb: dateDebut,
+        dateFin: dateFin,
+        _token: this._getCsrfToken()
+      })
+    });
   }
   //#endregion
 }

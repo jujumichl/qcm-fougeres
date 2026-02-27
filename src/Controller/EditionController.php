@@ -30,6 +30,17 @@ final class EditionController extends AbstractController
         QcmRepository $unQcmRepo,
         string $idQcm
     ): Response {
+
+        $qcm = $unQcmRepo->find($idQcm);
+        
+        if (!$qcm) {
+            return new JsonResponse(['error' => 'QCM not found'], 404);
+        }
+
+        if ($qcm->getCreateur()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()) {
+            return new JsonResponse(['error' => 'Not your QCM'], 403);
+        }
+
         $questions = $uneQuestionRepo->createQueryBuilder('q')
             ->leftJoin('q.idQcm', 'r')
             ->addSelect('r')
@@ -41,8 +52,10 @@ final class EditionController extends AbstractController
         $titleDesc = $unQcmRepo->findTitleAndDesc($idQcm);
 
         dump($titleDesc);
+        dump($qcm);
         return $this->render('edition/index.html.twig', [
             'controller_name' => 'EditionController',
+            'qcm' => $qcm,
             'questions' => $questions,
             'td' => $titleDesc,
         ]);

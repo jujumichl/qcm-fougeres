@@ -30,12 +30,12 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getUsernameAD(): ?string
     {
         return $this->usernameAD;
     }
 
-    public function setUsername(string $username): static
+    public function setUsernameAD(string $username): static
     {
         $this->usernameAD = $username;
 

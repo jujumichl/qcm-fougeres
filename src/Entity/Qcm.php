@@ -13,9 +13,6 @@ class Qcm
     #[ORM\Column(length: 8, unique: true)]
     private ?string $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null; 
-
     #[ORM\Column(nullable: true)]
     private ?string $dateDeb = null;
 
@@ -48,18 +45,6 @@ class Qcm
     public function getId(): ?string
     {
         return $this->id;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
     }
 
     public function getDateDeb(): ?string

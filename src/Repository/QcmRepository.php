@@ -16,7 +16,7 @@ class QcmRepository extends ServiceEntityRepository
         parent::__construct($registry, Qcm::class);
     }
 
-     public function findTitleAndDesc(string $id): ?array
+    public function findTitleAndDesc(string $id): ?array
     {
         return $this->createQueryBuilder('q')
             ->select('q.titre', 'q.description')
@@ -26,28 +26,25 @@ class QcmRepository extends ServiceEntityRepository
             ->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
 
-    //    /**
-    //     * @return Qcm[] Returns an array of Qcm objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('q')
-    //            ->andWhere('q.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('q.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findDates(string $id): ?array
+    {
+        return $this->createQueryBuilder('q')
+            ->select('q.dateDeb', 'q.dateFin')
+            ->where('q.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
 
-    //    public function findOneBySomeField($value): ?Qcm
-    //    {
-    //        return $this->createQueryBuilder('q')
-    //            ->andWhere('q.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findUserQcm($user)
+    {
+        return $this->createQueryBuilder('q')
+            ->leftJoin('q.createur', 'u')
+            ->addSelect('u')
+            ->where('q.etat = 1')
+            ->andWhere('u.usernameAD = :usernameAD')
+            ->setParameter('usernameAD', $user->getUserIdentifier())
+            ->getQuery()
+            ->getResult();
+    }
 }

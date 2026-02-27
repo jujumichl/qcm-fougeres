@@ -6,177 +6,216 @@
 
 {% block body %}
   <turbo-frame id="main-content">
-    <!-- Entête -->
-    {# <span class="badge text-bg-secondary ">Code QCM</span> #}
-    {# {{app.qcm.id}} #}
-    <div class="d-flex flex-column align-items-center mt-5" data-controller="edition">
-      <form action="" method="POST" class="col-4" data-edition-target="formQcm">
-        <div class="card mx-auto">
-          <div class="card-body p-4">
-            <fieldset>
-              <div class="mb-3">
-                <label for="_titre" class="form-label">Titre</label>
-                <input type="text" id="_titre" name="_titre" class="form-control" placeholder="Votre titre..." />
-              </div>
+    <div data-controller="edition">
+      <!-- Entête -->
+      <span class="badge text-bg-secondary position-fixed top-0 start-0 mt-3 ms-5">Code du QCM : {{ qcm.id }}</span>
+      <button class="btn position-fixed top-0 end-0 mt-3 me-3" data-bs-toggle="modal" data-bs-target="#param"><i class="bi bi-gear-fill"></i></button>
 
-              <div class="mb-4">
-                <label for="_description" class="form-label">Description</label>
-                <textarea id="_description" name="_description" rows="5" class="form-control" placeholder="Ecrivez votre description..."></textarea>
-              </div>
-            </fieldset>
-          </div>
-        </div>
-
-        <!-- Corps principal (les questions) -->
-        <div class="card mt-5 mx-auto">
-          <div class="card-header d-flex align-items-start gap-2" data-edition-target="Questions">
-            <label for="q1" class="form-label mt-2">1.</label>
-            <textarea id="q1" name="_question" rows="1" class="form-control" placeholder="Insérez votre question..."></textarea>
-          </div>
-          <!-- Réponses -->
-          <div class="card-body position-relative" data-edition-target="cardReponse">
-            <!-- Ajout de la réponse par défaut -->
-            <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
-              <!-- Bouton pour supprimer la réponse -->
-              <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-
-              <!-- Input visible côté utilisateur -->
-              <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
-
-              <!-- Input pour éditer la réponse -->
-              <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
-            </div>
-          </div>
-
-          <!-- Le type de réponse de base pour chaque question -->
-          <div class="card-footer d-flex justify-content-between align-items-center p-1">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-orange btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#typeReponse">Type de réponse</button>
-            <button type="button" class="btn" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
-          </div>
-        </div>
-
-        <div class="text-center mt-4 mb-4">
-          <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
-        </div>
-      </form>
-
-      <!-- Template qui contient la structure d'une réponse à choix unique -->
-
-      <template id="reponseUnique">
-        <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
-          <!-- Bouton pour supprimer la réponse -->
-          <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-
-          <!-- Input visible côté utilisateur -->
-          <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
-
-          <!-- Input pour éditer la réponse -->
-          <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
-        </div>
-      </template>
-
-      <!-- Template qui contient la structure d'une réponse à choix multiple -->
-      <template id="reponseMultiple">
-        <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
-          <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-          <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" />
-          <input type="text" name="editRepMultiple" class="form-control mb-3" placeholder="Mettez une réponse..." />
-        </div>
-      </template>
-
-      <!-- Template qui contient la structure d'une liste de réponses -->
-      <template id="headerList">
-        <!-- la nav qui cause _inNavbar: true DONC bloquage de l'ouverture du DPD-->
-        <div class="d-flex justify-content-center" id="dropdownMenu">
-          <div class="dropdown text-center">
-            <div class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Modifier les options</div>
-            <ul class="dropdown-menu p-3" style="min-width: 350px;">
-              <li class="mb-2">
-                <div class="d-flex">
-                  <input type="text" class="form-control" placeholder="Ajouter une réponse..." id="DropdownInput" />
-                  <button class="btn btn-outline-success" data-action="click->edition#addRepDrop"><i class="bi bi-plus"></i></button>
+      <div class="d-flex flex-column align-items-center mt-5">
+        <form action="" method="POST" class="col-4" data-edition-target="formQcm">
+          <div class="card mx-auto">
+            <div class="card-body p-4">
+              <fieldset>
+                <div class="mb-3">
+                  <label for="_titre" class="form-label">Titre</label>
+                  <input type="text" id="_titre" name="_titre" class="form-control" placeholder="Votre titre..." value="{{ td.titre }}" />
                 </div>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-              <li data-edition-target="dropdownRep"></li>
-            </ul>
-          </div>
-        </div>
-        <hr />
-      </template>
 
-      <template id="bodyList">
-        <div class="btn-group mb-3 me-2 w-100">
-          <div class="d-flex align-items-center input-group me-1" data-edition-target="divReponse">
-            <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-
-            <!-- Input principal -->
-            <input type="text" name="editRep" class="form-control" placeholder="Mettez une réponse..." />
-            <select class="form-select" aria-label="Default select example" data-edition-target="select">
-              <option selected hidden>Sélectionner une option...</option>
-            </select>
-          </div>
-        </div>
-      </template>
-
-      <!-- template d'une réponse à ajouter dans le menu dropdown -->
-      <template id="dropdwonRep">
-        <li>
-          <div class="d-flex align-items-center">
-            <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
-
-            <button type="button" class="btn btn-light flex-grow-1 text-start" data-edition-target="dropRep"></button>
-          </div>
-        </li>
-      </template>
-      <!-- Modal(PopUp) pour choisir le type de réponse -->
-      <div class="modal fade" id="typeReponse" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5">Choisissez un type de réponse :</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="mb-4">
+                  <label for="_description" class="form-label">Description</label>
+                  <textarea id="_description" name="_description" rows="5" class="form-control" placeholder="Ecrivez votre description...">{{ td.description }}</textarea>
+                </div>
+              </fieldset>
             </div>
-            <div class="modal-body d-flex flex-column gap-3" data-edition-target="modalBody">
-              <!-- Affiche le choix "réponses multiple" -->
-              <div class="d-flex align-items-center gap-2">
-                <input type="radio" name="radio" id="radio1" data-edition-type-value="multiple" class="form-check-input" data-edition-target="type" />
-                <label for="radio1" class="form-check-label">Choix multiple</label>
-                <i class="bi bi-check-square fs-5"></i>
-              </div>
+          </div>
 
-              <!-- Affiche le choix "réponse unique" -->
-              <div class="d-flex align-items-center gap-2">
-                <input type="radio" name="radio" id="radio2" data-edition-type-value="unique" class="form-check-input" data-edition-target="type" checked />
-                <label for="radio2" class="form-check-label">Choix unique</label>
-                <i class="bi bi-record-circle fs-5"></i>
-              </div>
+          <!-- Corps principal (les questions) -->
+          <div class="card mt-5 mx-auto">
+            <div class="card-header d-flex align-items-start gap-2" data-edition-target="Questions">
+              <label for="q1" class="form-label mt-2">1.</label>
+              <textarea id="q1" name="_question" rows="1" class="form-control" placeholder="Insérez votre question..."></textarea>
+            </div>
+            <!-- Réponses -->
+            <div class="card-body position-relative" data-edition-target="cardReponse">
+              <!-- Ajout de la réponse par défaut -->
+              <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+                <!-- Bouton pour supprimer la réponse -->
+                <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
 
-              <!-- Affiche une liste de réponse -->
-              <div class="d-flex align-items-center gap-2">
-                <input type="radio" name="radio" id="radio3" data-edition-type-value="liste" class="form-check-input" data-edition-target="type" />
-                <label for="radio3" class="form-check-label">Liste de réponse</label>
-                <i class="bi bi-menu-button-wide-fill fs-4"></i>
+                <!-- Input visible côté utilisateur -->
+                <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
+
+                <!-- Input pour éditer la réponse -->
+                <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
               </div>
             </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-action="click->edition#resetReponse click->edition#changerType">Valider</button>
+            <!-- Le type de réponse de base pour chaque question -->
+            <div class="card-footer d-flex justify-content-between align-items-center p-1">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-orange btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#typeReponse">Type de réponse</button>
+              <button type="button" class="btn" data-action="click->edition#ajoutReponse" title="Ajouter une Réponse"><i class="bi bi-plus-lg"></i></button>
+            </div>
+          </div>
+
+          <div class="text-center mt-4 mb-4">
+            <button type="button" class="btn btn-lg" data-action="click->edition#ajoutQuestion" title="Ajouter une Question"><i class="bi bi-plus-square"></i></button>
+          </div>
+        </form>
+        <span class="badge text-bg-secondary position-fixed bottom-0 start-0 mb-3 ms-3">créateur·rice : {{ qcm.createur.usernameAD }}</span>
+        <button class="btn btn-outline-primary position-fixed bottom-0 end-0 mb-3 me-3">Visualiser le QCM</button>
+        <button class="btn btn-success position-fixed bottom-0 end-0 mb-3" style="margin-right: 190px;">Enregistrer les modification</button>
+
+        <!-- Template qui contient la structure d'une réponse à choix unique -->
+
+        <template id="reponseUnique">
+          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+            <!-- Bouton pour supprimer la réponse -->
+            <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+
+            <!-- Input visible côté utilisateur -->
+            <input type="radio" name="RadioRep" class="form-check-input mb-3" data-edition-target="reponse" />
+
+            <!-- Input pour éditer la réponse -->
+            <input type="text" name="editRepUnique" class="form-control mb-3" placeholder="Mettez une réponse..." />
+          </div>
+        </template>
+
+        <!-- Template qui contient la structure d'une réponse à choix multiple -->
+        <template id="reponseMultiple">
+          <div class="d-flex align-items-center gap-3" data-edition-target="divReponse">
+            <button type="button" class="btn mb-3" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+            <input type="checkbox" name="checkboxRep" class="form-check-input mb-3" data-edition-target="reponse" />
+            <input type="text" name="editRepMultiple" class="form-control mb-3" placeholder="Mettez une réponse..." />
+          </div>
+        </template>
+
+        <!-- Template qui contient la structure d'une liste de réponses -->
+        <template id="headerList">
+          <!-- la nav qui cause _inNavbar: true DONC bloquage de l'ouverture du DPD -->
+          <div class="d-flex justify-content-center" id="dropdownMenu">
+            <div class="dropdown text-center">
+              <div class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Modifier les options</div>
+              <ul class="dropdown-menu p-3" style="min-width: 350px;">
+                <li class="mb-2">
+                  <div class="d-flex">
+                    <input type="text" class="form-control" placeholder="Ajouter une réponse..." id="DropdownInput" />
+                    <button class="btn btn-outline-success" data-action="click->edition#addRepDrop"><i class="bi bi-plus"></i></button>
+                  </div>
+                </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li data-edition-target="dropdownRep"></li>
+              </ul>
+            </div>
+          </div>
+          <hr />
+        </template>
+
+        <template id="bodyList">
+          <div class="btn-group mb-3 me-2 w-100">
+            <div class="d-flex align-items-center input-group me-1" data-edition-target="divReponse">
+              <button type="button" class="btn" title="supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+
+              <!-- Input principal -->
+              <input type="text" name="editRep" class="form-control" placeholder="Mettez une réponse..." />
+              <select class="form-select" aria-label="Default select example" data-edition-target="select">
+                <option selected hidden>Sélectionner une option...</option>
+              </select>
+            </div>
+          </div>
+        </template>
+
+        <div class="modal fade" id="param" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+              <div class="modal-header border-0 px-5 pt-4">
+                <h5 class="modal-title fw-semibold">Paramètres du QCM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body px-5">
+                <form id="formParam" data-edition-target="formParam">
+                  <div class="d-flex align-items-center justify-content-center gap-3 mb-3">
+                    <div>
+                      <label for="dateDebut" class="form-label text-muted small">Date de début</label>
+                      <input type="date" class="form-control" id="dateDebut" name="dateDebut" value="{{ qcm.dateDeb ?? '' }}" required />
+                    </div>
+                    <span class="mt-3">-</span>
+                    <div>
+                      <label for="dateFin" class="form-label text-muted small">Date de fin</label>
+                      <input type="date" class="form-control" id="dateFin" name="dateFin" value="{{ qcm.dateFin ?? '' }}" required />
+                    </div>
+                  </div>
+
+                  <div class="text-danger text-center mb-2 d-none" id="dateError">La date de fin doit être après la date de début.</div>
+                </form>
+              </div>
+
+              <div class="modal-footer border-0">
+                <button type="button" class="btn btn-success px-4 py-2" data-action="click->accueil#sauvegarderParam">Valider</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div data-controller="confirm">
-        {% include './MessConfirm/defaultConf.html.twig' %}
-        {% include './MessConfirm/defaultOk.html.twig' %}
-        {% include './MessConfirm/defaultWarn.html.twig' %}
+        <!-- template d'une réponse à ajouter dans le menu dropdown -->
+        <template id="dropdwonRep">
+          <li>
+            <div class="d-flex align-items-center">
+              <button type="button" class="btn btn-outline-danger" title="Supprimer" data-action="click->edition#supprReponse"><i class="bi bi-dash-circle"></i></button>
+
+              <button type="button" class="btn btn-light flex-grow-1 text-start" data-edition-target="dropRep"></button>
+            </div>
+          </li>
+        </template>
+
+        <!-- Modal(PopUp) pour choisir le type de réponse -->
+        <div class="modal fade" id="typeReponse" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5">Choisissez un type de réponse :</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body d-flex flex-column gap-3" data-edition-target="modalBody">
+                <!-- Affiche le choix "réponse unique" -->
+                <div class="d-flex align-items-center gap-2">
+                  <input type="radio" name="radio" id="radio2" data-edition-type-value="unique" class="form-check-input" data-edition-target="type" checked />
+                  <label for="radio2" class="form-check-label">Choix unique</label>
+                  <i class="bi bi-record-circle fs-5"></i>
+                </div>
+
+                <!-- Affiche le choix "réponses multiple" -->
+                <div class="d-flex align-items-center gap-2">
+                  <input type="radio" name="radio" id="radio1" data-edition-type-value="multiple" class="form-check-input" data-edition-target="type" />
+                  <label for="radio1" class="form-check-label">Choix multiple</label>
+                  <i class="bi bi-check-square fs-5"></i>
+                </div>
+
+                <!-- Affiche une liste de réponse -->
+                <div class="d-flex align-items-center gap-2">
+                  <input type="radio" name="radio" id="radio3" data-edition-type-value="liste" class="form-check-input" data-edition-target="type" />
+                  <label for="radio3" class="form-check-label">Liste de réponse</label>
+                  <i class="bi bi-menu-button-wide-fill fs-4"></i>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-action="click->edition#resetReponse click->edition#changerType">Valider</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-controller="confirm">
+          {% include './MessConfirm/defaultConf.html.twig' %}
+          {% include './MessConfirm/defaultOk.html.twig' %}
+          {% include './MessConfirm/defaultWarn.html.twig' %}
+        </div>
       </div>
     </div>
-    {# <span class="badge text-bg-secondary m-3">nom créateur</span>{{app.qcm.createur.username}} #}
   </turbo-frame>
 {% endblock %}

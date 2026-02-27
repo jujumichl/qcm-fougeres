@@ -13,6 +13,7 @@ export default class extends Controller {
     "select",
     "dropRep",
     "Questions",
+    "formQcm",
   ];
 
   static values = {
@@ -22,8 +23,9 @@ export default class extends Controller {
   connect() {
     this.currentRenameValue = null;
 
-    // ✅ Réinitialise Bootstrap après chaque rendu Turbo
     document.addEventListener('turbo:render', this._initBootstrap.bind(this));
+
+
   }
 
   disconnect() {
@@ -211,5 +213,54 @@ export default class extends Controller {
     this.dropRepTargets.forEach((btn, i) => {
       btn.value = i + 1;
     });
+  }
+
+
+  saveData(evt) {
+    evt.preventDefault();
+    let data = {
+      titre: "",
+      desc: "",
+      questions: {
+        question: []
+      }
+    }
+    // question: {[numérosQ, intituleQ, rep1, rep2...]}
+    let numQuest;
+    formQcmTarget.querySelectorAll('.card')
+      .forEach(c => {
+        // c = une card (card de titre/description + card de question/reponses)
+        c.querySelectorAll('.form-control')
+          .forEach(i => {
+            // i = une input qui a la classe form-control donc tous 
+            // les types des réponses passent sauf la liste qui a 
+            // un traitement spécial
+
+            // Récupération du titre
+            if (i.name === "_titre") {
+              data['titre'] = i.value;
+            } // Récupération de la description
+            else if (i.name === "_description") {
+              data['desc'] = i.value
+            } // récupération de l'intitulé de la question
+            else if (i.name === "_question") {
+              numQuest = i.previousElementSibling.textContent.split('.')[0]
+              if (!data['question'][1][i.value]) {
+                data['question'][numQuest].push(i.value)
+              }
+            } // réponses 
+            else {
+              if (this.typeValue === "unique") {
+
+              }
+              else if (this.typeValue === "multiple") {
+
+              }
+              else {
+
+              }
+            }
+          })
+      });
   }
 }

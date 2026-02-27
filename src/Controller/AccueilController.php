@@ -20,17 +20,10 @@ final class AccueilController extends AbstractController
     #[Route('/accueil', name: 'app_accueil')]
     public function index(QcmRepository $unQcmRepo): Response
     {
-        $user = $this->getUser();
 
-        $userQcm = $unQcmRepo->createQueryBuilder('q')
-            ->leftJoin('q.createur', 'u')
-            ->addSelect('u')
-            ->where('q.etat = 1')
-            ->andWhere('u.usernameAD = :usernameAD')
-            ->setParameter('usernameAD', $user->getUserIdentifier())
-            ->getQuery()
-            ->getResult();
+        $userQcm = $unQcmRepo->findUserQcm($this->getUser());
 
+        dump($userQcm);
         return $this->render('accueil/index.html.twig', [
             'controller_name' => 'AccueilController',
             'Qcms' => $userQcm,
@@ -56,8 +49,7 @@ final class AccueilController extends AbstractController
         }
 
         $qcm = new Qcm();
-        $qcm->setNom($data['name'] ?? 'Nouveau QCM');
-        $qcm->setTitre($data['title'] ?? 'New title');
+        $qcm->setTitre($data['title'] ?? 'Nouveau QCM');
         $qcm->setDescription($data['description'] ?? "descriptif du but du QCM");
         $qcm->setEtat(true);
         $qcm->setCreateur($this->getUser());
@@ -67,7 +59,7 @@ final class AccueilController extends AbstractController
 
         return new JsonResponse([
             'id'   => $qcm->getId(),
-            'name' => $qcm->getNom(),
+            'name' => $qcm->getTitre(),
         ]);
     }
 
@@ -101,7 +93,7 @@ final class AccueilController extends AbstractController
 
         return new JsonResponse([
             'id'        => $qcm->getId(),
-            'name'      => $qcm->getNom(),
+            'name'      => $qcm->getTitre(),
             'date'      => $date->format('d/m/Y'),
             'dateSuppr' => $datePlus7->format('d/m/Y'),
         ]);
@@ -133,7 +125,6 @@ final class AccueilController extends AbstractController
 
         return new JsonResponse([
             'id'   => $qcm->getId(),
-            'name' => $qcm->getNom(),
         ]);
     }
 
@@ -154,7 +145,7 @@ final class AccueilController extends AbstractController
         // Formatage explicite pour s'assurer que les données sont bien exposées
         $result = array_map(fn($q) => [
             'id'        => $q['id'],
-            'nom'       => $q['nom'],
+            'nom'       => $q['titre'],
             'deletedAt' => $q['deletedAt'],
         ], $corbeille);
 
@@ -183,14 +174,14 @@ final class AccueilController extends AbstractController
             return new JsonResponse(['error' => 'Name cannot be empty'], 400);
         }
 
-        $qcm->setNom($data['name']);
+        $qcm->setTitre($data['name']);
 
         $em->persist($qcm);
         $em->flush();
 
         return new JsonResponse([
             'id'   => $qcm->getId(),
-            'name' => $qcm->getNom(),
+            'name' => $qcm->getTitre(),
         ]);
     }
 
@@ -210,13 +201,41 @@ final class AccueilController extends AbstractController
         return new JsonResponse([
             'qcm' => [
                 'id'        => $qcm->getId(),
-                'nom'       => $qcm->getNom(),
+                'nom'       => $qcm->getTitre(),
                 'etat'      => $qcm->getEtat(),
                 'deletedAt' => $qcm->getDeletedAt(),
             ],
         ]);
     }
 
-   
+   #[Route('/qcm/parametres', name: 'qcm_param', methods: ['PUT'])]
+    public function param(Request $request, EntityManagerInterface $em, QcmRepository $unQcmRepo): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$this->isCsrfTokenValid('qcm_action', $data['_token'] ?? '')) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], 403);
+        }
+
+        $qcm = $unQcmRepo->find($data['id'] ?? null);
+        if (!$qcm) {
+            return new JsonResponse(['error' => 'QCM not found'], 404);
+        }
+
+        if ($qcm->getCreateur()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()) {
+            return new JsonResponse(['error' => 'Not your QCM'], 403);
+        }
+
+        $qcm->setDateDeb($data['dateDeb']);
+        $qcm->setDateFin($data['dateFin']);
+
+        $em->persist($qcm);
+        $em->flush();
+
+        return new JsonResponse([
+            'id'   => $qcm->getId(),
+            'name' => $qcm->getTitre(),
+        ]);
+    }
 
 }
